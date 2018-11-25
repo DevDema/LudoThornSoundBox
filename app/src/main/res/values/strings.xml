@@ -1,0 +1,44 @@
+<resources>
+    <string name="title">LUDOSOUNDBOX</string>
+    <string name="app_name">Ludo Thorn Soundbox</string>
+    <string name="action_settings">Settings</string>
+    <string name="logo">Logo</string>
+    <string name="leftcursor">Cursore sinistro</string>
+    <string name="rightcursor">Cursore destro</string>
+    <string name="credits">Crediti</string>
+    <string name="menu">Menu</string>
+    <string name="Tipee">Pagina Tipeee</string>
+    <string name="telegramlogo">Logo Telegram</string>
+    <string name="facebooklogo">Logo Facebook</string>
+    <string name="instagramlogo">Logo Instagram</string>
+    <string name="AppText">App sviluppata da:</string>
+    <string name="DesignText">Grafica realizzata da:</string>
+    <string name="author">Andrea De Matteis:</string>
+    <string name="designer">Maurizio Bacicchetto:</string>
+    <string name="youtubetext">Canale Youtube</string>
+    <string name="emailtext">andrea.de-matteis@outlook.com</string>
+    <string name="twittertext">Profilo Twitter</string>
+    <string name="instagramtext">Profilo Instagram</string>
+    <string name="instagramludo">@ludothornchannel</string>
+    <string name="facebookludo">/ludothorn</string>
+    <string name="telegramludo">@ludothorn</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3889032681139142/8666737012</string>
+    <string name="home">Home</string>
+    <string name="favorites">Preferiti</string>
+    <string name="video">Video</string>
+    <string name="info">Informazioni</string>
+    <string name="nofavorite">Non hai aggiunto nessun audio fra i preferiti! Puoi farlo tenendo premuto un pulsante relativo a un audio nella home, e lo troverai qui senza doverlo ricercare!</string>
+    <string name="deletefavorite">Per cancellare un audio da questa lista, tieni premuto sul pulsante corrispondente.</string>
+    <string name="search">Cerca:</string>
+    <string name="novideo">Nessun video disponibile. La tua connessione funziona?</string>
+    <string name="random">Random</string>
+    <string name="randombutton">A CASO!</string>
+    <string name="randomdescription">Stanco di scegliere? Fai fare tutto a Ludo! Schiavizzalo facendogli scegliere delle frasi a caso da dire!</string>
+    <string name="notification_channel_name">Ludo Thorn</string>
+    <string name="notification_channel_description">Nuovo Video!</string>
+    <string name="retryConnection">Riprova</string>
+    <string-array name="order_array">
+        <item>Nome</item>
+        <item>Data</item>
+    </string-array>
+</resources>
