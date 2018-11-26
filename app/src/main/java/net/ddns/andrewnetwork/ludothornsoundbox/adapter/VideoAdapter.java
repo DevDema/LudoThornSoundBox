@@ -46,7 +46,7 @@ public class VideoAdapter extends ArrayAdapter<Video> {
         if (convertView == null) {
             Context context = videoFragment.getContext();
             if(context!=null) inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (inflater != null) {
+        if (inflater != null && getCount()>0) {
 
             View row = inflater.inflate(R.layout.object_video, parent, false);
 

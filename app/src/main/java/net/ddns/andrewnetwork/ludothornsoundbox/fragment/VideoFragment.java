@@ -40,6 +40,7 @@ public class VideoFragment extends ParentFragment {
 
     VideoFragmentViewModel videoFragmentViewModel;
     TextView noVideo;
+    boolean done = false;
     ListView listview;
     InteractiveScrollView scrollView;
     ProgressBar mProgressBar;
@@ -55,10 +56,11 @@ public class VideoFragment extends ParentFragment {
     InteractiveScrollView.OnBottomReachedListener mbottomListener= new InteractiveScrollView.OnBottomReachedListener() {
         @Override
         public void onBottomReached() {
-            scrollView.setOnBottomReachedListener(null);
-                if(!videoFragmentViewModel.areAllVideosLoaded()) executionNumber++;
+            if(!videoFragmentViewModel.areAllVideosLoaded()) executionNumber++;
             moreProgressBar.setVisibility(View.VISIBLE);
             retryConnection(videoFragmentViewModel.findChannelByPosition(dropdown.getSelectedItemPosition()));
+            scrollView.setOnBottomReachedListener(null);
+
         }};
 
     @Nullable
@@ -216,12 +218,14 @@ public class VideoFragment extends ParentFragment {
 
     public void onThumbnailLoaded(Thumbnail thumbnail) {
         //ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        if(videoFragmentViewModel.setThumbnails(thumbnail,executionNumber)){
+
+        if(videoFragmentViewModel.setThumbnails(thumbnail,executionNumber) && !done){
             setAdapter(true,null);
             mProgressBar.setVisibility(View.GONE);
             moreProgressBar.setVisibility(View.GONE);
             if(!videoFragmentViewModel.areAllVideosLoaded())
                 scrollView.setOnBottomReachedListener(mbottomListener);
+            done = true;
         }
 
 
@@ -269,6 +273,7 @@ public class VideoFragment extends ParentFragment {
     }
 
     public void reset() {
+        done = false;
         setExecutionNumber(1);
         listview.setAdapter(null);
         videoFragmentViewModel.clearChannels();

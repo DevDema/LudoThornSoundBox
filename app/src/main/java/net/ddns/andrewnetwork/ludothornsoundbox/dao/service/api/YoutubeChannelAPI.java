@@ -1,21 +1,19 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.dao.service.api;
 
-
 import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.ChannelListResponse;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.dao.service.YoutubeAPIService;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.ChannelResponse;
 
 import java.io.IOException;
-import java.util.List;
 
 public class YoutubeChannelAPI extends YoutubeAPI {
-    ChannelResponse channelResponse;
-    YoutubeAPIService youtubeAPIService;
+    private ChannelResponse channelResponse;
+    private YoutubeAPIService youtubeAPIService;
+
     public YoutubeChannelAPI(YoutubeAPIService service, Channel channel) {
-        channelResponse = new ChannelResponse(channel.getChannelUsername());
+        channelResponse = new ChannelResponse(channel.getChannelUsername(), channel.getId());
         this.youtubeAPIService=service;
     }
 
@@ -26,7 +24,10 @@ public class YoutubeChannelAPI extends YoutubeAPI {
             try {
                 channels=tubeService.channels().list("statistics");
                 channels.setKey(key);
-                channels.setForUsername(channelResponse.getUsername());
+                if(channelResponse.getUsername()!=null && !channelResponse.getUsername().isEmpty())
+                    channels.setForUsername(channelResponse.getUsername());
+                else if(channelResponse.getId()!=null && !channelResponse.getId().isEmpty())
+                    channels.setId(channelResponse.getId());
                 final com.google.api.services.youtube.model.Channel channelListResponse = channels.execute().getItems().get(0);
                 channelResponse.setId(channelListResponse.getId());
                 channelResponse.setTotalnumberOfVideos(channelListResponse.getStatistics().getVideoCount());

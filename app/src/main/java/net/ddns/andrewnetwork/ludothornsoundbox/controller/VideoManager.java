@@ -32,7 +32,7 @@ public class VideoManager {
      */
     public static LudoVideo findVideoByUrl(List<LudoVideo> videoList, String url, boolean next) {
         for (LudoVideo video : videoList)
-            if (video.getThumbnail().getUrl().equals(url))
+            if (video.getThumbnail()!= null && video.getThumbnail().getUrl().equals(url))
                 if(!next)
                     return video;
                 else {
@@ -58,11 +58,13 @@ public class VideoManager {
      * @param thumbnail new thumbnail
      */
     public static void addThumbnailtoVideo(List<LudoVideo> videoList, Thumbnail thumbnail) {
-        LudoVideo video;
-        video = findVideoByUrl(videoList, thumbnail.getUrl(),false);
-        if(video!=null && video.hasThumbnail()) video= findVideoByUrl(videoList, thumbnail.getUrl(),true);
-        if(video!=null && thumbnail != null)
-            video.setThumbnail(thumbnail);
+        if(thumbnail!=null) {
+            LudoVideo video = findVideoByUrl(videoList, thumbnail.getUrl(), false);
+            if (video != null && video.hasThumbnail())
+                video = findVideoByUrl(videoList, thumbnail.getUrl(), true);
+            if (video != null)
+                video.setThumbnail(thumbnail);
+        }
     }
 
     /**
@@ -72,7 +74,7 @@ public class VideoManager {
     public static boolean areAllThumbnailsLoaded(List<LudoVideo> videoList) {
         int counter = 0;
         for (LudoVideo video : videoList)
-            if (video.getThumbnail().getImage() != null) counter++;
+            if (video.getThumbnail()!= null && video.getThumbnail().getImage() != null) counter++;
         if (counter >= videoList.size()) return true;
         return false;
     }

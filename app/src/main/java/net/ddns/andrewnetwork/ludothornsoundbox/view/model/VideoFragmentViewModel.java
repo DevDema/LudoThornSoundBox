@@ -33,6 +33,8 @@ public class VideoFragmentViewModel {
         connectivityManager = new ApplicationConnectivityManager(fragment.getActivity());
 
         channelList.add(new Channel("Ludo Thorn", "LudoThornDoppiaggio"));
+        channelList.add(new Channel("Ludo MasterRace", "","UCAmxcLPY_gvUm_XzDIcB0wg"));
+
         //channelList.add(new Channel("Ludo MasterRace", "UCAmxcLPY_gvUm_XzDIcB0wg"));
         channelManager = new ChannelManager(fragment.getContext(),channelList);
     }
@@ -191,7 +193,7 @@ public class VideoFragmentViewModel {
         Channel channel = channelManager.findChannelsByUsername(channelResponse.getUsername());
         channel.setTotalNumberOfVideos(channelResponse.getTotalnumberOfVideos().intValue());
         channel.setId(channelResponse.getId());
-        retryConnection();
+        retryConnection(channel);
     }
 
     public boolean loadThumbnailsFromMemory() throws JSONException {

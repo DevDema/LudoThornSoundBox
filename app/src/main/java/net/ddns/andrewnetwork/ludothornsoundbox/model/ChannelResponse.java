@@ -3,15 +3,18 @@ package net.ddns.andrewnetwork.ludothornsoundbox.model;
 import java.math.BigInteger;
 
 public class ChannelResponse {
-    String id;
-    BigInteger totalnumberOfVideos;
+    private String id;
+    private String username;
+    private BigInteger totalnumberOfVideos;
 
     public ChannelResponse(String username) {
         this.username = username;
     }
 
-    String username;
-
+    public ChannelResponse(String username, String id) {
+        this.username = username;
+        this.id = id;
+    }
 
     public String getId() {
         return id;

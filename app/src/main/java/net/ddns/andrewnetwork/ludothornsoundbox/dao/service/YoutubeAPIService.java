@@ -54,6 +54,8 @@ public class YoutubeAPIService {
         if(result!=null)
         caller.onVideoInformationLoaded(extractVideoInformation((Video) result), castToLudoVideo((Video) result));
     }
+
+
     public void onChannelsLoaded(Object result) {
         if(result!=null)
             caller.onChannelsLoaded((ChannelResponse) result);

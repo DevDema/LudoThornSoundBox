@@ -2,20 +2,18 @@ package net.ddns.andrewnetwork.ludothornsoundbox.model;
 
 import android.support.annotation.NonNull;
 
-import net.ddns.andrewnetwork.ludothornsoundbox.controller.VideoManager;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Channel implements Comparable, Serializable {
 
-    String ChannelName;
-    String id;
-    Integer totalNumberOfVideos;
-    String channelUsername;
-    ArrayList<LudoVideo> videoList;
+    private String ChannelName;
+    private String id;
+    private Integer totalNumberOfVideos;
+    private String channelUsername;
+    private ArrayList<LudoVideo> videoList;
 
-    String nextPageToken;
+    private String nextPageToken;
 
 
     public String getChannelName() {
@@ -31,6 +29,14 @@ public class Channel implements Comparable, Serializable {
         this.channelUsername = username;
         videoList = new ArrayList<>();
     }
+
+    public Channel(String channelName, String username, String id) {
+        ChannelName = channelName;
+        this.channelUsername = username;
+        this.id=id;
+        videoList = new ArrayList<>();
+    }
+
 
     public String getId() {
         return id;
