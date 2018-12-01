@@ -100,44 +100,44 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
             moreProgressBar.setIndeterminate(true);
             moreProgressBar.getIndeterminateDrawable().setColorFilter(0xFFFFFFFF, android.graphics.PorterDuff.Mode.MULTIPLY);
             retryButton.setOnClickListener((v) -> reset());
-            if (savedInstanceState != null) {
-                ArrayList<Channel> savedList = (ArrayList<Channel>) savedInstanceState.getSerializable("channelList");
-                //videoFragmentViewModel.areAllVideosLoaded(savedInstanceState.getBoolean("areAllVideosLoaded"));
-                if (savedList != null) {
-                    videoFragmentViewModel.setChannelList(savedList);
-                    try {
-                        if(videoFragmentViewModel.loadThumbnailsFromMemory()) {
-                            //videoFragmentViewModel.setCu(savedList);
-                            setAdapter(false, null);
-                            mProgressBar.setVisibility(View.GONE);
-                            connectivityBlock.setVisibility(View.GONE);
-                            if (videoFragmentViewModel.areAllVideosLoaded())
-                                scrollView.setOnBottomReachedListener(null);
-                            else scrollView.setOnBottomReachedListener(mbottomListener);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else retryConnection(null);
-        }
-           /*else if (channelListFromActivity!=null) {
+            ArrayList<Channel> savedList = null;
+            if(savedInstanceState!=null) savedList = (ArrayList<Channel>) savedInstanceState.getSerializable("channelList");
+            if(savedList == null) savedList = (ArrayList<Channel>) bundle.getSerializable("channelList");
+            //videoFragmentViewModel.areAllVideosLoaded(savedInstanceState.getBoolean("areAllVideosLoaded"));
+            if (savedList != null) {
+                videoFragmentViewModel.setChannelList(savedList);
                 try {
-                if(videoFragmentViewModel.loadThumbnailsFromMemory()) {
-                    connectivityBlock.setVisibility(View.GONE);
-                    mProgressBar.setVisibility(View.GONE);
-                }
+                    if(videoFragmentViewModel.loadThumbnailsFromMemory()) {
+                        //videoFragmentViewModel.setCu(savedList);
+                        setAdapter(false, null);
+                        mProgressBar.setVisibility(View.GONE);
+                        connectivityBlock.setVisibility(View.GONE);
+                        if (videoFragmentViewModel.areAllVideosLoaded())
+                            scrollView.setOnBottomReachedListener(null);
+                        else scrollView.setOnBottomReachedListener(mbottomListener);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //videoFragmentViewModel.setVideoList(videoListfromActivity);
-                setAdapter(false,null);
-                mProgressBar.setVisibility(View.GONE);
+            } else retryConnection(null);
+        }
+       /*else if (channelListFromActivity!=null) {
+            try {
+            if(videoFragmentViewModel.loadThumbnailsFromMemory()) {
                 connectivityBlock.setVisibility(View.GONE);
-                if (videoFragmentViewModel.areAllVideosLoaded())
-                    scrollView.setOnBottomReachedListener(null);
+                mProgressBar.setVisibility(View.GONE);
             }
-            else retryConnection(null);*/
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //videoFragmentViewModel.setVideoList(videoListfromActivity);
+            setAdapter(false,null);
+            mProgressBar.setVisibility(View.GONE);
+            connectivityBlock.setVisibility(View.GONE);
+            if (videoFragmentViewModel.areAllVideosLoaded())
+                scrollView.setOnBottomReachedListener(null);
+        }
+        else retryConnection(null);*/
     }
 
     @Override
@@ -293,7 +293,7 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
         super.onPause();
         videoFragmentViewModel.cancelProcesses();
         MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.onVideoListReceived((ArrayList<Channel>) saveChannelList());
+        Objects.requireNonNull(mainActivity).onVideoListReceived((ArrayList<Channel>) saveChannelList());
         mainActivity.OnExecutionNumberReceived(executionNumber);
     }
 
@@ -310,7 +310,7 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putSerializable("channelList", (ArrayList<Channel>) saveChannelList());
         savedInstanceState.putInt("executionNumber", executionNumber);
@@ -331,7 +331,7 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
         channelNames.add("Tutti i canali");
         for(Channel channel : getChannelList())
             channelNames.add(channel.getChannelName());
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), R.layout.spinner_item, channelNames);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_dropdown_item, channelNames);
 
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

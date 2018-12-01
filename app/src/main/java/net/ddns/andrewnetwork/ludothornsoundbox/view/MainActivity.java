@@ -19,8 +19,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends BaseActivity implements passVideoList {
+
     ArrayList<Channel> channels;
     int executionNumberVideoFragment=0;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
         Bundle bundle = new Bundle();

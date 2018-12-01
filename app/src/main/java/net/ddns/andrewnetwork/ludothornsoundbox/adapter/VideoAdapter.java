@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +21,15 @@ import net.ddns.andrewnetwork.ludothornsoundbox.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.Thumbnail;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class VideoAdapter extends ArrayAdapter<Video> {
 
-    ArrayList<LudoVideo> videoList;
-    ImageView tt3;
-    VideoFragment videoFragment;
+    private ArrayList<LudoVideo> videoList;
+    private VideoFragment videoFragment;
     public VideoAdapter(VideoFragment videoFragment, ArrayList<LudoVideo> videoList, int resource) {
-        super(videoFragment.getContext(), resource);
+        super(Objects.requireNonNull(videoFragment.getContext()), resource);
         this.videoFragment=videoFragment;
         this.videoList=videoList;
     }
@@ -40,8 +39,9 @@ public class VideoAdapter extends ArrayAdapter<Video> {
         return videoList.size();
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = null;
         if (convertView == null) {
             Context context = videoFragment.getContext();
@@ -61,7 +61,7 @@ public class VideoAdapter extends ArrayAdapter<Video> {
                 TextView updated = row.findViewById(R.id.Updated);
 
 
-                tt3 = row.findViewById(R.id.icon);
+                ImageView tt3 = row.findViewById(R.id.icon);
 
                 if (tt1 != null) {
                     tt1.setText(p.getTitle());
@@ -100,7 +100,10 @@ public class VideoAdapter extends ArrayAdapter<Video> {
                     else updated.setText(p.getDateTime().toString());
             }
             row.setOnClickListener(v -> {
-                Uri uri = Uri.parse(buildVideoUrl(p.getId()));
+                Uri uri = null;
+                if (p != null) {
+                    uri = Uri.parse(buildVideoUrl(p.getId()));
+                }
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 row.getRootView().getContext().startActivity(intent);
             });
@@ -117,7 +120,7 @@ public class VideoAdapter extends ArrayAdapter<Video> {
      * @param id videoId
      * @return complete video string
      */
-    public String buildVideoUrl(String id) {
+    private String buildVideoUrl(String id) {
         return "https://www.youtube.com/watch?v="+id;
     }
 }
