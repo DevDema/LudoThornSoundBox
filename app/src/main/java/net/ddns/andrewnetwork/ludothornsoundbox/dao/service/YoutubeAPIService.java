@@ -11,6 +11,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.controller.VideoManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.dao.service.api.YoutubeChannelAPI;
 import net.ddns.andrewnetwork.ludothornsoundbox.dao.service.api.YoutubeSearchAPI;
 import net.ddns.andrewnetwork.ludothornsoundbox.dao.service.api.YoutubeVideoAPI;
+import net.ddns.andrewnetwork.ludothornsoundbox.fragment.IVideoLoader;
 import net.ddns.andrewnetwork.ludothornsoundbox.fragment.VideoFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.ChannelResponse;
@@ -26,11 +27,11 @@ import java.util.List;
 
 public class YoutubeAPIService {
 
-    VideoFragment caller;
+    IVideoLoader caller;
     YoutubeSearchAPI youtubeSearchAPI;
     YoutubeVideoAPI youtubeVideoAPI;
 
-    public void onVideosLoaded(Object result) throws MalformedURLException {
+    public void onVideosLoaded(Object result) {
         if(result!=null) {
             addVideosToChannels((List<SearchResult>) result);
             for(Channel channel : caller.getChannelList())
@@ -40,7 +41,7 @@ public class YoutubeAPIService {
             else loadVideos();
     }
 
-    public void onVideosLoaded(Object result, Channel channel) throws MalformedURLException {
+    public void onVideosLoaded(Object result, Channel channel) {
         if(result!=null) {
             addVideosToChannel((List<SearchResult>) result, channel);
             VideoManager.removeDuplicatesifThereAreAny(channel.getVideoList());
@@ -110,7 +111,7 @@ public class YoutubeAPIService {
     }*/
 
 
-    public YoutubeAPIService(VideoFragment videoFragment) {
+    public YoutubeAPIService(IVideoLoader videoFragment) {
         this.caller = videoFragment;
 
          }

@@ -1,6 +1,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.dao.service;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.dao.service.api.ThumbnailAPI;
+import net.ddns.andrewnetwork.ludothornsoundbox.fragment.IVideoLoader;
 import net.ddns.andrewnetwork.ludothornsoundbox.fragment.VideoFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.Thumbnail;
@@ -9,9 +10,10 @@ import java.net.MalformedURLException;
 
 public class ThumbnailAPIService {
 
-    VideoFragment videoFragment;
+    IVideoLoader videoFragment;
     ThumbnailAPI process;
-    public ThumbnailAPIService(VideoFragment videoFragment) {
+
+    public ThumbnailAPIService(IVideoLoader videoFragment) {
         this.videoFragment = videoFragment;
     }
 

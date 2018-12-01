@@ -21,11 +21,11 @@ import java.util.List;
 
 public class VideoFragmentViewModel {
 
-    ApplicationConnectivityManager connectivityManager;
-    YoutubeAPIService youtube ;
-    ThumbnailAPIService thumbnailAPIService;
-    ArrayList<Channel> channelList = new ArrayList<>();
-    ChannelManager channelManager;
+    private ApplicationConnectivityManager connectivityManager;
+    private YoutubeAPIService youtube ;
+    private ThumbnailAPIService thumbnailAPIService;
+    private ArrayList<Channel> channelList = new ArrayList<>();
+    private ChannelManager channelManager;
 
     public VideoFragmentViewModel(VideoFragment fragment) {
         youtube = new YoutubeAPIService(fragment);
@@ -39,13 +39,13 @@ public class VideoFragmentViewModel {
         channelManager = new ChannelManager(fragment.getContext(),channelList);
     }
 
-    public VideoFragmentViewModel(VideoFragment fragment, ArrayList<Channel> channelList) {
+    /*public VideoFragmentViewModel(VideoFragment fragment, ArrayList<Channel> channelList) {
         youtube = new YoutubeAPIService(fragment);
         thumbnailAPIService  = new ThumbnailAPIService(fragment);
         connectivityManager = new ApplicationConnectivityManager(fragment.getActivity());
         this.channelList=channelList;
         channelManager = new ChannelManager(fragment.getContext(), channelList);
-    }
+    }*/
 
     public ArrayList<LudoVideo> getCompleteVideoList() {
         return VideoManager.createCompleteList(channelList);
@@ -55,7 +55,7 @@ public class VideoFragmentViewModel {
         return channelManager.areAllVideosLoaded();
     }
 
-    public ArrayList<LudoVideo> getCompleteVideoListWithNoThumbnails() {
+    private ArrayList<LudoVideo> getCompleteVideoListWithNoThumbnails() {
         ArrayList<LudoVideo> ludoVideos = VideoManager.createCompleteList(channelList);
         ArrayList<LudoVideo> newLudoVideos = new ArrayList<>();
         for(LudoVideo video : ludoVideos)
@@ -67,9 +67,9 @@ public class VideoFragmentViewModel {
         return channelList;
     }
 
-    public List<LudoVideo> getFilteredVideoList(Channel channel) {
+    /*public List<LudoVideo> getFilteredVideoList(Channel channel) {
         return orderByDate(channel.getVideoList());
-    }
+    }*/
 
     public ArrayList<LudoVideo> getVideoListFromChannelPosition(int position) {
         return orderByDate(findChannelByPosition(position).getVideoList());
@@ -87,10 +87,10 @@ public class VideoFragmentViewModel {
         return getCompleteVideoList().isEmpty();
     }
 
-    public boolean isVideoListEmpty(Channel channel) {
+    /*public boolean isVideoListEmpty(Channel channel) {
         if(channel.getVideoList().isEmpty()) return true;
         return false;
-    }
+    }*/
 
    /* public void addListWithoutDuplicates(List<LudoVideo> videoList) {
         VideoManager.addListWithoutDuplicates(youtube.getChannelList(),videoList);
@@ -116,7 +116,7 @@ public class VideoFragmentViewModel {
     }
 
 
-    public boolean areAllThumbnailsLoaded() {
+    private boolean areAllThumbnailsLoaded() {
         return VideoManager.areAllThumbnailsLoaded(getCompleteVideoList());
     }
 
@@ -129,13 +129,17 @@ public class VideoFragmentViewModel {
         return false;
     }
 
-        public boolean getConnectivity() {
-            return connectivityManager.isNetworkAvailable();
-        }
+    private boolean getConnectivity() {
+        return connectivityManager.isNetworkAvailable();
+    }
 
     public boolean retryConnection() {
         if(getConnectivity()) {
-            if(channelManager.areAllTotalNumberOfVideosSet() && channelManager.areAllIdsSet()) youtube.loadVideos();
+            if(channelManager.areAllTotalNumberOfVideosSet() && channelManager.areAllIdsSet()) {
+                for(Channel channel : channelList) {
+                    youtube.loadVideos(channel);
+                }
+            }
             else youtube.loadChannels(channelList);
                 return true;
         }
@@ -144,14 +148,14 @@ public class VideoFragmentViewModel {
 
     public boolean retryConnection(Channel channel) {
         if(channel==null) return retryConnection();
-        if(getConnectivity()) {
+        else if(getConnectivity()) {
             youtube.loadVideos(channel);
             return true;
         }
         return false;
     }
 
-    public ArrayList<LudoVideo> orderByDate(ArrayList<LudoVideo> videoList) {
+    private ArrayList<LudoVideo> orderByDate(ArrayList<LudoVideo> videoList) {
         return VideoManager.orderByDate(videoList);
     }
 
@@ -163,11 +167,11 @@ public class VideoFragmentViewModel {
     }
     /*public boolean isFilteredListEmpty() {
         return filteredVideoList.isEmpty();
-    }*/
+    }
 
     public boolean isCurrentVideoListEmpty() {
         return getCompleteVideoList().isEmpty();
-    }
+    }*/
 
     public void cancelProcesses() {
         youtube.removeCallBacks();
@@ -175,7 +179,7 @@ public class VideoFragmentViewModel {
         cleanVideoList();
     }
 
-    public void cleanVideoList() {
+    private void cleanVideoList() {
         VideoManager.cleanVideoList(getCompleteVideoList());
     }
 

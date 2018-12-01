@@ -35,8 +35,9 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.Objects;
 
-public class VideoFragment extends ParentFragment {
+public class VideoFragment extends ParentFragment implements IVideoLoader {
 
     VideoFragmentViewModel videoFragmentViewModel;
     TextView noVideo;
@@ -50,9 +51,6 @@ public class VideoFragment extends ParentFragment {
     Button retryButton;
     Spinner dropdown;
     ImageButton refreshButton;
-    View.OnClickListener refreshListener = (v) -> {
-        reset();
-    };
     InteractiveScrollView.OnBottomReachedListener mbottomListener= new InteractiveScrollView.OnBottomReachedListener() {
         @Override
         public void onBottomReached() {
@@ -60,12 +58,12 @@ public class VideoFragment extends ParentFragment {
             moreProgressBar.setVisibility(View.VISIBLE);
             retryConnection(videoFragmentViewModel.findChannelByPosition(dropdown.getSelectedItemPosition()));
             scrollView.setOnBottomReachedListener(null);
-
+            mProgressBar.setVisibility(View.GONE);
         }};
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
 
         return inflater.inflate(R.layout.content_video, container, false);
@@ -93,26 +91,7 @@ public class VideoFragment extends ParentFragment {
         scrollView = view.findViewById(R.id.videoScroll);
         dropdown = view.findViewById(R.id.selectChannel);
         retryButton = view.findViewById(R.id.retryConnection);
-        List<String> channelNames = new ArrayList<>();
-        channelNames.add("Tutti i canali");
-        for(Channel channel : videoFragmentViewModel.getChannelList())
-            channelNames.add(channel.getChannelName());
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, channelNames);
-
-        dropdown.setAdapter(adapter);
-        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ArrayList<LudoVideo> videoList = null;
-                if(position>0) videoList = videoFragmentViewModel.getVideoListFromChannelPosition(position);
-                setAdapter(false, videoList);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                parent.setSelection(0);
-            }
-        });
+        createChannelList();
         if(!videoFragmentViewModel.areAllVideosLoaded()) scrollView.setOnBottomReachedListener(mbottomListener);
 
         if(videoFragmentViewModel.isVideoListEmpty()) {
@@ -120,7 +99,7 @@ public class VideoFragment extends ParentFragment {
             mProgressBar.getIndeterminateDrawable().setColorFilter(0xFFFFFFFF, android.graphics.PorterDuff.Mode.MULTIPLY);
             moreProgressBar.setIndeterminate(true);
             moreProgressBar.getIndeterminateDrawable().setColorFilter(0xFFFFFFFF, android.graphics.PorterDuff.Mode.MULTIPLY);
-            retryButton.setOnClickListener(refreshListener);
+            retryButton.setOnClickListener((v) -> reset());
             if (savedInstanceState != null) {
                 ArrayList<Channel> savedList = (ArrayList<Channel>) savedInstanceState.getSerializable("channelList");
                 //videoFragmentViewModel.areAllVideosLoaded(savedInstanceState.getBoolean("areAllVideosLoaded"));
@@ -142,7 +121,7 @@ public class VideoFragment extends ParentFragment {
                 }
             } else retryConnection(null);
         }
-           /* else if (channelListFromActivity!=null) {
+           /*else if (channelListFromActivity!=null) {
                 try {
                 if(videoFragmentViewModel.loadThumbnailsFromMemory()) {
                     connectivityBlock.setVisibility(View.GONE);
@@ -157,18 +136,30 @@ public class VideoFragment extends ParentFragment {
                 connectivityBlock.setVisibility(View.GONE);
                 if (videoFragmentViewModel.areAllVideosLoaded())
                     scrollView.setOnBottomReachedListener(null);
-            }*/
-            else retryConnection(null);
-        refreshButton.setOnClickListener(refreshListener);
+            }
+            else retryConnection(null);*/
     }
 
-
-    public void onVideosLoaded() throws MalformedURLException {
-        if (videoFragmentViewModel.getCompleteVideoList() != null && !videoFragmentViewModel.areAllVideosLoaded()) showProgressBar();
+    @Override
+    public void onVideosLoaded()  {
+        if (videoFragmentViewModel.getCompleteVideoList() != null && !videoFragmentViewModel.areAllVideosLoaded()) {
+            try {
+                showProgressBar();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public void onVideosLoaded(Channel channel) throws MalformedURLException {
-        if (channel.getVideoList() != null && !channel.areAllVideosLoaded()) showProgressBar(channel);
+    @Override
+    public void onVideosLoaded(Channel channel) {
+        if (channel.getVideoList() != null && !channel.areAllVideosLoaded()) {
+            try {
+                showProgressBar(channel);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void showProgressBar(Channel channel) throws MalformedURLException {
@@ -181,6 +172,7 @@ public class VideoFragment extends ParentFragment {
         videoFragmentViewModel.loadVideoInformation();
     }
 
+    @Override
     public void onVideoInformationLoaded(VideoInformation videoInformation,LudoVideo video) {
         LudoVideo videoFound = VideoManager.findVideoById(videoFragmentViewModel.getCompleteVideoList(), video.getId());
         if(videoFound!=null) videoFound.setVideoInformation(videoInformation);
@@ -188,6 +180,7 @@ public class VideoFragment extends ParentFragment {
 
     }
 
+    @Override
     public void onChannelsLoaded(ChannelResponse channelResponse) {
         videoFragmentViewModel.onChannelsLoaded(channelResponse);
         //videoList=VideoManager.replaceVideo(videoList,video,videoFound);
@@ -208,36 +201,38 @@ public class VideoFragment extends ParentFragment {
             listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();
         }
-
         ViewGroup.LayoutParams params = listview.getLayoutParams();
         ViewGroup.MarginLayoutParams margins = (ViewGroup.MarginLayoutParams) listview.getLayoutParams();
-        params.height = totalHeight + (listview.getDividerHeight() * (listAdapter.getCount()))+margins.topMargin;
+        params.height = totalHeight + (listview.getDividerHeight() * (listAdapter.getCount()))+margins.topMargin + firstElement.getMeasuredHeight();
         listview.setLayoutParams(params);
         listview.requestLayout();
     }
 
+    @Override
     public void onThumbnailLoaded(Thumbnail thumbnail) {
-        //ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-
         if(videoFragmentViewModel.setThumbnails(thumbnail,executionNumber) && !done){
+            onAllThumbnailsLoaded();
+        }
+    }
+
+    private void onAllThumbnailsLoaded() {
             setAdapter(true,null);
             mProgressBar.setVisibility(View.GONE);
             moreProgressBar.setVisibility(View.GONE);
             if(!videoFragmentViewModel.areAllVideosLoaded())
                 scrollView.setOnBottomReachedListener(mbottomListener);
             done = true;
-        }
-
-
     }
 
 
     public void retryConnection(Channel channel) {
-        if(videoFragmentViewModel.retryConnection(channel) && executionNumber==1) {
+        boolean connect = videoFragmentViewModel.retryConnection(channel);
+
+        if(connect) {
             mProgressBar.setVisibility(View.VISIBLE);
             connectivityBlock.setVisibility(View.GONE);
         }
-        else if(executionNumber==1 && !videoFragmentViewModel.retryConnection(channel)) {
+        else if(executionNumber==1) {
             connectivityBlock.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
         }
@@ -264,10 +259,12 @@ public class VideoFragment extends ParentFragment {
     }
     }
 
+    @Override
     public int getExecutionNumber() {
         return executionNumber;
     }
 
+    @Override
     public void setExecutionNumber(int number) {
         executionNumber = number;
     }
@@ -303,13 +300,13 @@ public class VideoFragment extends ParentFragment {
     @Override
     public void onStart() {
         super.onStart();
-        /*if(videoFragmentViewModel!=null) {
+        if(videoFragmentViewModel!=null) {
             try {
-                videoFragmentViewModel.loadThumbnailsFromMemory(getContext());
+                videoFragmentViewModel.loadThumbnailsFromMemory();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
     }
 
     @Override
@@ -329,6 +326,31 @@ public class VideoFragment extends ParentFragment {
         return channelList;
     }
 
+    private void createChannelList() {
+        List<String> channelNames = new ArrayList<>();
+        channelNames.add("Tutti i canali");
+        for(Channel channel : getChannelList())
+            channelNames.add(channel.getChannelName());
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), R.layout.spinner_item, channelNames);
+
+        dropdown.setAdapter(adapter);
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ArrayList<LudoVideo> videoList = null;
+                if(position>0) videoList = videoFragmentViewModel.getVideoListFromChannelPosition(position);
+                setAdapter(false, videoList);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                parent.setSelection(0);
+            }
+        });
+        refreshButton.setOnClickListener((v) -> reset());
+    }
+
+    @Override
     public List<Channel> getChannelList() {
         return videoFragmentViewModel.getChannelList();
     }

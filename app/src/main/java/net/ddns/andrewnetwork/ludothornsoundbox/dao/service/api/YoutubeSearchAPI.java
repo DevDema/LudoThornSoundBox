@@ -82,23 +82,21 @@ public class YoutubeSearchAPI extends YoutubeAPI {
         for(Channel channel : channelList) if(!channel.areAllVideosLoaded()) channels.add(channel);
         return channels;
     }
+
     @Override
     protected void onPostExecute(Object result) {
-        try {
             if (selectiveSearch) {
                 Channel channel = channelList.get(0);
                 youtubeAPIService.onVideosLoaded(result, channel);
-            } else youtubeAPIService.onVideosLoaded(result);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+            }
+            else youtubeAPIService.onVideosLoaded(result);
     }
 
-        private Long setMaxResults() {
-            Long maxresults;
-            if(channelList.size()==1) maxresults = NUMBER_OF_VIDEOS_RETURNED * (youtubeAPIService.getExecutionNumber());
-            else maxresults = (NUMBER_OF_VIDEOS_RETURNED * (youtubeAPIService.getExecutionNumber())/getCountofChannelsWithUnfinishedVideos());
-            return maxresults;
-        }
+    private Long setMaxResults() {
+        Long maxresults;
+        if(channelList.size()==1) maxresults = NUMBER_OF_VIDEOS_RETURNED * (youtubeAPIService.getExecutionNumber());
+        else maxresults = (NUMBER_OF_VIDEOS_RETURNED * (youtubeAPIService.getExecutionNumber())/getCountofChannelsWithUnfinishedVideos());
+        return maxresults;
+    }
 }
 

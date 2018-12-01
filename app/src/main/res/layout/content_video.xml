@@ -19,22 +19,23 @@
             <Spinner
                 android:id="@+id/selectChannel"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight=".1"
                 android:minHeight="40dp"
-                android:popupBackground="@android:color/background_light"
-                android:spinnerMode="dropdown" />
+                android:spinnerMode="dropdown"
+                android:textAlignment="center" />
 
             <ImageButton
                 android:id="@+id/refreshButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="end"
                 android:background="?android:selectableItemBackground"
                 android:paddingStart="30dp"
                 android:paddingTop="10dp"
                 android:paddingEnd="30dp"
                 android:paddingBottom="10dp"
+                android:scaleType="fitCenter"
                 custom:srcCompat="@drawable/ic_action_refresh" />
 
         </LinearLayout>
@@ -44,7 +45,7 @@
             style="@style/Base.Widget.AppCompat.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:indeterminate="true"
             android:visibility="visible" />
 
