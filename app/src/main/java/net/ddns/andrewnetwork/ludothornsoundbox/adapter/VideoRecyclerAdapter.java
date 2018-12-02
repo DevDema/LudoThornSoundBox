@@ -111,4 +111,8 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
             super(v);
         }
     }
+
+    public void setVideoList(List<LudoVideo> videoList) {
+        this.videoList = videoList;
+    }
 }
