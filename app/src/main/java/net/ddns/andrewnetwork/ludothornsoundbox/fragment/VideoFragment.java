@@ -3,6 +3,8 @@ package net.ddns.andrewnetwork.ludothornsoundbox.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,21 +13,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
-import net.ddns.andrewnetwork.ludothornsoundbox.adapter.VideoAdapter;
+import net.ddns.andrewnetwork.ludothornsoundbox.adapter.VideoRecyclerAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.controller.VideoManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.ChannelResponse;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.VideoInformation;
-import net.ddns.andrewnetwork.ludothornsoundbox.view.InteractiveScrollView;
 import net.ddns.andrewnetwork.ludothornsoundbox.view.MainActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.view.model.VideoFragmentViewModel;
 
@@ -42,24 +41,40 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
     VideoFragmentViewModel videoFragmentViewModel;
     TextView noVideo;
     boolean done = false;
-    ListView listview;
-    InteractiveScrollView scrollView;
+    //ListView listview;
+    //InteractiveScrollView scrollView;
     ProgressBar mProgressBar;
-    ProgressBar moreProgressBar;
+    RecyclerView recyclerView;
+    //ProgressBar moreProgressBar;
     LinearLayout connectivityBlock;
     int executionNumber = 1;
     Button retryButton;
     Spinner dropdown;
     ImageButton refreshButton;
-    InteractiveScrollView.OnBottomReachedListener mbottomListener= new InteractiveScrollView.OnBottomReachedListener() {
+    /*InteractiveScrollView.OnBottomReachedListener mbottomListener= new InteractiveScrollView.OnBottomReachedListener() {
         @Override
         public void onBottomReached() {
             if(!videoFragmentViewModel.areAllVideosLoaded()) executionNumber++;
-            moreProgressBar.setVisibility(View.VISIBLE);
+            //moreProgressBar.setVisibility(View.VISIBLE);
             retryConnection(videoFragmentViewModel.findChannelByPosition(dropdown.getSelectedItemPosition()));
-            scrollView.setOnBottomReachedListener(null);
+            //scrollView.setOnBottomReachedListener(null);
             mProgressBar.setVisibility(View.GONE);
-        }};
+        }};*/
+
+    RecyclerView.OnScrollListener mBottomListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+
+            if (!recyclerView.canScrollVertically(1)) {
+                done = false;
+                if(!videoFragmentViewModel.areAllVideosLoaded()) executionNumber++;
+                retryConnection(videoFragmentViewModel.findChannelByPosition(dropdown.getSelectedItemPosition()));
+                mProgressBar.setVisibility(View.GONE);
+                recyclerView.removeOnScrollListener(this);
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -82,23 +97,24 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
             if(executionNumber!=0) this.executionNumber =executionNumber;
         }
         refreshButton = view.findViewById(R.id.refreshButton);
-        listview = view.findViewById(R.id.listview);
+        //listview = view.findViewById(R.id.listview);
         noVideo = view.findViewById(R.id.noVideo);
         mProgressBar = view.findViewById(R.id.progress_bar);
+        recyclerView = view.findViewById(R.id.videoRecycler);
         mProgressBar.setVisibility(View.VISIBLE);
-        moreProgressBar = view.findViewById(R.id.more_progress_bar);
+        //moreProgressBar = view.findViewById(R.id.more_progress_bar);
         connectivityBlock = view.findViewById(R.id.connectivityblock);
-        scrollView = view.findViewById(R.id.videoScroll);
+        //scrollView = view.findViewById(R.id.videoScroll);
         dropdown = view.findViewById(R.id.selectChannel);
         retryButton = view.findViewById(R.id.retryConnection);
         createChannelList();
-        if(!videoFragmentViewModel.areAllVideosLoaded()) scrollView.setOnBottomReachedListener(mbottomListener);
+        if(!videoFragmentViewModel.areAllVideosLoaded()) //scrollView.setOnBottomReachedListener(mbottomListener);
 
         if(videoFragmentViewModel.isVideoListEmpty()) {
             mProgressBar.setIndeterminate(true);
             mProgressBar.getIndeterminateDrawable().setColorFilter(0xFFFFFFFF, android.graphics.PorterDuff.Mode.MULTIPLY);
-            moreProgressBar.setIndeterminate(true);
-            moreProgressBar.getIndeterminateDrawable().setColorFilter(0xFFFFFFFF, android.graphics.PorterDuff.Mode.MULTIPLY);
+            //moreProgressBar.setIndeterminate(true);
+            //moreProgressBar.getIndeterminateDrawable().setColorFilter(0xFFFFFFFF, android.graphics.PorterDuff.Mode.MULTIPLY);
             retryButton.setOnClickListener((v) -> reset());
             ArrayList<Channel> savedList = null;
             if(savedInstanceState!=null) savedList = (ArrayList<Channel>) savedInstanceState.getSerializable("channelList");
@@ -112,9 +128,9 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
                         setAdapter(false, null);
                         mProgressBar.setVisibility(View.GONE);
                         connectivityBlock.setVisibility(View.GONE);
-                        if (videoFragmentViewModel.areAllVideosLoaded())
+                        /*if (videoFragmentViewModel.areAllVideosLoaded())
                             scrollView.setOnBottomReachedListener(null);
-                        else scrollView.setOnBottomReachedListener(mbottomListener);
+                        else scrollView.setOnBottomReachedListener(mbottomListener);*/
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -163,12 +179,12 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
     }
 
     private void showProgressBar(Channel channel) throws MalformedURLException {
-        if (executionNumber != 1) moreProgressBar.setVisibility(View.VISIBLE);
+        //if (executionNumber != 1) moreProgressBar.setVisibility(View.VISIBLE);
         videoFragmentViewModel.loadVideoInformation(channel);
     }
 
     private void showProgressBar() throws MalformedURLException {
-        if (executionNumber != 1) moreProgressBar.setVisibility(View.VISIBLE);
+        //if (executionNumber != 1) moreProgressBar.setVisibility(View.VISIBLE);
         videoFragmentViewModel.loadVideoInformation();
     }
 
@@ -187,7 +203,7 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
     }
 
 
-    public void setListViewHeightBasedOnChildren() {
+    /*public void setListViewHeightBasedOnChildren() {
         ListAdapter listAdapter = listview.getAdapter();
         if (listAdapter == null) {
             // pre-condition
@@ -206,7 +222,7 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
         params.height = totalHeight + (listview.getDividerHeight() * (listAdapter.getCount()))+margins.topMargin + firstElement.getMeasuredHeight();
         listview.setLayoutParams(params);
         listview.requestLayout();
-    }
+    }*/
 
     @Override
     public void onThumbnailLoaded(Thumbnail thumbnail) {
@@ -218,9 +234,9 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
     private void onAllThumbnailsLoaded() {
             setAdapter(true,null);
             mProgressBar.setVisibility(View.GONE);
-            moreProgressBar.setVisibility(View.GONE);
+            //moreProgressBar.setVisibility(View.GONE);
             if(!videoFragmentViewModel.areAllVideosLoaded())
-                scrollView.setOnBottomReachedListener(mbottomListener);
+                //scrollView.setOnBottomReachedListener(mbottomListener);
             done = true;
     }
 
@@ -236,20 +252,24 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
             connectivityBlock.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
         }
-        if(executionNumber==1) scrollView.setVisibility(View.GONE);
+        //if(executionNumber==1) scrollView.setVisibility(View.GONE);
     }
 
     private void setAdapter(boolean saveToMemory, ArrayList<LudoVideo> videoList) {
         //for(LudoVideo video : filteredVideoList) Log.v("Video", video.toString());
-        VideoAdapter adapter = null;
+        VideoRecyclerAdapter adapter = null;
         if(videoList==null) videoList = videoFragmentViewModel.getCompleteVideoList();
         if (getActivity() != null)
-            adapter = new VideoAdapter(this, videoList, R.layout.object_video);
-        if (listview != null && !videoFragmentViewModel.isVideoListEmpty() && adapter != null)
-            listview.setAdapter(adapter);
-        setListViewHeightBasedOnChildren();
-        scrollView.setOnBottomReachedListener(mbottomListener);
-        scrollView.setVisibility(View.VISIBLE);
+            //adapter = new VideoAdapter(this, videoList, R.layout.object_video);
+            adapter = new VideoRecyclerAdapter(this,videoList);
+        if (!videoFragmentViewModel.isVideoListEmpty() && adapter != null) {
+            //listview.setAdapter(adapter);
+            //setListViewHeightBasedOnChildren();
+            recyclerView.addOnScrollListener(mBottomListener);
+            //scrollView.setVisibility(View.VISIBLE);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(adapter);
+        }
         if (saveToMemory) {
             try {
                 videoFragmentViewModel.saveToMemory(getContext());
@@ -272,7 +292,7 @@ public class VideoFragment extends ParentFragment implements IVideoLoader {
     public void reset() {
         done = false;
         setExecutionNumber(1);
-        listview.setAdapter(null);
+        //.setAdapter(null);
         videoFragmentViewModel.clearChannels();
         retryConnection(videoFragmentViewModel.findChannelByPosition(dropdown.getSelectedItemPosition()));
     }

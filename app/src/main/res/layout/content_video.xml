@@ -45,7 +45,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|center_horizontal"
             android:indeterminate="true"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/connectivityblock"
@@ -77,7 +77,7 @@
         </LinearLayout>
 
 
-        <net.ddns.andrewnetwork.ludothornsoundbox.view.InteractiveScrollView
+        <!--<net.ddns.andrewnetwork.ludothornsoundbox.view.InteractiveScrollView
             android:id="@+id/videoScroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -110,7 +110,10 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-        </net.ddns.andrewnetwork.ludothornsoundbox.view.InteractiveScrollView>
-
+        </net.ddns.andrewnetwork.ludothornsoundbox.view.InteractiveScrollView>-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/videoRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

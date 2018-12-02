@@ -2,6 +2,8 @@ package net.ddns.andrewnetwork.ludothornsoundbox.model;
 
 import android.support.annotation.NonNull;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.controller.VideoManager;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -55,7 +57,7 @@ public class Channel implements Comparable, Serializable {
     }
 
     public boolean areAllVideosLoaded() {
-        if(totalNumberOfVideos!=null) return videoList.size()>=totalNumberOfVideos;
+        if(totalNumberOfVideos!=null) return videoList.size()>=totalNumberOfVideos && VideoManager.areAllThumbnailsLoaded(videoList);
         return false;
     }
     public ArrayList<LudoVideo> getVideoList() {
