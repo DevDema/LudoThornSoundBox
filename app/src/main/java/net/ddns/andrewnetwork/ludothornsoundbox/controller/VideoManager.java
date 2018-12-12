@@ -57,14 +57,17 @@ public class VideoManager {
      * @param videoList list of videos
      * @param thumbnail new thumbnail
      */
-    public static void addThumbnailtoVideo(List<LudoVideo> videoList, Thumbnail thumbnail) {
+    public static boolean addThumbnailtoVideo(List<LudoVideo> videoList, Thumbnail thumbnail) {
         if(thumbnail!=null) {
             LudoVideo video = findVideoByUrl(videoList, thumbnail.getUrl(), false);
             if (video != null && video.hasThumbnail())
                 video = findVideoByUrl(videoList, thumbnail.getUrl(), true);
-            if (video != null)
+            if (video != null) {
                 video.setThumbnail(thumbnail);
+                return true;
+            }
         }
+        return false;
     }
 
     /**
@@ -221,5 +224,9 @@ public class VideoManager {
         for(Channel channel : channels)
             size+=channel.getVideoList().size();
         return size;
+    }
+
+    public static String buildVideoUrl(String id){
+        return "https://www.youtube.com/watch?v="+id;
     }
 }

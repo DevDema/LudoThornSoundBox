@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 
 public class HomeFragment extends GifFragment {
 
@@ -180,7 +182,7 @@ public class HomeFragment extends GifFragment {
             if(isHorizontal()) columns = 3;
             else columns = 2;
             if(isTablet()) columns++;
-            typeFace = Typeface.createFromAsset(this.getActivity().getAssets(), "font/knewave.ttf");
+            typeFace = ResourcesCompat.getFont(Objects.requireNonNull(getContext()), R.font.knewave);
             width=bundle.getInt("width");
     }
 

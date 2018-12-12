@@ -17,7 +17,9 @@ import org.json.JSONException;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class VideoFragmentViewModel {
 
@@ -26,6 +28,7 @@ public class VideoFragmentViewModel {
     private ThumbnailAPIService thumbnailAPIService;
     private ArrayList<Channel> channelList = new ArrayList<>();
     private ChannelManager channelManager;
+    private int counter;
 
     public VideoFragmentViewModel(VideoFragment fragment) {
         youtube = new YoutubeAPIService(fragment);
@@ -121,8 +124,10 @@ public class VideoFragmentViewModel {
     }
 
     public boolean setThumbnails(Thumbnail thumbnail, int executionNumber) {
-        VideoManager.addThumbnailtoVideo(getCompleteVideoList(), thumbnail);
-        if (areAllThumbnailsLoaded()) {
+        Set<LudoVideo> hs = new HashSet<>(getCompleteVideoList());
+        if(VideoManager.addThumbnailtoVideo(getCompleteVideoList(), thumbnail))
+            counter++;
+        if (counter>=hs.size()) {
             if (executionNumber > 1) VideoManager.orderByDate(getCompleteVideoList());
             return true;
         }
@@ -137,7 +142,8 @@ public class VideoFragmentViewModel {
         if(getConnectivity()) {
             if(channelManager.areAllTotalNumberOfVideosSet() && channelManager.areAllIdsSet()) {
                 for(Channel channel : channelList) {
-                    youtube.loadVideos(channel);
+                    if(!channel.areAllVideosLoaded())
+                        youtube.loadVideos(channel);
                 }
             }
             else youtube.loadChannels(channelList);
