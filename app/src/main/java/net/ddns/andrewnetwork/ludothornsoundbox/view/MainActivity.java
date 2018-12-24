@@ -3,6 +3,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.view;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.widget.FrameLayout;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.controller.passVideoList;
@@ -13,6 +14,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.fragment.RandomFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.fragment.VideoFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.LudoVideo;
+import net.ddns.andrewnetwork.ludothornsoundbox.view.model.AdCustomListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class MainActivity extends BaseActivity implements passVideoList {
 
     ArrayList<Channel> channels;
     int executionNumberVideoFragment=0;
+    FrameLayout frameLayout;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
@@ -58,6 +61,8 @@ public class MainActivity extends BaseActivity implements passVideoList {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        frameLayout = findViewById(R.id.fragment_container);
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         Bundle bundle = new Bundle();
@@ -71,6 +76,11 @@ public class MainActivity extends BaseActivity implements passVideoList {
             loadFragment(fragment);
         }
         else if(executionNumberVideoFragment!=0) bundle.putInt("executionNumber", executionNumberVideoFragment);
+
+        adCustomListener = () -> {
+            frameLayout.requestLayout();
+            frameLayout.invalidate();
+        };
     }
 
     @Override

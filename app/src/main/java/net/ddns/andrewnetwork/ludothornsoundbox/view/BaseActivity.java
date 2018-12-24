@@ -21,6 +21,8 @@ import com.google.android.gms.ads.MobileAds;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.FavoriteAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.model.User;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants;
+import net.ddns.andrewnetwork.ludothornsoundbox.view.model.AdCustomListener;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     AdView mAdView;
     InterstitialAd interstitialAd;
     ArrayList<FavoriteAudio> favoriteAudioList = new ArrayList<>();
+    AdCustomListener adCustomListener;
     final R.raw rawResources = new R.raw();
 
     float adcounter = 1;
@@ -41,14 +44,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         loadAudioList();
 
-        MobileAds.initialize(this, " ca-app-pub-3889032681139142~8858308706");
+        MobileAds.initialize(this, AppConstants.ADS_CODE);
 
         /*Premium*/
         if(!User.isPremiumUser())
         {
             mAdView = findViewById(R.id.adView);
             Bundle extras = new Bundle();
-            extras.putString("max_ad_content_rating", "T");
+            //extras.putString("max_ad_content_rating", "T");
             AdRequest adRequest = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build();
             mAdView.loadAd(adRequest);
             AdListener adListener = new AdListener() {
@@ -56,11 +59,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onAdLoaded() {
                     mAdView.setVisibility(View.VISIBLE);
+                    if(adCustomListener != null)
+                        adCustomListener.onAdLoaded();
                 }
 
                 @Override
                 public void onAdFailedToLoad(int error) {
                     mAdView.setVisibility(View.GONE);
+                    if(adCustomListener != null)
+                        adCustomListener.onAdLoaded();
                 }
 
                 @Override

@@ -2,6 +2,8 @@ package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 
 public abstract class AppConstants {
 
+    public static String ADS_CODE = "ca-app-pub-3889032681139142~8858308706";
+
     public static String PAGINA_TIPEE = "https://www.tipeee.com/ludothorn";
     public static String PAGINA_PATROEN = "https://www.patreon.com/LudoThorn";
     public static String PAGINA_TELEGRAM ="https://telegram.me/LudoThornChannel";

@@ -150,27 +150,34 @@ public class VideoManager {
         return filteredVideoList;
     }
 
-    public static void removeVideosWithNoThumbanails(List<LudoVideo> videoList){
+    public static ArrayList<LudoVideo> removeVideosWithNoThumbanails(ArrayList<LudoVideo> videoList){
+        ArrayList<LudoVideo> videos = new ArrayList<>(videoList);
         try {
-            for(LudoVideo video : videoList) if (!video.hasThumbnail()) videoList.remove(video);
+            for(LudoVideo video : videoList) if (!video.hasThumbnail()) videos.remove(video);
         } catch (ConcurrentModificationException e){
             e.printStackTrace();
         }
+
+        return videos;
     }
 
-    public static void removeVideosWithNoInformation(List<LudoVideo> videoList){
-        for(LudoVideo video : videoList) if (!video.hasInformation()) videoList.remove(video);
+    public static ArrayList<LudoVideo> removeVideosWithNoInformation(List<LudoVideo> videoList){
+        ArrayList<LudoVideo> videos = new ArrayList<>(videoList);
+        for(LudoVideo video : videoList) if (!video.hasInformation()) videos.remove(video);
+        return videos;
     }
 
-    public static void removeAllThumbnails(List<LudoVideo> videoList) {
+    public static ArrayList<LudoVideo> removeAllThumbnails(List<LudoVideo> videoList) {
+        ArrayList<LudoVideo> videos = new ArrayList<>(videoList);
         for(LudoVideo video : videoList) if(video.hasThumbnail()) video.setThumbnail(null);
+        return videos;
     }
     public static void cleanVideoList(ArrayList<LudoVideo> videoList){
         try {
-            removeVideosWithNoThumbanails(videoList);
-            removeVideosWithNoInformation(videoList);
-            removeDuplicates(videoList);
-            removeAllThumbnails(videoList);
+            videoList = removeVideosWithNoThumbanails(videoList);
+            videoList = removeVideosWithNoInformation(videoList);
+            videoList = removeDuplicates(videoList);
+            videoList = removeAllThumbnails(videoList);
         } catch(ConcurrentModificationException e) {
             e.printStackTrace();
         }

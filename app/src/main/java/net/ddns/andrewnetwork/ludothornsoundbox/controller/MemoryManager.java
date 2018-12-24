@@ -28,10 +28,12 @@ public class MemoryManager {
     String imageDir = "thumbnails";
 
     public MemoryManager(Context context) throws JSONException {
-        appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-        prefsEditor = appSharedPrefs.edit();
-        cw = new ContextWrapper(context.getApplicationContext());
-        thumbnailListJson = loadFromMemory();
+        if(context != null) {
+            appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+            prefsEditor = appSharedPrefs.edit();
+            cw = new ContextWrapper(context.getApplicationContext());
+            thumbnailListJson = loadFromMemory();
+        }
     }
     public boolean clearMemory() {
         File dir = new File(imageDir);
