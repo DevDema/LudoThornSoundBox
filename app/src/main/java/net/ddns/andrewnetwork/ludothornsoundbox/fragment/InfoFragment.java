@@ -3,6 +3,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,19 +12,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants;
 import net.ddns.andrewnetwork.ludothornsoundbox.view.WebActivity;
 
 public class InfoFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.content_credits, container,false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         TextView telegramludo =  view.findViewById(R.id.telegramtext);
@@ -36,7 +38,7 @@ public class InfoFragment extends Fragment {
         TextView tipeee = view.findViewById(R.id.tipeee);
         telegramludo.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://telegram.me/LudoThornChannel"));
+                    Uri.parse(AppConstants.PAGINA_TELEGRAM));
             startActivity(browserIntent);
         });
         tipeee.setOnClickListener(v -> {
@@ -45,32 +47,32 @@ public class InfoFragment extends Fragment {
         });
         instagramludo.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://www.instagram.com/ludothorn/"));
+                    Uri.parse(AppConstants.PAGINA_INSTAGRAM));
             startActivity(browserIntent);
         });
         facebookludo.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://www.facebook.com/LudoThorn/"));
+                    Uri.parse(AppConstants.PAGINA_FACEBOOK));
             startActivity(browserIntent);
         });
         emailauthor.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("mailto:andrea.de-matteis@outlook.com"));
+                    Uri.parse(AppConstants.MAIL_TO_DEVELOPER));
             startActivity(browserIntent);
         });
         youtubeauthor.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://www.youtube.com/channel/UCyxgU1CTLrUemNV0kRAqP1A?view_as=subscriber"));
+                    Uri.parse(AppConstants.PAGINA_YOUTUBE));
             startActivity(browserIntent);
         });
         twitterdesigner.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://twitter.com/Mawrishi"));
+                    Uri.parse(AppConstants.PAGINA_TWITTER));
             startActivity(browserIntent);
         });
         instagramdesigner.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://www.instagram.com/mawri.psd/"));
+                    Uri.parse(AppConstants.PAGINA_INSTAGRAM_GRAFICO));
             startActivity(browserIntent);
         });
 

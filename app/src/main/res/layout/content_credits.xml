@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/knewave"
                 android:gravity="center"
-                android:text="@string/Tipee"
+                android:text="@string/Patreon"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />

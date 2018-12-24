@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.view;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -7,17 +8,21 @@ import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants;
+
 import java.util.Objects;
 
 public class WebActivity extends AppCompatActivity {
     private WebView mWebView;
+
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         mWebView = new WebView(this);
         mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.loadUrl("https://www.tipeee.com/ludothorn");
+        mWebView.loadUrl(AppConstants.PAGINA_PATROEN);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
