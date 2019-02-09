@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_home"
-        android:icon="@drawable/ic_action_home"
+        android:icon="@drawable/ic_home_white_24dp"
         android:title="@string/home" />
     <item android:id="@+id/action_random"
         android:title="@string/random"
-        android:icon="@drawable/ic_action_random" />
+        android:icon="@drawable/ic_question_white" />
     <item android:id="@+id/action_video"
         android:title="@string/video"
-        android:icon="@drawable/ic_action_video" />
+        android:icon="@drawable/ic_video_white_24dp" />
     <item android:id="@+id/action_favorites"
         android:title="@string/favorites"
-        android:icon="@drawable/ic_action_fav" />
+        android:icon="@drawable/ic_star_white_24dp" />
     <item android:id="@+id/action_info"
         android:title="@string/info"
-        android:icon="@drawable/ic_action_info" />
+        android:icon="@drawable/ic_info_outline_white_24dp" />
 
 </menu>
