@@ -20,6 +20,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.utils;
  */
 
 public final class AppConstants {
+    public static String ADS_CODE = "ca-app-pub-3889032681139142~8858308706";
 
     public static final String STATUS_CODE_SUCCESS = "success";
     public static final String STATUS_CODE_FAILED = "failed";

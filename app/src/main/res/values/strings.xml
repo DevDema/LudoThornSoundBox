@@ -1,4 +1,6 @@
 <resources>
+    <string name="banner_ad_unit_id">ca-app-pub-3889032681139142/8666737012</string>
+
     <string name="app_name">LudoThornSoundbox</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -16,4 +18,11 @@
     <string name="video">Video</string>
     <string name="favorites">Preferiti</string>
     <string name="info">Informazioni</string>
+    <string name="app_subname">La miglior app (di Ludo)</string>
+    <string name="blank_edit_text">--</string>
+    <string name="rightcursor">Cursore Destro</string>
+    <string name="leftcursor">Cursore Sinistro</string>
+    <string name="search">Cerca:</string>
+    <string name="Stop_label">stop</string>
+    <string name="Play_label">play</string>
 </resources>

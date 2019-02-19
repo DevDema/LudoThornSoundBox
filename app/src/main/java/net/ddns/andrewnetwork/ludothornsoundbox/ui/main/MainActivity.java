@@ -2,28 +2,27 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main;
 
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
-import android.view.View;
-
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import android.view.Menu;
 import android.view.MenuItem;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
 
-public class MainActivity extends BaseActivity
+
+public class MainActivity extends ParentActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ActivityMainBinding mBinding;
@@ -42,6 +41,8 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        replaceFragment(new HomeFragment());
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -50,8 +51,8 @@ public class MainActivity extends BaseActivity
         mBinding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mBinding.navView.setNavigationItemSelectedListener(this);
+        mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
     }
 
     @Override
@@ -88,26 +89,31 @@ public class MainActivity extends BaseActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        mBinding.drawerLayout.closeDrawer(GravityCompat.START);
+        Fragment fragment;
+        switch (id) {
+            default:
+            case R.id.action_home:
+                fragment = new HomeFragment();
+                break;
+            case R.id.action_random:
+                fragment = new HomeFragment();
+                break;
+            case R.id.action_video:
+                fragment = new HomeFragment();
+                break;
+            case R.id.action_favorites:
+                fragment = new HomeFragment();
+                break;
+            case R.id.action_info:
+                fragment = new HomeFragment();
+                break;
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        replaceFragment(fragment);
         return true;
     }
 }
