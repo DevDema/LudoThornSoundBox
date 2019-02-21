@@ -12,16 +12,13 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 
 public abstract class ParentFragment extends BaseFragment {
     Bundle bundle;
-    MediaPlayer mediaPlayer;
-    ImageView play_pause;
-    Button.OnClickListener playAudio;
+    protected ImageView play_pause;
 
-    MediaPlayer.OnCompletionListener completionListener = new MediaPlayer.OnCompletionListener() {
+    protected MediaPlayer.OnCompletionListener completionListener = new MediaPlayer.OnCompletionListener() {
 
         public void onCompletion(MediaPlayer mp) {
 
             play_pause.setImageResource(R.drawable.ic_play_white);
-            ParentFragment.this.mediaPlayer.setOnCompletionListener(this);
         }
     };
 

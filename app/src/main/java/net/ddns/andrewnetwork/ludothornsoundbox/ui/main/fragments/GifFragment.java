@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,23 +37,20 @@ public abstract class GifFragment extends ParentFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         play_pause = view.findViewById(R.id.play);
         stop = view.findViewById(R.id.stop);
-        play_pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                    play_pause.setImageResource(R.drawable.ic_play_white);
-                }
-                else {
-                    mediaPlayer.start();
-                    play_pause.setImageResource(R.drawable.ic_pause_white);
+        play_pause.setOnClickListener(view1 -> {
+            if(DataSingleTon.getInstance().getMediaPlayer().isPlaying()) {
+                DataSingleTon.getInstance().getMediaPlayer().pause();
+                play_pause.setImageResource(R.drawable.ic_play_white);
+            }
+            else {
+                DataSingleTon.getInstance().getMediaPlayer().start();
+                play_pause.setImageResource(R.drawable.ic_pause_white);
 
-                }
             }
         });
         stop.setOnClickListener(view2 -> {
-            if(mediaPlayer.isPlaying())
-                mediaPlayer.stop();
+            if(DataSingleTon.getInstance().getMediaPlayer().isPlaying())
+                DataSingleTon.getInstance().getMediaPlayer().stop();
             play_pause.setImageResource(R.drawable.ic_play_white);
         });
         gif = view.findViewById(R.id.gif);
@@ -66,10 +64,4 @@ public abstract class GifFragment extends ParentFragment {
         searchlabel = view.findViewById(R.id.searchlabel);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setOnCompletionListener(completionListener);
-    }
 }

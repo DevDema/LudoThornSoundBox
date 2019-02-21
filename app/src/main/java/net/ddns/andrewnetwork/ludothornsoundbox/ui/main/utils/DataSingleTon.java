@@ -18,4 +18,9 @@ public class DataSingleTon {
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
     }
+
+    public void setMediaPlayer(MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
+    }
+
 }

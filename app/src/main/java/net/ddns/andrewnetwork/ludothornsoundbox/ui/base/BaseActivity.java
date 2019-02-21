@@ -61,9 +61,6 @@ public abstract class BaseActivity extends CoreActivity implements MvpView, Base
 
         addLifeCycleListener(new ActivitiesStatusManager(), savedInstanceState);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
-
     }
 
     public ActivityComponent getActivityComponent() {

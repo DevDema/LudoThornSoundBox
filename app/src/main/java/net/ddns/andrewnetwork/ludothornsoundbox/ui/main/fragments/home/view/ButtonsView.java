@@ -1,6 +1,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,9 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.StringParse;
 
 import java.util.List;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 
 public class ButtonsView<T> extends LinearLayout {
@@ -26,6 +30,7 @@ public class ButtonsView<T> extends LinearLayout {
     private Context mContext;
     private static int MAX_COLUMNS;
     private static int MAX_ROWS;
+    private static int MARGIN;
     private List<T> list;
     private LinearLayout masterLayout;
 
@@ -41,9 +46,8 @@ public class ButtonsView<T> extends LinearLayout {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 int buttonWidth = (int) context.getResources().getDimension(R.dimen.input_size_m);
                 int buttonHeight = (int) context.getResources().getDimension(R.dimen.input_size_xxxs);
-                MAX_COLUMNS = (int) Math.floor(getWidth()*1.0 / buttonWidth);
-                MAX_ROWS = (int) Math.floor(getHeight()*1.0 / buttonHeight);
-
+                MAX_COLUMNS = (int) Math.floor(getWidth() * 1.0 / (buttonWidth + 2* MARGIN * MAX_COLUMNS)) ;
+                MAX_ROWS = (int) Math.floor(getHeight() * 1.0 / (buttonHeight + 2* MARGIN * MAX_ROWS));
                 masterLayout = (LinearLayout) getChildAt(0);
                 for (int i = 0; i < MAX_ROWS; i++) {
                     LinearLayout linearLayout = new LinearLayout(context);
@@ -55,9 +59,15 @@ public class ButtonsView<T> extends LinearLayout {
                         LayoutParams layoutParams = new LayoutParams(buttonWidth, buttonHeight);
                         layoutParams.gravity = Gravity.CENTER;
                         layoutParams.weight = 1;
+                        layoutParams.leftMargin = MARGIN;
+                        layoutParams.rightMargin = MARGIN;
+                        layoutParams.bottomMargin = MARGIN;
+                        layoutParams.topMargin = MARGIN;
 
                         button.setLayoutParams(layoutParams);
 
+                        button.setTypeface(ResourcesCompat.getFont(mContext, R.font.knewave));
+                        button.setBackground(ContextCompat.getDrawable(mContext, R.drawable.button_white));
                         button.setVisibility(View.INVISIBLE);
                         button.setMaxLines(1);
                         linearLayout.addView(button);
@@ -65,7 +75,7 @@ public class ButtonsView<T> extends LinearLayout {
                     masterLayout.addView(linearLayout);
                 }
 
-                if(onViewReadyListener != null) {
+                if (onViewReadyListener != null) {
                     onViewReadyListener.onViewReady();
                 }
             }
@@ -86,7 +96,7 @@ public class ButtonsView<T> extends LinearLayout {
             for (int j = 0; j < MAX_COLUMNS; j++) {
                 Button button = (Button) linearLayout.getChildAt(j);
                 int index = i * MAX_COLUMNS + j;
-                if(index < list.size()) {
+                if (index < list.size()) {
                     T object = list.get(index);
                     if (object != null) {
                         button.setText(parser.parseToString(object));
@@ -106,7 +116,7 @@ public class ButtonsView<T> extends LinearLayout {
             for (int j = 0; j < MAX_COLUMNS; j++) {
                 Button button = (Button) linearLayout.getChildAt(j);
                 int position = i * MAX_COLUMNS + j;
-                if(position < list.size()) {
+                if (position < list.size()) {
                     T object = list.get(position);
                     if (object != null) {
                         button.setOnClickListener(view -> listener.onButtonSelected(object, position, (Button) view));
@@ -117,7 +127,7 @@ public class ButtonsView<T> extends LinearLayout {
     }
 
     public int getMaxItems() {
-        return MAX_COLUMNS*MAX_ROWS;
+        return MAX_COLUMNS * MAX_ROWS;
     }
 
     public void setOnViewReadyListener(OnViewReadyListener onViewReadyListener) {

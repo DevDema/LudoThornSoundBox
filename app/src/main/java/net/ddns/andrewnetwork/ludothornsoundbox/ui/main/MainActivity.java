@@ -13,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -95,6 +96,7 @@ public class MainActivity extends ParentActivity
 
         mBinding.drawerLayout.closeDrawer(GravityCompat.START);
         Fragment fragment;
+
         switch (id) {
             default:
             case R.id.action_home:
@@ -113,7 +115,33 @@ public class MainActivity extends ParentActivity
                 fragment = new HomeFragment();
                 break;
         }
-        replaceFragment(fragment);
+
+        replaceFragmentIfNotExists(fragment);
         return true;
+    }
+
+    public void replaceFragmentIfNotExists(Fragment newFragment) {
+        boolean found = false;
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (newFragment.getClass().isInstance(fragment)) {
+                fragmentTransaction.show(fragment);
+
+                found = true;
+            }
+        }
+
+        if(found) {
+            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                if (!newFragment.getClass().isInstance(fragment)) {
+                    fragmentTransaction.hide(fragment);
+                }
+            }
+
+            fragmentTransaction.commit();
+        }
+
+        else addFragment(newFragment);
+
     }
 }

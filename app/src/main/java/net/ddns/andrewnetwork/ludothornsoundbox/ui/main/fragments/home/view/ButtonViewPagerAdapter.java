@@ -28,6 +28,7 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
     private final int MINIMUM_NUMBER_PAGE = 1;
     private List<ButtonsView<T>> viewList;
     private OnButtonSelectedListener<T> listener;
+    private int maxItemsPerPage;
 
     public ButtonViewPagerAdapter(Context context, List<T> list, StringParse<T> parser) {
         super();
@@ -46,10 +47,19 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
         return maxItems;
     }
 
+    public List<T> getItemsAll() {
+        return itemsAll;
+    }
+
+    public List<T> getList() {
+        return list;
+    }
+
     @NonNull
     @Override
     public ButtonsView<T> instantiateItem(@NonNull ViewGroup collection, int position) {
         ButtonsView<T> buttonsView = new ButtonsView<>(mContext);
+        this.maxItemsPerPage = buttonsView.getMaxItems();
         buttonsView.setOnViewReadyListener(() -> {
             int numberOfViews = (int) Math.ceil(list.size() * 1.0 / buttonsView.getMaxItems());
             for (int i = 0; i < numberOfViews; i++) {
@@ -76,6 +86,7 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
         });
         collection.addView(buttonsView);
         viewList.add(buttonsView);
+
         return buttonsView;
     }
 
@@ -132,5 +143,9 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
                 notifyDataSetChanged();
             }
         };
+    }
+
+    public int getMaxItemsPerPage() {
+        return maxItemsPerPage;
     }
 }
