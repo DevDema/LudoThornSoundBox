@@ -15,7 +15,29 @@
 
 package net.ddns.andrewnetwork.ludothornsoundbox.data.network;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.VideoInformation;
+
+import java.util.Date;
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Single;
+
 public interface ApiHelper {
 
     ApiHeader getApiHeader();
+
+    Observable<List<LudoVideo>> getVideoList(Channel channel);
+
+    Observable<Channel> getChannel(Channel channel);
+
+    Observable<Thumbnail> getThumbnail(LudoVideo video);
+
+    Observable<VideoInformation> getVideoInformation(LudoVideo video);
+
+    Observable<List<LudoVideo>> getMoreVideos(Channel channel, Date beforeDate);
 }

@@ -18,6 +18,10 @@ package net.ddns.andrewnetwork.ludothornsoundbox.di.module;
 import android.content.Context;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.di.ActivityContext;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.AppSchedulerProvider;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.SchedulerProvider;
 
@@ -71,4 +75,9 @@ public class ActivityModule {
     IMainPresenter<IMainView> provideMainPresenter(MainPresenter<IMainView> presenter) {
         return presenter;
     }*/
+
+    @Provides
+    IVideoPresenter<IVideoView> provideVideoPresenter(VideoPresenter<IVideoView> presenter) {
+        return presenter;
+    }
 }

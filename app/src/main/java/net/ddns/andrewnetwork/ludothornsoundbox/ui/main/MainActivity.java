@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
 
 
 public class MainActivity extends ParentActivity
@@ -44,7 +45,7 @@ public class MainActivity extends ParentActivity
 
         replaceFragment(new HomeFragment());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -106,7 +107,7 @@ public class MainActivity extends ParentActivity
                 fragment = new HomeFragment();
                 break;
             case R.id.action_video:
-                fragment = new HomeFragment();
+                fragment = new VideoFragment();
                 break;
             case R.id.action_favorites:
                 fragment = new HomeFragment();

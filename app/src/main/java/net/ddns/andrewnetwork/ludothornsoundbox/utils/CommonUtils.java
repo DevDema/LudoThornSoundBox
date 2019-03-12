@@ -16,8 +16,10 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -86,5 +88,36 @@ public final class CommonUtils {
         is.close();
 
         return new String(buffer, "UTF-8");
+    }
+
+    public static void showDialog(Context context, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("OK", (dialog, id) ->
+                        dialog.dismiss());
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public static void showDialog(Context context, String message, DialogInterface.OnClickListener positiveListener, boolean showCancel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("OK", positiveListener);
+        if (showCancel)
+            builder.setNegativeButton("Annulla", (dialog, id) -> dialog.dismiss());
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public static void showDialog(Context context, String message, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("OK", positiveListener)
+                .setNegativeButton("Annulla", negativeListener);
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

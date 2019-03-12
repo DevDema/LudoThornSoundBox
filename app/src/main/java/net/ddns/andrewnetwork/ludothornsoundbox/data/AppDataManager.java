@@ -2,6 +2,10 @@ package net.ddns.andrewnetwork.ludothornsoundbox.data;
 
 import android.content.Context;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.VideoInformation;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.network.ApiHeader;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.network.ApiHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.persistence.DatabaseHelper;
@@ -9,15 +13,13 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.prefs.PreferencesHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.ApplicationContext;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.RxBus;
 
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.Flowable;
-import io.reactivex.Single;
+import io.reactivex.Observable;
 
 
 @Singleton
@@ -42,6 +44,31 @@ public class AppDataManager implements DataManager {
     @Override
     public ApiHeader getApiHeader() {
         return mApiHelper.getApiHeader();
+    }
+
+    @Override
+    public Observable<List<LudoVideo>> getVideoList(Channel channel) {
+        return mApiHelper.getVideoList(channel);
+    }
+
+    @Override
+    public Observable<Channel> getChannel(Channel channel) {
+        return mApiHelper.getChannel(channel);
+    }
+
+    @Override
+    public Observable<Thumbnail> getThumbnail(LudoVideo video) {
+        return mApiHelper.getThumbnail(video);
+    }
+
+    @Override
+    public Observable<VideoInformation> getVideoInformation(LudoVideo video) {
+        return mApiHelper.getVideoInformation(video);
+    }
+
+    @Override
+    public Observable<List<LudoVideo>> getMoreVideos(Channel channel, Date beforeDate) {
+        return mApiHelper.getMoreVideos(channel, beforeDate);
     }
 
     @Override

@@ -15,9 +15,12 @@
 
 package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.Uri;
+import android.view.Display;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 
@@ -47,4 +50,11 @@ public final class AppUtils {
         }
     }
 
+    public static boolean isTablet(Activity activity) {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        return width > 1500;
+    }
 }

@@ -25,4 +25,6 @@
     <string name="search">Cerca:</string>
     <string name="Stop_label">stop</string>
     <string name="Play_label">play</string>
+    <string name="novideo">Nessun video disponibile</string>
+    <string name="retryConnection">Riprova</string>
 </resources>
