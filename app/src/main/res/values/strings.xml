@@ -27,4 +27,7 @@
     <string name="Play_label">play</string>
     <string name="novideo">Nessun video disponibile</string>
     <string name="retryConnection">Riprova</string>
+    <string name="preferiti_add_label">Aggiungi ai preferiti</string>
+    <string name="video_originale_label">Video originale</string>
+    <string name="nascondi_audio_label">Nascondi audio</string>
 </resources>

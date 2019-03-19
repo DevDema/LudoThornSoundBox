@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/preferiti"
+    android:icon="@drawable/ic_star_black_24dp"
+    android:title="@string/preferiti_add_label"/>
+    <item android:id="@+id/video_collegato"
+        android:icon="@drawable/ic_video_black"
+    android:title="@string/video_originale_label"/>
+    <item android:id="@+id/nascondi_audio"
+        android:icon="@drawable/ic_audio_black"
+    android:title="@string/nascondi_audio_label"/>
+</menu>

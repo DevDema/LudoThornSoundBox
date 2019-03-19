@@ -120,6 +120,7 @@ public class ButtonsView<T> extends LinearLayout {
                     T object = list.get(position);
                     if (object != null) {
                         button.setOnClickListener(view -> listener.onButtonSelected(object, position, (Button) view));
+                        button.setOnLongClickListener(v -> listener.onButtonLongSelected(object, position, (Button) v));
                     }
                 }
             }

@@ -6,4 +6,6 @@ public interface OnButtonSelectedListener<T> {
 
     void onButtonSelected(T object, int position, Button button);
 
+    boolean onButtonLongSelected(T object, int position, Button button);
+
 }
