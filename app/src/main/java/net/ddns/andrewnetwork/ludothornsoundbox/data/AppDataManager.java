@@ -3,6 +3,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.data;
 import android.content.Context;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.VideoInformation;
@@ -13,6 +14,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.prefs.PreferencesHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.ApplicationContext;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.RxBus;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -79,5 +81,15 @@ public class AppDataManager implements DataManager {
     @Override
     public String getAccessToken() {
         return mPreferencesHelper.getAccessToken();
+    }
+
+    @Override
+    public List<LudoAudio> getPreferitiList() {
+        return mPreferencesHelper.getPreferitiList() != null ? mPreferencesHelper.getPreferitiList() : new ArrayList<>();
+    }
+
+    @Override
+    public boolean salvaPreferito(LudoAudio audio) {
+        return mPreferencesHelper.salvaPreferito(audio);
     }
 }

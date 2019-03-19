@@ -17,37 +17,50 @@ import com.google.android.material.appbar.AppBarLayout;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.FragmentHomeBinding;
+import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.GifFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomePresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomeView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.ButtonViewPagerAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.OnButtonSelectedListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.model.ChiaveValore;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.SpinnerUtils;
 
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.ViewPager;
 
-public class HomeFragment extends GifFragment implements OnButtonSelectedListener<LudoAudio> {
+public class HomeFragment extends GifFragment implements OnButtonSelectedListener<LudoAudio>, IHomeView {
 
     private FragmentHomeBinding mBinding;
     private List<LudoAudio> audioList;
     public static final int AUDIO_NOME = 1;
     public static final int AUDIO_DATA = 2;
-
+    @Inject
+    IHomePresenter<IHomeView> mPresenter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
+
+        ActivityComponent activityComponent = getActivityComponent();
+
+        if(activityComponent != null) {
+            activityComponent.inject(this);
+            mPresenter.onAttach(this);
+        }
 
         return mBinding.getRoot();
     }
@@ -158,7 +171,6 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
     @SuppressLint("RestrictedApi")
     @Override
     public boolean onButtonLongSelected(LudoAudio audio, int position, Button button) {
-        PopupMenu popupMenu = new PopupMenu(mActivity, button);
         MenuBuilder menuBuilder = new MenuBuilder(mActivity);
         MenuInflater inflater = new MenuInflater(mActivity);
         MenuPopupHelper optionsMenu = new MenuPopupHelper(mActivity, menuBuilder, button);
@@ -168,6 +180,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
             public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.preferiti:
+                        mPresenter.salvaPreferito(audio);
                         break;
                     case R.id.video_collegato:
                         break;
@@ -197,5 +210,27 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
             behavior.setTopAndBottomOffset(0);
             behavior.onNestedPreScroll(mBinding.coordinatorRoot, mBinding.appBarLayout, null, 0, 1, new int[2]);
         }
+    }
+
+    @Override
+    public void onPreferitoEsistente(LudoAudio audio) {
+        CommonUtils.showDialog(getContext(), getString(R.string.audio_esistente_label));
+    }
+
+    @Override
+    public void onPreferitoSalvataggioSuccess() {
+        CommonUtils.showDialog(getContext(), getString(R.string.salvato_correttamente_audio_label));
+
+    }
+
+    @Override
+    public void onPreferitoSalvataggioFailed(String messaggio) {
+
+        if(messaggio == null || messaggio.isEmpty()) {
+            messaggio = getString(R.string.salvato_fallito_audio_label);
+        }
+
+        CommonUtils.showDialog(getContext(), messaggio);
+
     }
 }

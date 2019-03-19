@@ -30,4 +30,8 @@
     <string name="preferiti_add_label">Aggiungi ai preferiti</string>
     <string name="video_originale_label">Video originale</string>
     <string name="nascondi_audio_label">Nascondi audio</string>
+    <string name="positive_label">OK, grazie Ludo!</string>
+    <string name="audio_esistente_label">Questo audio esiste già nei preferiti.</string>
+    <string name="salvato_correttamente_audio_label">Audio salvato nei preferiti con successo!</string>
+    <string name="salvato_fallito_audio_label">Salvataggio nei preferiti fallito!</string>
 </resources>

@@ -18,10 +18,18 @@ package net.ddns.andrewnetwork.ludothornsoundbox.data.prefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.android.gms.common.util.JsonUtils;
+import com.google.gson.reflect.TypeToken;
+
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.ApplicationContext;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.PreferenceInfo;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,6 +40,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String PREF_KEY_CURRENT_USER_ID = "PREF_KEY_CURRENT_USER_ID";
     private static final String PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN";
+    private static final String PREF_KEY_PREFERITI = "PREF_KEY_PREFERITI";
 
     private final SharedPreferences mPrefs;
 
@@ -50,5 +59,29 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public String getAccessToken() {
         return mPrefs.getString(PREF_KEY_ACCESS_TOKEN, null);
+    }
+
+    @Override
+    public List<LudoAudio> getPreferitiList() {
+        String serializedList = mPrefs.getString(PREF_KEY_PREFERITI, "");
+        return JsonUtil.getGson().fromJson(serializedList,  new TypeToken<List<LudoAudio>>(){}.getType());
+    }
+
+    @Override
+    public boolean salvaPreferito(LudoAudio audio) {
+        try {
+            List<LudoAudio> audioList = getPreferitiList() != null ? getPreferitiList() : new ArrayList<>();
+
+            audioList.add(audio);
+
+            String audioListString = JsonUtil.getGson().toJson(audioList);
+
+            mPrefs.edit().putString(PREF_KEY_PREFERITI, audioListString).apply();
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

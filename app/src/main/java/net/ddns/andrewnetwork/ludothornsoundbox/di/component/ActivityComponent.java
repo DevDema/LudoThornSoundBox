@@ -17,6 +17,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.di.component;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.di.PerActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.module.ActivityModule;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
 
 import dagger.Component;
@@ -31,4 +32,6 @@ public interface ActivityComponent {
 
 
     void inject(VideoFragment fragment);
+
+    void inject(HomeFragment fragment);
 }

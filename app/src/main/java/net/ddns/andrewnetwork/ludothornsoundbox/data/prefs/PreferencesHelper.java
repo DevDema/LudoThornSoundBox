@@ -15,6 +15,10 @@
 
 package net.ddns.andrewnetwork.ludothornsoundbox.data.prefs;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
+
+import java.util.List;
+
 /**
  * Created by janisharali on 27/01/17.
  */
@@ -25,4 +29,8 @@ public interface PreferencesHelper {
     Long getCurrentUserId();
 
     String getAccessToken();
+
+    List<LudoAudio> getPreferitiList();
+
+    boolean salvaPreferito(LudoAudio audio);
 }

@@ -94,7 +94,7 @@ public final class CommonUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton("OK", (dialog, id) ->
+                .setPositiveButton(context.getString(R.string.positive_label), (dialog, id) ->
                         dialog.dismiss());
         AlertDialog alert = builder.create();
         alert.show();
@@ -104,7 +104,7 @@ public final class CommonUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton("OK", positiveListener);
+                .setPositiveButton(context.getString(R.string.positive_label), positiveListener);
         if (showCancel)
             builder.setNegativeButton("Annulla", (dialog, id) -> dialog.dismiss());
         AlertDialog alert = builder.create();
@@ -115,7 +115,7 @@ public final class CommonUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton("OK", positiveListener)
+                .setPositiveButton(context.getString(R.string.positive_label), positiveListener)
                 .setNegativeButton("Annulla", negativeListener);
         AlertDialog alert = builder.create();
         alert.show();
