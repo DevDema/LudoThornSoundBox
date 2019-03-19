@@ -92,4 +92,9 @@ public class AppDataManager implements DataManager {
     public boolean salvaPreferito(LudoAudio audio) {
         return mPreferencesHelper.salvaPreferito(audio);
     }
+
+    @Override
+    public boolean rimuoviPreferito(LudoAudio audio) {
+        return mPreferencesHelper.rimuoviPreferito(audio);
+    }
 }

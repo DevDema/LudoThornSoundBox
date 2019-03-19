@@ -21,15 +21,19 @@ import android.content.SharedPreferences;
 import com.google.android.gms.common.util.JsonUtils;
 import com.google.gson.reflect.TypeToken;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.ApplicationContext;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.PreferenceInfo;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -72,6 +76,10 @@ public class AppPreferencesHelper implements PreferencesHelper {
         try {
             List<LudoAudio> audioList = getPreferitiList() != null ? getPreferitiList() : new ArrayList<>();
 
+            if(audioList.size() >= 5) {
+                throw new IllegalArgumentException();
+            }
+
             audioList.add(audio);
 
             String audioListString = JsonUtil.getGson().toJson(audioList);
@@ -84,4 +92,21 @@ public class AppPreferencesHelper implements PreferencesHelper {
             return false;
         }
     }
+
+    @Override
+    public boolean rimuoviPreferito(LudoAudio audio) {
+        try {
+            List<LudoAudio> audioList = getPreferitiList() != null ? getPreferitiList() : new ArrayList<>();
+
+            boolean result = audioList.remove(AudioUtils.findAudioById(audioList, audio));
+
+            String audioListString = JsonUtil.getGson().toJson(audioList);
+
+            mPrefs.edit().putString(PREF_KEY_PREFERITI, audioListString).apply();
+
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }    }
 }

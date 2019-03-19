@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
 
 
@@ -110,7 +111,7 @@ public class MainActivity extends ParentActivity
                 fragment = new VideoFragment();
                 break;
             case R.id.action_favorites:
-                fragment = new HomeFragment();
+                fragment = new PreferitiFragment();
                 break;
             case R.id.action_info:
                 fragment = new HomeFragment();

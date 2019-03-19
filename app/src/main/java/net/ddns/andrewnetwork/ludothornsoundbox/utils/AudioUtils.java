@@ -70,5 +70,15 @@ public abstract class AudioUtils {
     public static void reverse(List<LudoAudio> arrayList) {
         Collections.reverse(arrayList);
     }
+
+    public static LudoAudio findAudioById(List<LudoAudio> audioList, LudoAudio audio) {
+        for(LudoAudio audioInList : audioList) {
+            if(audio.getAudio() == audioInList.getAudio()) {
+                return audioInList;
+            }
+        }
+
+        return audio;
+    }
 }
 

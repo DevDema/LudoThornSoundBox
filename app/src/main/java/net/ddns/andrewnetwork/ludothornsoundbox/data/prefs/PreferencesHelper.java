@@ -33,4 +33,6 @@ public interface PreferencesHelper {
     List<LudoAudio> getPreferitiList();
 
     boolean salvaPreferito(LudoAudio audio);
+
+    boolean rimuoviPreferito(LudoAudio audio);
 }

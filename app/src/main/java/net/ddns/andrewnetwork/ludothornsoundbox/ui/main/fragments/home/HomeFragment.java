@@ -233,4 +233,9 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
         CommonUtils.showDialog(getContext(), messaggio);
 
     }
+
+    @Override
+    public void onMaxAudioReached() {
+        CommonUtils.showDialog(mActivity, mActivity.getString(R.string.max_audio_reached_label));
+    }
 }

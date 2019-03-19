@@ -22,6 +22,9 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomePrese
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomeView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder.IPreferitiView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
@@ -87,6 +90,11 @@ public class ActivityModule {
 
     @Provides
     IHomePresenter<IHomeView> provideHomePresenter(HomePresenter<IHomeView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    PreferitiViewPresenterBinder.IPreferitiPresenter<IPreferitiView> providePreferitiPresenter(PreferitiPresenter<IPreferitiView> presenter) {
         return presenter;
     }
 }

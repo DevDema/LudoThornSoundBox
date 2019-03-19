@@ -13,6 +13,8 @@ public interface HomeViewPresenterBinder {
         void onPreferitoSalvataggioSuccess();
 
         void onPreferitoSalvataggioFailed(String messaggio);
+
+        void onMaxAudioReached();
     }
 
     interface IHomePresenter<V extends IHomeView> extends MvpPresenter<V> {

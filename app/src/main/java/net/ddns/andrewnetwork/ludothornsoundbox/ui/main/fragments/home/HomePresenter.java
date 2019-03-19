@@ -26,9 +26,15 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
     public void salvaPreferito(LudoAudio audio) {
         List<LudoAudio> preferitiList = getDataManager().getPreferitiList() != null ? getDataManager().getPreferitiList() : new ArrayList<>();
 
+        //CONTROLLA SE HAI RAGGIUNTO IL NUMERO MASSIMO DI PREFERITI.
+        if(preferitiList.size() >= 5) {
+            getMvpView().onMaxAudioReached();
+            return;
+        }
+
         //CONTROLLA SE ESISTE GIA'
-        for(LudoAudio audioInList : preferitiList) {
-            if(audioInList.getAudio() == audio.getAudio()) {
+        for (LudoAudio audioInList : preferitiList) {
+            if (audioInList.getAudio() == audio.getAudio()) {
                 getMvpView().onPreferitoEsistente(audio);
                 return;
             }
@@ -36,10 +42,12 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
 
         //SE NON ESISTE, AGGIUNGI.
         try {
-            getDataManager().salvaPreferito(audio);
-            getMvpView().onPreferitoSalvataggioSuccess();
+
+            if (getDataManager().salvaPreferito(audio)) {
+                getMvpView().onPreferitoSalvataggioSuccess();
+            }
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
             getMvpView().onPreferitoSalvataggioFailed(e.getCause().getMessage());
         }
     }
