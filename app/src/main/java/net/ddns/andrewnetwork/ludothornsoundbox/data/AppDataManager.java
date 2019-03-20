@@ -74,6 +74,15 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<LudoAudio> getVideoById(LudoAudio audio) {
+        if(audio.getVideo().getId() == null || audio.getVideo().getId().isEmpty()) {
+            return Observable.create(emitter -> emitter.onNext(audio));
+        }
+
+        return mApiHelper.getVideoById(audio);
+    }
+
+    @Override
     public Long getCurrentUserId() {
         return mPreferencesHelper.getCurrentUserId();
     }

@@ -4,6 +4,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpView;
 
+import java.util.List;
+
 public interface HomeViewPresenterBinder {
 
     interface IHomeView extends MvpView {
@@ -15,10 +17,14 @@ public interface HomeViewPresenterBinder {
         void onPreferitoSalvataggioFailed(String messaggio);
 
         void onMaxAudioReached();
+
+        void onVideoInformationNotLoaded();
     }
 
     interface IHomePresenter<V extends IHomeView> extends MvpPresenter<V> {
 
         void salvaPreferito(LudoAudio audio);
+
+        void getVideoInformationForAudios(List<LudoAudio> audioList);
     }
 }

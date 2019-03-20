@@ -62,6 +62,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
             mPresenter.onAttach(this);
         }
 
+        mPresenter.getVideoInformationForAudios(audioList);
         return mBinding.getRoot();
     }
 
@@ -157,7 +158,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        audioList = AudioUtils.createAudioList();
+        audioList = AudioUtils.createAudioList(Objects.requireNonNull(getContext()));
     }
 
     @Override
@@ -237,5 +238,10 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
     @Override
     public void onMaxAudioReached() {
         CommonUtils.showDialog(mActivity, mActivity.getString(R.string.max_audio_reached_label));
+    }
+
+    @Override
+    public void onVideoInformationNotLoaded() {
+
     }
 }

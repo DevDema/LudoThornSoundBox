@@ -16,9 +16,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.data.network;
 
 import android.util.Log;
-
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
@@ -29,12 +26,11 @@ import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.VideoInformation;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -46,7 +42,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.LOOKUP_TYPE_VIDEO;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.LUDO_THORN_KEY;
@@ -186,6 +181,29 @@ public class AppApiHelper implements ApiHelper {
             List<LudoVideo> videoList = castToLudoVideo(searchResultList);
             VideoUtils.addVideosToChannels(channel, videoList);
             emitter.onNext(videoList);
+            emitter.onComplete();
+        });
+    }
+
+    @Override
+    public Observable<LudoAudio> getVideoById(LudoAudio audio) {
+        return Observable.create(emitter -> {
+            Log.v("VideoFromAudioREST", "getting Video for audio: " + audio.getTitle());
+
+            YouTube.Videos.List search;
+            search = createTubeService().videos().list("id,snippet,statistics");
+            search.setKey(LUDO_THORN_KEY);
+            search.setId(audio.getVideo().getId());
+            search.setMaxResults(1L);
+            final VideoListResponse videoListResponse = search.execute();
+
+            List<Video> searchResultList = new ArrayList<>(videoListResponse.getItems());
+            LudoVideo video = castToLudoVideo(searchResultList.get(0));
+
+            audio.setVideo(video);
+
+            emitter.onNext(audio);
+
             emitter.onComplete();
         });
     }

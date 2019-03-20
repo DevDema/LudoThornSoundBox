@@ -12,6 +12,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class HomePresenter<V extends IHomeView> extends BasePresenter<V> implements IHomePresenter<V> {
@@ -50,5 +52,21 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
             e.printStackTrace();
             getMvpView().onPreferitoSalvataggioFailed(e.getCause().getMessage());
         }
+    }
+
+    @Override
+    public void getVideoInformationForAudios(List<LudoAudio> audioList) {
+        getCompositeDisposable().add(Observable.fromIterable(audioList).flatMap(audio -> getDataManager().getVideoById(audio))
+                .observeOn(getSchedulerProvider().ui())
+                .subscribeOn(getSchedulerProvider().io())
+                .subscribe(audio -> {
+
+                }, throwable -> {
+                    throwable.printStackTrace();
+                    getMvpView().onVideoInformationNotLoaded();
+                }, () -> {
+                    //Everything is completed.
+                })
+        );
     }
 }

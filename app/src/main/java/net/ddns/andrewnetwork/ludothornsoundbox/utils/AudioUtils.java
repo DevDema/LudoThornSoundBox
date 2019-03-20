@@ -1,21 +1,30 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.media.MediaPlayer;
+
+import com.google.api.client.util.Charsets;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public abstract class AudioUtils {
 
-    public static List<LudoAudio> createAudioList() {
+    public static List<LudoAudio> createAudioList(Context context) {
         List<LudoAudio> audioList = new ArrayList<>();
+        final Resources resources = context.getResources();
         final Class<R.raw> c = R.raw.class;
         final Field[] fields = c.getDeclaredFields();
         final R.raw rawResources = new R.raw();
@@ -25,14 +34,35 @@ public abstract class AudioUtils {
             int resourceid;
             try {
                 resourcename = field.getName();
-                resourceid = field.getInt(rawResources);
-                audioList.add(new LudoAudio(resourcename, resourceid));
+                if (resourcename.charAt(resourcename.length() - 1) != '_') {
+                    int resourceInfoId = resources.getIdentifier(resourcename + "_", "raw", context.getPackageName());
+                    LudoVideo ludoVideo = resourceInfoId != 0 ? JsonUtil.getGson().fromJson(readTextFile(resources.openRawResource(resourceInfoId)), LudoVideo.class): new LudoVideo();
+                    resourceid = field.getInt(rawResources);
+                    audioList.add(new LudoAudio(resourcename, resourceid, ludoVideo));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         return audioList;
+    }
+
+    public static String readTextFile(InputStream inputStream) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        byte buf[] = new byte[1024];
+        int len;
+        try {
+            while ((len = inputStream.read(buf)) != -1) {
+                outputStream.write(buf, 0, len);
+            }
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
+
+        }
+        return outputStream.toString();
     }
 
     public static void playTrack(Context context, LudoAudio audio, MediaPlayer.OnCompletionListener onCompletionListener) {
@@ -72,8 +102,8 @@ public abstract class AudioUtils {
     }
 
     public static LudoAudio findAudioById(List<LudoAudio> audioList, LudoAudio audio) {
-        for(LudoAudio audioInList : audioList) {
-            if(audio.getAudio() == audioInList.getAudio()) {
+        for (LudoAudio audioInList : audioList) {
+            if (audio.getAudio() == audioInList.getAudio()) {
                 return audioInList;
             }
         }

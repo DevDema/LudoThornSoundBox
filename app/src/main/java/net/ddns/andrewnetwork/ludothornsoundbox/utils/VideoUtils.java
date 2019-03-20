@@ -4,6 +4,7 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.SearchResultSnippet;
 import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatistics;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
@@ -42,9 +43,54 @@ public abstract class VideoUtils {
         return videoList;
     }
 
+    public static LudoVideo castToLudoVideo(Video video) {
+        LudoVideo ludoVideo = new LudoVideo(LudoVideo.Source.YOUTUBE);
+
+        ludoVideo.setId(video.getId());
+
+        VideoSnippet videoSnippet =video.getSnippet();
+
+        ludoVideo.setTitle(videoSnippet.getTitle());
+        ludoVideo.setDateTime(convertToDate(videoSnippet.getPublishedAt()));
+        ludoVideo.setDescription(videoSnippet.getDescription());
+        ludoVideo.setChannel(findChannel(videoSnippet.getChannelId(), videoSnippet.getChannelTitle()));
+        ludoVideo.setThumbnail(new Thumbnail(videoSnippet.getThumbnails().getMedium().getUrl()));
+
+        VideoStatistics videoStatistics = video.getStatistics();
+        VideoInformation videoInformation = new VideoInformation();
+
+        videoInformation.setLikes(videoStatistics.getLikeCount());
+        videoInformation.setDislikes(videoStatistics.getDislikeCount());
+        videoInformation.setViews(videoStatistics.getViewCount());
+
+        ludoVideo.setVideoInformation(videoInformation);
+
+        return ludoVideo;
+
+    }
+
+    private static Channel findChannel(String channelId, String channelTitle) {
+        Channel channel = findChannelById(channelId);
+
+        if(channel == null) {
+            channel = findChannelByTitle(channelTitle);
+        }
+
+        return channel;
+    }
+
+    private static Channel findChannelByTitle(String channelTitle) {
+        for(Channel channel : getChannels()) {
+            if(channel.getChannelName() != null && channel.getChannelName().equals(channelTitle)) {
+                return channel;
+            }
+        }
+
+        return null;
+    }
+
     /**
-     *
-     * @param channel associate to channel
+     * @param channel   associate to channel
      * @param videoList videolist to be linked
      */
     public static void addVideosToChannels(Channel channel, List<LudoVideo> videoList) {
@@ -64,9 +110,19 @@ public abstract class VideoUtils {
         List<Channel> channelList = new ArrayList<>();
 
         channelList.add(new Channel("Ludo Thorn", "LudoThornDoppiaggio", R.color.background));
-        channelList.add(new Channel("Ludo MasterRace", "","UCAmxcLPY_gvUm_XzDIcB0wg", R.color.yellow_background));
+        channelList.add(new Channel("Ludo MasterRace", "", "UCAmxcLPY_gvUm_XzDIcB0wg", R.color.yellow_background));
 
         return channelList;
+    }
+
+    public static Channel findChannelById(String id) {
+        for(Channel channel : getChannels()) {
+            if(channel.getId() != null && channel.getId().equals(id)) {
+                return channel;
+            }
+        }
+
+        return null;
     }
 
 
@@ -91,7 +147,7 @@ public abstract class VideoUtils {
     public static VideoInformation extractVideoInformation(Video video) {
         VideoInformation videoInformation = new VideoInformation();
         VideoStatistics videoStatistics = video.getStatistics();
-        if(videoStatistics!=null) {
+        if (videoStatistics != null) {
             videoInformation.setLikes(videoStatistics.getLikeCount());
             videoInformation.setDislikes(videoStatistics.getDislikeCount());
             videoInformation.setViews(videoStatistics.getViewCount());
@@ -99,12 +155,12 @@ public abstract class VideoUtils {
         return videoInformation;
     }
 
-    public static List<LudoVideo> removeDuplicates (List<LudoVideo> videoList) {
+    public static List<LudoVideo> removeDuplicates(List<LudoVideo> videoList) {
         List<LudoVideo> ludoVideos = new ArrayList<>(videoList);
         if (ludoVideos.size() > 1)
             for (int i = 0; i < ludoVideos.size(); i++)
-                for(int j = 0; j < ludoVideos.size(); j++)
-                    if(ludoVideos.get(i).equals(ludoVideos.get(j)) && i!=j)
+                for (int j = 0; j < ludoVideos.size(); j++)
+                    if (ludoVideos.get(i).equals(ludoVideos.get(j)) && i != j)
                         ludoVideos.remove(j);
         return ludoVideos;
     }
@@ -112,11 +168,11 @@ public abstract class VideoUtils {
     public static Date getMostRecentDate(List<Channel> channelList) {
         List<Date> dateList = new ArrayList<>();
 
-        for(Channel channel : channelList) {
-            if(channel.getVideoList().isEmpty())
+        for (Channel channel : channelList) {
+            if (channel.getVideoList().isEmpty())
                 continue;
 
-            dateList.add(channel.getVideoList().get(channel.getVideoList().size()-1).getDateTime());
+            dateList.add(channel.getVideoList().get(channel.getVideoList().size() - 1).getDateTime());
         }
 
         return Collections.max(dateList);
@@ -125,10 +181,10 @@ public abstract class VideoUtils {
     public static Date getMostRecentDate(Channel channel) {
         List<Date> dateList = new ArrayList<>();
 
-        if(channel.getVideoList().isEmpty())
+        if (channel.getVideoList().isEmpty())
             return Calendar.getInstance().getTime();
 
-        dateList.add(channel.getVideoList().get(channel.getVideoList().size()-1).getDateTime());
+        dateList.add(channel.getVideoList().get(channel.getVideoList().size() - 1).getDateTime());
 
         return Collections.max(dateList);
     }

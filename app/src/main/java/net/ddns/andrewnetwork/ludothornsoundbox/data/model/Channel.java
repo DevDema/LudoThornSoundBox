@@ -1,5 +1,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.data.model;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.R;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -23,6 +25,12 @@ public class Channel implements Comparable, Serializable {
 
     public void setChannelName(String channelName) {
         ChannelName = channelName;
+    }
+
+    public Channel(String id) {
+        this.id = id;
+
+        backGroundColor = R.color.background;
     }
 
     public Channel(String channelName, String username, int color) {

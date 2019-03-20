@@ -16,6 +16,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.data.network;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.VideoInformation;
@@ -40,4 +41,6 @@ public interface ApiHelper {
     Observable<VideoInformation> getVideoInformation(LudoVideo video);
 
     Observable<List<LudoVideo>> getMoreVideos(Channel channel, Date beforeDate);
+
+    Observable<LudoAudio> getVideoById(LudoAudio audio);
 }

@@ -30,6 +30,10 @@ public class LudoVideo implements Comparable<LudoVideo>, Serializable {
 
     }
 
+    public LudoVideo(String id) {
+        this.id = id;
+    }
+
     public LudoVideo(String id, String title, String description, Date dateTime, Thumbnail thumbnail) {
         this.id = id;
         this.title = title;
