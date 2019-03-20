@@ -16,6 +16,7 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.FragmentHomeBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.GifFragment;
@@ -40,6 +41,9 @@ import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.ViewPager;
+
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
+import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
 public class HomeFragment extends GifFragment implements OnButtonSelectedListener<LudoAudio>, IHomeView {
 
@@ -184,6 +188,14 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                         mPresenter.salvaPreferito(audio);
                         break;
                     case R.id.video_collegato:
+                        LudoVideo video = audio.getVideo();
+                        if(getContext() != null) {
+                            if (video != null && nonEmptyNonNull(video.getId())) {
+                                CommonUtils.openLink(getContext(), buildVideoUrl(video.getId()));
+                            } else {
+                                CommonUtils.showDialog(getContext(), "Link non disponibile.");
+                            }
+                        }
                         break;
                     case R.id.nascondi_audio:
                         break;

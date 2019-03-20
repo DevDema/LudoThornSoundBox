@@ -20,12 +20,15 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.provider.Settings;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -119,5 +122,12 @@ public final class CommonUtils {
                 .setNegativeButton("Annulla", negativeListener);
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    public static void openLink(Context context, String link) {
+        Uri uri = Uri.parse(link);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        context.startActivity(intent);
     }
 }

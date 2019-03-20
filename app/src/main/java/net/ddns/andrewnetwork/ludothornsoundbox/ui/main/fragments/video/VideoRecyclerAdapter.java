@@ -20,6 +20,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.ParentFragment
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoInformationManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
 import java.util.ArrayList;
@@ -32,9 +33,12 @@ import java.util.Set;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
+
 public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filterable {
 
     private ParentFragment fragment;
+    private Context context;
     private List<LudoVideo> videoList;
     private List<LudoVideo> itemsAll;
 
@@ -43,6 +47,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
 
     public VideoRecyclerAdapter(ParentFragment fragment) {
         this.fragment = fragment;
+        this.context = fragment.getContext();
         this.videoList = new ArrayList<>();
 
         this.itemsAll = new ArrayList<>(videoList);
@@ -125,12 +130,11 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
                     else updated.setText(p.getDateTime().toString());
             }
             viewHolder.itemView.setOnClickListener(v -> {
-                Uri uri = null;
-                if (p != null) {
-                    uri = Uri.parse(VideoManager.buildVideoUrl(p.getId()));
+                if(p != null) {
+                    CommonUtils.openLink(context, buildVideoUrl(p.getId()));
+                } else {
+                    CommonUtils.showDialog(context, "Link non disponibile.");
                 }
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                viewHolder.itemView.getRootView().getContext().startActivity(intent);
             });
         }
     }
