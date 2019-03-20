@@ -32,7 +32,15 @@ public interface PreferencesHelper {
 
     List<LudoAudio> getPreferitiList();
 
+    List<LudoAudio> getAudioSavedList();
+
+    LudoAudio getVideoByIdInPref(LudoAudio audio);
+
     boolean salvaPreferito(LudoAudio audio);
 
     boolean rimuoviPreferito(LudoAudio audio);
+
+    void saveAudioList(List<LudoAudio> audioList);
+
+    void removeAllVideosInPref();
 }

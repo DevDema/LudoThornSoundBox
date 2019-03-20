@@ -56,7 +56,10 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
 
     @Override
     public void getVideoInformationForAudios(List<LudoAudio> audioList) {
-        getCompositeDisposable().add(Observable.fromIterable(audioList).flatMap(audio -> getDataManager().getVideoById(audio))
+        getDataManager().removeAllVideosInPref();
+
+        getCompositeDisposable().add(Observable.fromIterable(audioList).flatMap(audio -> getDataManager().getVideoById(audio)).toList()
+                .doOnSuccess(audioListByserver -> getDataManager().saveAudioList(audioListByserver))
                 .observeOn(getSchedulerProvider().ui())
                 .subscribeOn(getSchedulerProvider().io())
                 .subscribe(audio -> {
@@ -64,8 +67,6 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
                 }, throwable -> {
                     throwable.printStackTrace();
                     getMvpView().onVideoInformationNotLoaded();
-                }, () -> {
-                    //Everything is completed.
                 })
         );
     }

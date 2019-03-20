@@ -45,6 +45,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PREF_KEY_CURRENT_USER_ID = "PREF_KEY_CURRENT_USER_ID";
     private static final String PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN";
     private static final String PREF_KEY_PREFERITI = "PREF_KEY_PREFERITI";
+    private static final String PREF_KEY_AUDIO = "PREF_KEY_AUDIO";
 
     private final SharedPreferences mPrefs;
 
@@ -68,7 +69,22 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public List<LudoAudio> getPreferitiList() {
         String serializedList = mPrefs.getString(PREF_KEY_PREFERITI, "");
-        return JsonUtil.getGson().fromJson(serializedList,  new TypeToken<List<LudoAudio>>(){}.getType());
+        return JsonUtil.getGson().fromJson(serializedList, new TypeToken<List<LudoAudio>>() {
+        }.getType());
+    }
+
+    @Override
+    public List<LudoAudio> getAudioSavedList() {
+        String serializedList = mPrefs.getString(PREF_KEY_AUDIO, "");
+        List<LudoAudio> audioList = JsonUtil.getGson().fromJson(serializedList, new TypeToken<List<LudoAudio>>() {}.getType());
+        return audioList != null ? audioList : new ArrayList<>();
+    }
+
+    @Override
+    public LudoAudio getVideoByIdInPref(LudoAudio audio) {
+        List<LudoAudio> audioList = getAudioSavedList();
+
+        return AudioUtils.findAudioById(audioList, audio);
     }
 
     @Override
@@ -76,7 +92,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
         try {
             List<LudoAudio> audioList = getPreferitiList() != null ? getPreferitiList() : new ArrayList<>();
 
-            if(audioList.size() >= 5) {
+            if (audioList.size() >= 5) {
                 throw new IllegalArgumentException();
             }
 
@@ -108,5 +124,20 @@ public class AppPreferencesHelper implements PreferencesHelper {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }    }
+        }
+    }
+
+    @Override
+    public void saveAudioList(List<LudoAudio> audioList) {
+
+        String audioListString = JsonUtil.getGson().toJson(audioList);
+
+        mPrefs.edit().putString(PREF_KEY_AUDIO, audioListString).apply();
+
+    }
+
+    @Override
+    public void removeAllVideosInPref() {
+        mPrefs.edit().remove(PREF_KEY_AUDIO).apply();
+    }
 }

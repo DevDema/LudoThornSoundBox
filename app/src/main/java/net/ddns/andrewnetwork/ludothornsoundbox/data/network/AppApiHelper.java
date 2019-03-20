@@ -16,6 +16,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.data.network;
 
 import android.util.Log;
+
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
@@ -31,6 +32,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.VideoInformation;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -148,13 +150,12 @@ public class AppApiHelper implements ApiHelper {
             final VideoListResponse videoListResponse = videoSearch.execute();
             videos = videoListResponse.getItems();
 
-            if (!videos.isEmpty() && videos.size() == 1)  {
+            if (!videos.isEmpty() && videos.size() == 1) {
                 VideoInformation videoInformation = VideoUtils.extractVideoInformation(videos.get(0));
                 video.setVideoInformation(videoInformation);
 
                 emitter.onNext(videoInformation);
-            }
-            else emitter.onError(new IllegalArgumentException("Video results are not 1."));
+            } else emitter.onError(new IllegalArgumentException("Video results are not 1."));
 
             emitter.onComplete();
         });
@@ -168,7 +169,7 @@ public class AppApiHelper implements ApiHelper {
             YouTube.Search.List search;
             search = createTubeService().search().list("id,snippet");
             search.setKey(LUDO_THORN_KEY);
-            if(channel != null) {
+            if (channel != null) {
                 search.setChannelId(channel.getId());
             }
             search.setPublishedBefore(new DateTime(beforeDate));
@@ -196,6 +197,7 @@ public class AppApiHelper implements ApiHelper {
             search.setId(audio.getVideo().getId());
             search.setMaxResults(1L);
             final VideoListResponse videoListResponse = search.execute();
+
 
             List<Video> searchResultList = new ArrayList<>(videoListResponse.getItems());
             LudoVideo video = castToLudoVideo(searchResultList.get(0));

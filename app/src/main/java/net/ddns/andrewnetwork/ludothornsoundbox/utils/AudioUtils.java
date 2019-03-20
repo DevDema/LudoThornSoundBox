@@ -102,7 +102,8 @@ public abstract class AudioUtils {
     }
 
     public static LudoAudio findAudioById(List<LudoAudio> audioList, LudoAudio audio) {
-        for (LudoAudio audioInList : audioList) {
+        List<LudoAudio> audioList1 = new ArrayList<>(audioList);
+        for (LudoAudio audioInList : audioList1) {
             if (audio.getAudio() == audioInList.getAudio()) {
                 return audioInList;
             }

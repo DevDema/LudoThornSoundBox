@@ -12,6 +12,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.network.ApiHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.persistence.DatabaseHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.prefs.PreferencesHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.ApplicationContext;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.RxBus;
 
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+
+import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
 
 @Singleton
@@ -73,13 +76,36 @@ public class AppDataManager implements DataManager {
         return mApiHelper.getMoreVideos(channel, beforeDate);
     }
 
+
     @Override
     public Observable<LudoAudio> getVideoById(LudoAudio audio) {
-        if(audio.getVideo().getId() == null || audio.getVideo().getId().isEmpty()) {
-            return Observable.create(emitter -> emitter.onNext(audio));
+        if(!nonEmptyNonNull(audio.getVideo().getId())) {
+            return Observable.create(emitter -> {
+                emitter.onNext(audio);
+                emitter.onComplete();
+            });
         }
 
-        return mApiHelper.getVideoById(audio);
+        LudoAudio audioInPref = getVideoByIdInPref(audio);
+        if(audioInPref.hashCode() == audio.hashCode()) {
+            return mApiHelper.getVideoById(audio);
+        } else {
+            return Observable.create(emitter -> {
+                emitter.onNext(audioInPref);
+                emitter.onComplete();
+            });
+        }
+    }
+
+    @Override
+    public void saveAudioList(List<LudoAudio> audioList) {
+        mPreferencesHelper.saveAudioList(audioList);
+
+    }
+
+    @Override
+    public void removeAllVideosInPref() {
+        mPreferencesHelper.removeAllVideosInPref();
     }
 
     @Override
@@ -95,6 +121,16 @@ public class AppDataManager implements DataManager {
     @Override
     public List<LudoAudio> getPreferitiList() {
         return mPreferencesHelper.getPreferitiList() != null ? mPreferencesHelper.getPreferitiList() : new ArrayList<>();
+    }
+
+    @Override
+    public List<LudoAudio> getAudioSavedList() {
+        return mPreferencesHelper.getPreferitiList() != null ? mPreferencesHelper.getPreferitiList() : new ArrayList<>();
+    }
+
+    @Override
+    public LudoAudio getVideoByIdInPref(LudoAudio audio) {
+        return mPreferencesHelper.getVideoByIdInPref(audio);
     }
 
     @Override
