@@ -39,47 +39,6 @@ public class ButtonsView<T> extends LinearLayout {
 
         this.mContext = context;
         inflate();
-
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int buttonWidth = (int) context.getResources().getDimension(R.dimen.input_size_m);
-                int buttonHeight = (int) context.getResources().getDimension(R.dimen.input_size_xxxs);
-                MAX_COLUMNS = (int) Math.floor(getWidth() * 1.0 / (buttonWidth + 2* MARGIN * MAX_COLUMNS)) ;
-                MAX_ROWS = (int) Math.floor(getHeight() * 1.0 / (buttonHeight + 2* MARGIN * MAX_ROWS));
-                masterLayout = (LinearLayout) getChildAt(0);
-                for (int i = 0; i < MAX_ROWS; i++) {
-                    LinearLayout linearLayout = new LinearLayout(context);
-                    linearLayout.setGravity(Gravity.CENTER);
-                    linearLayout.setWeightSum(MAX_COLUMNS);
-                    linearLayout.setOrientation(HORIZONTAL);
-                    for (int j = 0; j < MAX_COLUMNS; j++) {
-                        Button button = new Button(context);
-                        LayoutParams layoutParams = new LayoutParams(buttonWidth, buttonHeight);
-                        layoutParams.gravity = Gravity.CENTER;
-                        layoutParams.weight = 1;
-                        layoutParams.leftMargin = MARGIN;
-                        layoutParams.rightMargin = MARGIN;
-                        layoutParams.bottomMargin = MARGIN;
-                        layoutParams.topMargin = MARGIN;
-
-                        button.setLayoutParams(layoutParams);
-
-                        button.setTypeface(ResourcesCompat.getFont(mContext, R.font.knewave));
-                        button.setBackground(ContextCompat.getDrawable(mContext, R.drawable.button_white));
-                        button.setVisibility(View.INVISIBLE);
-                        button.setMaxLines(1);
-                        linearLayout.addView(button);
-                    }
-                    masterLayout.addView(linearLayout);
-                }
-
-                if (onViewReadyListener != null) {
-                    onViewReadyListener.onViewReady();
-                }
-            }
-        });
     }
 
     private void inflate() {
@@ -89,8 +48,10 @@ public class ButtonsView<T> extends LinearLayout {
     }
 
     public void setAdapter(List<T> list, StringParse<T> parser) {
-        this.list = list;
+        setAllInvisible();
 
+        this.list = list;
+        int lastIndex = 0;
         for (int i = 0; i < MAX_ROWS; i++) {
             LinearLayout linearLayout = (LinearLayout) masterLayout.getChildAt(i);
             for (int j = 0; j < MAX_COLUMNS; j++) {
@@ -102,10 +63,26 @@ public class ButtonsView<T> extends LinearLayout {
                         button.setText(parser.parseToString(object));
                         button.setVisibility(View.VISIBLE);
                     }
+                } else if(lastIndex == 0) {
+                    lastIndex = index;
+                    break;
+                } else {
+                    button.setVisibility(View.GONE);
                 }
             }
         }
     }
+
+    private void setAllInvisible() {
+        for (int i = 0; i < MAX_ROWS; i++) {
+            LinearLayout linearLayout = (LinearLayout) masterLayout.getChildAt(i);
+
+            for (int j = 0; j < MAX_COLUMNS; j++) {
+                linearLayout.getChildAt(j).setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
 
     public void setOnButtonSelectedListener(OnButtonSelectedListener<T> listener) {
         if (list == null)
@@ -124,6 +101,43 @@ public class ButtonsView<T> extends LinearLayout {
                     }
                 }
             }
+        }
+    }
+
+    public void inflateButtons(Context context) {
+        int buttonWidth = (int) context.getResources().getDimension(R.dimen.input_size_m);
+        int buttonHeight = (int) context.getResources().getDimension(R.dimen.input_size_xxxs);
+        MAX_COLUMNS = (int) Math.floor(getWidth() * 1.0 / (buttonWidth + 2 * MARGIN * MAX_COLUMNS));
+        MAX_ROWS = (int) Math.floor(getHeight() * 1.0 / (buttonHeight + 2 * MARGIN * MAX_ROWS));
+        masterLayout = (LinearLayout) getChildAt(0);
+        for (int i = 0; i < MAX_ROWS; i++) {
+            LinearLayout linearLayout = new LinearLayout(context);
+            linearLayout.setGravity(Gravity.CENTER);
+            linearLayout.setWeightSum(MAX_COLUMNS);
+            linearLayout.setOrientation(HORIZONTAL);
+            for (int j = 0; j < MAX_COLUMNS; j++) {
+                Button button = new Button(context);
+                LayoutParams layoutParams = new LayoutParams(buttonWidth, buttonHeight);
+                layoutParams.gravity = Gravity.CENTER;
+                layoutParams.weight = 1;
+                layoutParams.leftMargin = MARGIN;
+                layoutParams.rightMargin = MARGIN;
+                layoutParams.bottomMargin = MARGIN;
+                layoutParams.topMargin = MARGIN;
+
+                button.setLayoutParams(layoutParams);
+
+                button.setTypeface(ResourcesCompat.getFont(mContext, R.font.knewave));
+                button.setBackground(ContextCompat.getDrawable(mContext, R.drawable.button_white));
+                button.setVisibility(View.INVISIBLE);
+                button.setMaxLines(1);
+                linearLayout.addView(button);
+            }
+            masterLayout.addView(linearLayout);
+        }
+
+        if (onViewReadyListener != null) {
+            onViewReadyListener.onViewReady();
         }
     }
 

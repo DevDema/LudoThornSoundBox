@@ -31,6 +31,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.VideoInformation;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
 import java.io.InputStream;
@@ -200,11 +201,18 @@ public class AppApiHelper implements ApiHelper {
 
 
             List<Video> searchResultList = new ArrayList<>(videoListResponse.getItems());
-            LudoVideo video = castToLudoVideo(searchResultList.get(0));
+            if(searchResultList.isEmpty()) {
+                Throwable throwable = new IllegalArgumentException("No Videos were found for audio " + JsonUtil.getGson().toJson(audio));
+                throwable.printStackTrace();
+                emitter.onNext(audio);
+            } else {
+                LudoVideo video = castToLudoVideo(searchResultList.get(0));
 
-            audio.setVideo(video);
+                audio.setVideo(video);
 
-            emitter.onNext(audio);
+                emitter.onNext(audio);
+
+            }
 
             emitter.onComplete();
         });

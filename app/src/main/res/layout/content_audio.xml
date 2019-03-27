@@ -22,7 +22,7 @@
             android:textColorLink="@android:color/white"
             android:textSize="18sp" />
 
-        <EditText
+        <net.ddns.andrewnetwork.ludothornsoundbox.utils.view.CustomEditText
             android:id="@+id/searchstring"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

@@ -10,6 +10,8 @@ public interface HomeViewPresenterBinder {
 
     interface IHomeView extends MvpView {
 
+        void onAudioListReceived(List<LudoAudio> audioList);
+
         void onPreferitoEsistente(LudoAudio audio);
 
         void onPreferitoSalvataggioSuccess();
@@ -26,5 +28,7 @@ public interface HomeViewPresenterBinder {
         void salvaPreferito(LudoAudio audio);
 
         void getVideoInformationForAudios(List<LudoAudio> audioList);
+
+        void salvaAudio(LudoAudio audio);
     }
 }

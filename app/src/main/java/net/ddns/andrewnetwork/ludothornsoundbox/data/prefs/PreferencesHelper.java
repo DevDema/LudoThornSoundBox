@@ -43,4 +43,6 @@ public interface PreferencesHelper {
     void saveAudioList(List<LudoAudio> audioList);
 
     void removeAllVideosInPref();
+
+    void saveAudio(LudoAudio audio);
 }

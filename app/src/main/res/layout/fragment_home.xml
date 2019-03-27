@@ -28,6 +28,7 @@
             android:layout_height="match_parent"
             android:fillViewport="true"
 
+
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,8 +54,7 @@
                     <androidx.viewpager.widget.ViewPager
                         android:id="@+id/buttons_audio_pager"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                    </androidx.viewpager.widget.ViewPager>
+                        android:layout_height="match_parent"/>
                 </LinearLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -113,17 +113,6 @@
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <ImageButton
-                        android:id="@+id/expand_up"
-                        android:layout_width="@dimen/input_size_xxs"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:foregroundGravity="center"
-                        app:layout_constraintEnd_toStartOf="@id/reverse"
-                        app:layout_constraintStart_toEndOf="@id/counter"
-                        app:srcCompat="@drawable/ic_arrow_up_white" />
-
-                    <ImageButton
                         android:id="@+id/reverse"
                         android:layout_width="@dimen/input_size_xxs"
                         android:layout_height="match_parent"
@@ -132,7 +121,7 @@
                         android:foregroundGravity="center"
                         android:scaleType="fitCenter"
                         app:layout_constraintEnd_toStartOf="@id/spinner"
-                        app:layout_constraintStart_toEndOf="@id/expand_up"
+                        app:layout_constraintStart_toEndOf="@id/counter"
                         app:srcCompat="@drawable/ic_reverse_white" />
 
                     <Spinner

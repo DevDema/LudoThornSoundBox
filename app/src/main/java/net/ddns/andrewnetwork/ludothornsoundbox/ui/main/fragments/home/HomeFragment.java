@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 
-import com.google.android.material.appbar.AppBarLayout;
-
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
@@ -30,6 +28,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.SpinnerUtils;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -38,13 +37,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.ViewPager;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
+@SuppressWarnings("unchecked")
 public class HomeFragment extends GifFragment implements OnButtonSelectedListener<LudoAudio>, IHomeView {
 
     private FragmentHomeBinding mBinding;
@@ -54,6 +53,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
     @Inject
     IHomePresenter<IHomeView> mPresenter;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,106 +61,22 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
 
         ActivityComponent activityComponent = getActivityComponent();
 
-        if(activityComponent != null) {
+        if (activityComponent != null) {
             activityComponent.inject(this);
             mPresenter.onAttach(this);
         }
 
         mPresenter.getVideoInformationForAudios(audioList);
+
         return mBinding.getRoot();
     }
 
-    @SuppressLint("DefaultLocale")
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        mBinding.spinner.setAdapter(SpinnerUtils.createOrderAdapter(getContext()));
-
-        mBinding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ButtonViewPagerAdapter<LudoAudio> adapter = (ButtonViewPagerAdapter<LudoAudio>) mBinding.buttonsAudioPager.getAdapter();
-
-                AudioUtils.sortBy(Objects.requireNonNull(adapter).getItemsAll(),
-                        ((ChiaveValore<String>) parent.getSelectedItem()).getChiave());
-                AudioUtils.sortBy(adapter.getList(),
-                        ((ChiaveValore<String>) parent.getSelectedItem()).getChiave());
-
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        mBinding.reverse.setOnClickListener(view2 -> {
-                    ButtonViewPagerAdapter<LudoAudio> adapter = (ButtonViewPagerAdapter<LudoAudio>) mBinding.buttonsAudioPager.getAdapter();
-
-                    if (adapter == null)
-                        return;
-
-                    AudioUtils.reverse(adapter.getItemsAll());
-                    AudioUtils.reverse(adapter.getList());
-
-                    adapter.notifyDataSetChanged();
-                }
-        );
-
-        ButtonViewPagerAdapter<LudoAudio> adapter = new ButtonViewPagerAdapter<>(getContext(), audioList, LudoAudio::getTitle);
-
-        ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mBinding.counter.setText(String.format("%d/%d", adapter.getMaxItemsPerPage() * position + 1, adapter.getList().size()));
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        };
-        mBinding.buttonsAudioPager.addOnPageChangeListener(onPageChangeListener);
-
-        mBinding.buttonsAudioPager.post(() -> onPageChangeListener.onPageSelected(0));
-
-        mBinding.buttonsAudioPager.setAdapter(adapter);
-
-        mBinding.expandUp.setOnClickListener(v -> expandToolbar());
-
-        adapter.setOnButtonSelectedListener(this);
-
-        mBinding.buttonRight.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_RIGHT));
-        mBinding.buttonLeft.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_LEFT));
-
-        mBinding.audioHeader.searchstring.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                adapter.getFilter().filter(s);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
 
         audioList = AudioUtils.createAudioList(Objects.requireNonNull(getContext()));
     }
@@ -189,7 +105,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                         break;
                     case R.id.video_collegato:
                         LudoVideo video = audio.getVideo();
-                        if(getContext() != null) {
+                        if (getContext() != null) {
                             if (video != null && nonEmptyNonNull(video.getId())) {
                                 CommonUtils.openLink(getContext(), buildVideoUrl(video.getId()));
                             } else {
@@ -198,6 +114,13 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                         }
                         break;
                     case R.id.nascondi_audio:
+                        audio.setHidden(true);
+                        mPresenter.salvaAudio(audio);
+                        if (mBinding.buttonsAudioPager.getAdapter() != null) {
+                            if (mBinding.audioHeader.searchstring.getText() != null) {
+                                ((ButtonViewPagerAdapter) mBinding.buttonsAudioPager.getAdapter()).getFilter().filter(mBinding.audioHeader.searchstring.getText().toString());
+                            }
+                        }
                         break;
                 }
                 return true;
@@ -216,13 +139,102 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
         return true;
     }
 
-    private void expandToolbar() {
+    /*private void expandToolbar() {
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mBinding.appBarLayout.getLayoutParams();
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
         if (behavior != null) {
             behavior.setTopAndBottomOffset(0);
             behavior.onNestedPreScroll(mBinding.coordinatorRoot, mBinding.appBarLayout, null, 0, 1, new int[2]);
         }
+    }*/
+
+    @Override
+    public void onAudioListReceived(List<LudoAudio> audioList) {
+
+        mBinding.spinner.setAdapter(SpinnerUtils.createOrderAdapter(getContext()));
+
+        mBinding.reverse.setOnClickListener(view2 -> {
+                    ButtonViewPagerAdapter<LudoAudio> adapter = (ButtonViewPagerAdapter<LudoAudio>) mBinding.buttonsAudioPager.getAdapter();
+
+                    if (adapter == null)
+                        return;
+
+                    adapter.changeItemList(AudioUtils::reverse);
+                    adapter.changeItemsAll(AudioUtils::reverse);
+
+                    adapter.notifyDataSetChanged();
+                }
+        );
+
+        ButtonViewPagerAdapter<LudoAudio> adapter = new ButtonViewPagerAdapter<>(getContext(), audioList, LudoAudio::getTitle, mBinding.buttonsAudioPager, ludoaudio -> !ludoaudio.isHidden());
+
+        ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mBinding.counter.setText(String.format(Locale.ITALIAN, "%d/%d", adapter.getMaxItemsPerPage() * position + 1, adapter.getList().size() * adapter.getMaxItemsPerPage()));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        };
+        mBinding.buttonsAudioPager.addOnPageChangeListener(onPageChangeListener);
+
+        adapter.setOnButtonSelectedListener(this);
+
+        mBinding.buttonsAudioPager.setAdapter(adapter);
+
+        mBinding.buttonRight.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_RIGHT));
+
+        mBinding.buttonLeft.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_LEFT));
+
+        mBinding.audioHeader.searchstring.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                adapter.getFilter().filter(s);
+            }
+        });
+
+        mBinding.buttonsAudioPager.setOffscreenPageLimit(2);
+
+        mBinding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ButtonViewPagerAdapter<LudoAudio> adapter = (ButtonViewPagerAdapter<LudoAudio>) mBinding.buttonsAudioPager.getAdapter();
+
+                if (adapter != null) {
+                    adapter.changeItemList(list -> AudioUtils.sortBy(list,
+                            ((ChiaveValore<String>) parent.getSelectedItem()).getChiave()));
+                    adapter.changeItemsAll(list -> AudioUtils.sortBy(list,
+                            ((ChiaveValore<String>) parent.getSelectedItem()).getChiave()));
+
+                    adapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
     @Override
@@ -239,7 +251,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
     @Override
     public void onPreferitoSalvataggioFailed(String messaggio) {
 
-        if(messaggio == null || messaggio.isEmpty()) {
+        if (messaggio == null || messaggio.isEmpty()) {
             messaggio = getString(R.string.salvato_fallito_audio_label);
         }
 
@@ -254,6 +266,6 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
 
     @Override
     public void onVideoInformationNotLoaded() {
-
+        CommonUtils.showDialog(getContext(), "Si è verificato un errore nel caricamento delle informazioni degli audio.");
     }
 }

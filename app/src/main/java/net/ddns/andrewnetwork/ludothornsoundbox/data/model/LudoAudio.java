@@ -9,6 +9,7 @@ public class LudoAudio implements Serializable {
     private int audio;
     private int order;
     private LudoVideo referredVideo;
+    private boolean hidden;
 
     public static Comparator<LudoAudio> COMPARE_BY_DATE = (one, other) -> Integer.compare(one.order, other.order);
 
@@ -57,5 +58,13 @@ public class LudoAudio implements Serializable {
     public void setVideo(LudoVideo video) {
 
         this.referredVideo = video;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public boolean isHidden() {
+        return hidden;
     }
 }

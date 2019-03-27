@@ -86,15 +86,7 @@ public class AppDataManager implements DataManager {
             });
         }
 
-        LudoAudio audioInPref = getVideoByIdInPref(audio);
-        if(audioInPref.hashCode() == audio.hashCode()) {
-            return mApiHelper.getVideoById(audio);
-        } else {
-            return Observable.create(emitter -> {
-                emitter.onNext(audioInPref);
-                emitter.onComplete();
-            });
-        }
+        return mApiHelper.getVideoById(audio);
     }
 
     @Override
@@ -106,6 +98,11 @@ public class AppDataManager implements DataManager {
     @Override
     public void removeAllVideosInPref() {
         mPreferencesHelper.removeAllVideosInPref();
+    }
+
+    @Override
+    public void saveAudio(LudoAudio audio) {
+        mPreferencesHelper.saveAudio(audio);
     }
 
     @Override
@@ -125,7 +122,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public List<LudoAudio> getAudioSavedList() {
-        return mPreferencesHelper.getPreferitiList() != null ? mPreferencesHelper.getPreferitiList() : new ArrayList<>();
+        return mPreferencesHelper.getAudioSavedList() != null ? mPreferencesHelper.getAudioSavedList() : new ArrayList<>();
     }
 
     @Override

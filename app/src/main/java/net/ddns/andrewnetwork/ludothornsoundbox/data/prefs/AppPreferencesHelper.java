@@ -140,4 +140,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public void removeAllVideosInPref() {
         mPrefs.edit().remove(PREF_KEY_AUDIO).apply();
     }
+
+    @Override
+    public void saveAudio(LudoAudio audio) {
+        List<LudoAudio> audioList = getAudioSavedList();
+
+        if(audioList.remove(AudioUtils.findAudioById(audioList, audio))) {
+            audioList.add(audio);
+        }
+
+        saveAudioList(audioList);
+    }
 }
