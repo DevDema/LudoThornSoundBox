@@ -61,8 +61,6 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
         this(context, list, parser, viewPager);
 
         this.otherFilters = filterBy;
-
-        //getFilter().filter("");
     }
 
     private List<List<T>> groupByPage(List<T> list) {
@@ -137,6 +135,13 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
         this.collection = collection;
 
         ButtonsView<T> buttonsView = getViewSingleton(position);
+
+        configureButtonsView(buttonsView, position);
+
+        return buttonsView;
+    }
+
+    private void configureButtonsView(ButtonsView<T> buttonsView, int position) {
         buttonsView.inflateButtons(mContext);
 
         buttonsView.setAdapter(
@@ -151,7 +156,6 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
         if (buttonsView.getParent() == null) {
             collection.addView(buttonsView);
         }
-        return buttonsView;
     }
 
     private ButtonsView<T> getViewSingleton(int position) {
@@ -187,6 +191,20 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
     public void setOnButtonSelectedListener(OnButtonSelectedListener<T> listener) {
 
         this.listener = listener;
+    }
+
+    public void notifyLayoutChanged() {
+        this.list = groupByPage(ungroupList(list));
+        this.itemsAll = new ArrayList<>(this.list);
+        clearButtonsViewList();
+        notifyDataSetChanged();
+    }
+
+    private void clearButtonsViewList() {
+
+        for(ButtonsView buttonsView : viewList) {
+            buttonsView.removeAllViews();
+        }
     }
 
     @Override
@@ -233,5 +251,9 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
 
     public int getMaxItemsPerPage() {
         return maxItemsPerPage;
+    }
+
+    public List<T> getUngroupedItems() {
+        return ungroupList(list);
     }
 }

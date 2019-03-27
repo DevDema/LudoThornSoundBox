@@ -47,6 +47,11 @@ public class ButtonsView<T> extends LinearLayout {
         layoutInflater.inflate(R.layout.buttons_audio, this, true);
     }
 
+    @Override
+    public void removeAllViews() {
+        masterLayout.removeAllViews();
+    }
+
     public void setAdapter(List<T> list, StringParse<T> parser) {
         setAllInvisible();
 
@@ -63,7 +68,7 @@ public class ButtonsView<T> extends LinearLayout {
                         button.setText(parser.parseToString(object));
                         button.setVisibility(View.VISIBLE);
                     }
-                } else if(lastIndex == 0) {
+                } else if (lastIndex == 0) {
                     lastIndex = index;
                     break;
                 } else {
@@ -78,7 +83,9 @@ public class ButtonsView<T> extends LinearLayout {
             LinearLayout linearLayout = (LinearLayout) masterLayout.getChildAt(i);
 
             for (int j = 0; j < MAX_COLUMNS; j++) {
-                linearLayout.getChildAt(j).setVisibility(View.INVISIBLE);
+                if (linearLayout.getChildAt(j) != null) {
+                    linearLayout.getChildAt(j).setVisibility(View.INVISIBLE);
+                }
             }
         }
     }
@@ -107,8 +114,8 @@ public class ButtonsView<T> extends LinearLayout {
     public void inflateButtons(Context context) {
         int buttonWidth = (int) context.getResources().getDimension(R.dimen.input_size_m);
         int buttonHeight = (int) context.getResources().getDimension(R.dimen.input_size_xxxs);
-        MAX_COLUMNS = (int) Math.floor(getWidth() * 1.0 / (buttonWidth + 2 * MARGIN * MAX_COLUMNS));
-        MAX_ROWS = (int) Math.floor(getHeight() * 1.0 / (buttonHeight + 2 * MARGIN * MAX_ROWS));
+        MAX_COLUMNS = (int) Math.floor(getWidth() * 1.0 / (buttonWidth + 2 * MARGIN));
+        MAX_ROWS = (int) Math.floor(getHeight() * 1.0 / (buttonHeight + 2 * MARGIN));
         masterLayout = (LinearLayout) getChildAt(0);
         for (int i = 0; i < MAX_ROWS; i++) {
             LinearLayout linearLayout = new LinearLayout(context);

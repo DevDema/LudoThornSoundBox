@@ -1,6 +1,8 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home;
 
 import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.Button;
 
@@ -176,7 +179,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
 
             @Override
             public void onPageSelected(int position) {
-                mBinding.counter.setText(String.format(Locale.ITALIAN, "%d/%d", adapter.getMaxItemsPerPage() * position + 1, adapter.getList().size() * adapter.getMaxItemsPerPage()));
+                setCounter(adapter, position);
             }
 
             @Override
@@ -235,6 +238,13 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
             }
         });
 
+        setCounter(adapter, 0);
+
+    }
+
+    private void setCounter(ButtonViewPagerAdapter adapter, int position) {
+        mBinding.counter.setText(String.format(Locale.ITALIAN, "%d/%d", adapter.getMaxItemsPerPage() * position + 1, adapter.getUngroupedItems().size()));
+
     }
 
     @Override
@@ -267,5 +277,20 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
     @Override
     public void onVideoInformationNotLoaded() {
         CommonUtils.showDialog(getContext(), "Si è verificato un errore nel caricamento delle informazioni degli audio.");
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (mBinding.buttonsAudioPager.getAdapter() != null) {
+            mBinding.buttonsAudioPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    ((ButtonViewPagerAdapter) mBinding.buttonsAudioPager.getAdapter()).notifyLayoutChanged();
+                    mBinding.buttonsAudioPager.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
+        }
     }
 }
