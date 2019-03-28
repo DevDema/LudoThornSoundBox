@@ -104,7 +104,7 @@
 
                     <TextView
                         android:id="@+id/counter"
-                        android:layout_width="@dimen/input_size_xs"
+                        android:layout_width="@dimen/input_size_xs2"
                         android:layout_height="0dp"
                         android:layout_gravity="center"
                         android:gravity="center"

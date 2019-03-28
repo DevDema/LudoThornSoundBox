@@ -97,7 +97,10 @@ public class PreferitiFragment extends ParentFragment implements IPreferitiView 
                 button.setGravity(Gravity.CENTER_VERTICAL);
                 mBinding.linear.addView(button);
             }
-        } else mBinding.deletefavorite.setVisibility(View.GONE);
+        } else {
+            mBinding.deletefavorite.setVisibility(View.GONE);
+            mBinding.nofavorite.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
