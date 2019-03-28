@@ -68,7 +68,7 @@ public abstract class AudioUtils {
     public static void playTrack(Context context, LudoAudio audio, MediaPlayer.OnCompletionListener onCompletionListener) {
 
         stopTrack();
-
+        //TODO BUG DRAWABLE RESOURCE ID
         DataSingleTon.getInstance().setMediaPlayer(MediaPlayer.create(context, audio.getAudio()));
 
         DataSingleTon.getInstance().getMediaPlayer().setOnCompletionListener(onCompletionListener);

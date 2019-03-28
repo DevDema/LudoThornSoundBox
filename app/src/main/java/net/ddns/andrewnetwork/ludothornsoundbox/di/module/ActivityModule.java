@@ -24,7 +24,12 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewP
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomeView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder.IPreferitiPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder.IPreferitiView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
@@ -94,7 +99,12 @@ public class ActivityModule {
     }
 
     @Provides
-    PreferitiViewPresenterBinder.IPreferitiPresenter<IPreferitiView> providePreferitiPresenter(PreferitiPresenter<IPreferitiView> presenter) {
+    IPreferitiPresenter<IPreferitiView> providePreferitiPresenter(PreferitiPresenter<IPreferitiView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    IRandomPresenter<IRandomView> provideRandomPresenter(RandomPresenter<IRandomView> presenter) {
         return presenter;
     }
 }

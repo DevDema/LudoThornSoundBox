@@ -67,4 +67,8 @@ public class LudoAudio implements Serializable {
     public boolean isHidden() {
         return hidden;
     }
+
+    public void setId(int audio) {
+        this.audio = audio;
+    }
 }

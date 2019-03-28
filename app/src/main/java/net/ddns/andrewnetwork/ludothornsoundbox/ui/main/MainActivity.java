@@ -22,6 +22,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
 
 
@@ -105,7 +106,7 @@ public class MainActivity extends ParentActivity
                 fragment = new HomeFragment();
                 break;
             case R.id.action_random:
-                fragment = new HomeFragment();
+                fragment = new RandomFragment();
                 break;
             case R.id.action_video:
                 fragment = new VideoFragment();

@@ -13,7 +13,7 @@
     <string name="app_market_link">"market://details?id="</string>
     <string name="app_google_play_store_link">"https://play.google.com/store/apps/details?id="</string>
     <string name="some_error">Si è verificato un errore</string>
-    <string name="home">Hoem</string>
+    <string name="home">Home</string>
     <string name="random">Random</string>
     <string name="video">Video</string>
     <string name="favorites">Preferiti</string>
@@ -39,5 +39,6 @@
     <string name="audio_rimosso_preferiti_label">Audio rimosso dai preferiti con successo!</string>
     <string name="audio_non_rimosso_preferiti_label">Si è verificato un errore nella rimozione del preferito.</string>
     <string name="max_audio_reached_label">Hai raggiunto il massimo di audio!</string>
-
+    <string name="randombutton">A CASO!</string>
+    <string name="randomdescription">Stanco di scegliere? Fai fare tutto a Ludo! Schiavizzalo facendogli scegliere delle frasi a caso da dire!</string>
 </resources>
