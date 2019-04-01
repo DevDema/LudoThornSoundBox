@@ -54,4 +54,5 @@
     <string name="dopo_label">DOPO</string>
     <string name="giammai_label">Giammai!</string>
     <string name="do_you_like_label">Ti piace l\'app? Lasciaci un feedback sul Play Store!</string>
+    <string name="extra_audio_info"><![CDATA[Audio disponibile nell\'app LudoThornSoundBox: https://play.google.com/store/apps/details?id=net.ddns.andrewnetwork.ludothornsoundbox&hl=it \n\n Voce di Ludo Thorn!]]></string>
 </resources>

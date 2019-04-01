@@ -134,6 +134,8 @@ public abstract class AudioUtils {
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, fragment.getString(R.string.extra_audio_info));
+
             shareIntent.setType(fragment.getContext().getString(R.string.MIME_AUDIO_ANY));
             fragment.startActivity(Intent.createChooser(shareIntent, fragment.getResources().getText(R.string.send_audio_label)));
         }
