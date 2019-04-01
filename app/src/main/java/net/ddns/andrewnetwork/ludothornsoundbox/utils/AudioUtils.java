@@ -1,17 +1,23 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Environment;
 
 import com.google.api.client.util.Charsets;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -19,6 +25,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 public abstract class AudioUtils {
 
@@ -110,6 +120,52 @@ public abstract class AudioUtils {
         }
 
         return audio;
+    }
+
+    public static void shareAudio(@NonNull BaseFragment fragment, @NonNull LudoAudio audio) {
+        Uri fileUri = writeToExternalStorage(fragment, audio);
+
+        if(fileUri == null) {
+            fragment.showMessage(fragment.getResources().getText(R.string.generic_error_label).toString());
+            return;
+        }
+
+        if(fragment.getContext() != null) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            shareIntent.setType(fragment.getContext().getString(R.string.MIME_AUDIO_ANY));
+            fragment.startActivity(Intent.createChooser(shareIntent, fragment.getResources().getText(R.string.send_audio_label)));
+        }
+    }
+
+    private static Uri writeToExternalStorage(Fragment fragment, LudoAudio audio) {
+        InputStream inputStream;
+        FileOutputStream fileOutputStream;
+        try {
+            inputStream = fragment.getResources().openRawResource(audio.getAudio());
+            File file = new File(Environment.getExternalStorageDirectory(), createAudioFileName(audio));
+            fileOutputStream = new FileOutputStream(file);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                fileOutputStream.write(buffer, 0, length);
+            }
+
+
+
+            inputStream.close();
+            fileOutputStream.close();
+            return Uri.fromFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static String createAudioFileName(LudoAudio audio) {
+        return audio.getTitle() + ".mp3";
     }
 }
 

@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.provider.Settings;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager;
 
 import java.io.IOException;
@@ -38,6 +39,11 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.fragment.app.Fragment;
+
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 /**
  * Created by janisharali on 27/01/17.
  */
@@ -45,6 +51,7 @@ import java.util.regex.Pattern;
 public final class CommonUtils {
 
     private static final String TAG = "CommonUtils";
+    private static final int EXPORT_REQUEST = 8081;
 
     private CommonUtils() {
         // This utility class is not publicly instantiable
@@ -130,4 +137,24 @@ public final class CommonUtils {
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         context.startActivity(intent);
     }
+
+    public static void askForStoragePermission(BaseFragment fragment, PermissionListener permissionListener) {
+        new PermissionManager.Builder().with(fragment).setResultListener(new PermissionManager.OnPermissionResultListener() {
+            @Override
+            public void onPermissionGranted() {
+                permissionListener.onPermissionGranted();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+            }
+
+            @Override
+            public void onBlockedRequest() {
+            }
+
+            @Override
+            public void onPermissionRepeated() {
+            }
+        }).build().checkPermission(WRITE_EXTERNAL_STORAGE, EXPORT_REQUEST);    }
 }

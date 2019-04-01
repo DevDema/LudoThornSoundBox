@@ -45,4 +45,10 @@
     <string name="dislike_label">Dislike</string>
     <string name="views_label">Views</string>
     <string name="likes_label">Likes</string>
+    <string name="send_audio_label">Invia audio</string>
+    <string name="condividi_audio_label">Condividi audio</string>
+    <string name="MIME_AUDIO_MP3">audio/mpeg</string>
+    <string name="MIME_AUDIO_ANY">audio/*</string>
+    <string name="ask_permission_label">Per condividere un audio, devi concedere all\'app il permesso di scrivere nella memoria.</string>
+    <string name="generic_error_label">Si è verificato un errore.</string>
 </resources>

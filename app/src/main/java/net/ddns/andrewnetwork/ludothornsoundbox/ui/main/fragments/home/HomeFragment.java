@@ -1,7 +1,9 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
@@ -31,6 +33,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.OnBu
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.model.ChiaveValore;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.PermissionListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.SpinnerUtils;
 
 import java.util.List;
@@ -131,6 +134,9 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
 
                         }
                         break;
+                    case R.id.condividi_audio:
+                        shareAudio(audio);
+                        break;
                     case R.id.nascondi_audio:
                         audio.setHidden(true);
                         mPresenter.salvaAudio(audio);
@@ -140,6 +146,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                             }
                         }
                         break;
+
                 }
                 return true;
             }
@@ -155,6 +162,20 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
         optionsMenu.show();
 
         return true;
+    }
+
+    private void shareAudio(LudoAudio audio) {
+        PermissionListener permissionListener = () -> AudioUtils.shareAudio(HomeFragment.this, audio);
+
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            CommonUtils.showDialog(getContext(), getResources().getString(R.string.ask_permission_label), (dialog, which) ->
+                            CommonUtils.askForStoragePermission(HomeFragment.this,
+                                    permissionListener
+                            )
+                    , true);
+        } else {
+            permissionListener.onPermissionGranted();
+        }
     }
 
     /*private void expandToolbar() {
