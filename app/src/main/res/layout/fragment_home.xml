@@ -124,7 +124,6 @@
                         android:background="@null"
                         android:foregroundGravity="center"
                         android:scaleType="fitCenter"
-                        app:layout_constraintEnd_toStartOf="@id/spinner"
                         app:layout_constraintStart_toEndOf="@id/counter"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -132,10 +131,11 @@
 
                     <Spinner
                         android:id="@+id/spinner"
-                        android:layout_width="@dimen/input_size_m"
+                        android:layout_width="0dp"
                         android:layout_height="0dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/reverse"
                         app:layout_constraintBottom_toBottomOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

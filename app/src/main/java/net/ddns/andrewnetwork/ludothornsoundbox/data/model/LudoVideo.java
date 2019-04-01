@@ -1,7 +1,9 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.data.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,11 +14,10 @@ public class LudoVideo implements Comparable<LudoVideo>, Serializable {
     private Thumbnail thumbnail;
 
     public enum Source {YOUTUBE, PERSONAL}
-
-    ;
     private VideoInformation videoInformation;
     private Channel channel;
     private Source source;
+    private List<LudoAudio> audioList;
 
     public Source getSource() {
         return source;
@@ -27,29 +28,30 @@ public class LudoVideo implements Comparable<LudoVideo>, Serializable {
     }
 
     public LudoVideo() {
+        this.audioList = new ArrayList<>();
 
     }
 
     public LudoVideo(String id) {
+        this();
         this.id = id;
     }
 
     public LudoVideo(String id, String title, String description, Date dateTime, Thumbnail thumbnail) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.dateTime = dateTime;
+        this(id, title, description, dateTime);
         this.thumbnail = thumbnail;
     }
 
     public LudoVideo(String id, String title, String description, Date dateTime) {
-        this.id = id;
+        this(id);
         this.title = title;
         this.description = description;
         this.dateTime = dateTime;
+
     }
 
     public LudoVideo(Source source) {
+        this();
         this.source = source;
     }
 
@@ -145,12 +147,21 @@ public class LudoVideo implements Comparable<LudoVideo>, Serializable {
     }
 
     public boolean hasThumbnail() {
-        if (thumbnail != null && thumbnail.getImage() != null) return true;
-        return false;
+        return thumbnail != null && thumbnail.getImage() != null;
     }
 
     public boolean hasInformation() {
-        if (videoInformation != null && videoInformation.getViews() != null) return true;
-        return false;
+        return videoInformation != null && videoInformation.getViews() != null;
+    }
+
+
+    void addAudio(LudoAudio audio) {
+        if (!audioList.contains(audio)) {
+            audioList.add(audio);
+        }
+    }
+
+    public List<LudoAudio> getConnectedAudioList() {
+        return audioList;
     }
 }

@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 
@@ -146,5 +147,18 @@ public class MainActivity extends ParentActivity
 
         else addFragment(newFragment);
 
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("dialog");
+        if(fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .detach(fragment)
+                    .commit();
+        }
     }
 }

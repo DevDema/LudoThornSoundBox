@@ -3,7 +3,9 @@ package net.ddns.andrewnetwork.ludothornsoundbox.data.model;
 import java.io.Serializable;
 import java.util.Comparator;
 
-public class LudoAudio implements Serializable {
+import androidx.annotation.Nullable;
+
+public class LudoAudio implements Serializable, Cloneable {
 
     private String title;
     private int audio;
@@ -57,6 +59,13 @@ public class LudoAudio implements Serializable {
 
     public void setVideo(LudoVideo video) {
 
+        if(video != null) {
+            try {
+                video.addAudio(clone());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
         this.referredVideo = video;
     }
 
@@ -70,5 +79,27 @@ public class LudoAudio implements Serializable {
 
     public void setId(int audio) {
         this.audio = audio;
+    }
+
+    @Override
+    protected LudoAudio clone() throws CloneNotSupportedException {
+        LudoAudio audio = (LudoAudio) super.clone();
+
+        audio.setVideo(null);
+
+        return audio;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj == null) {
+            return false;
+        }
+
+        if(getClass() != obj.getClass()) {
+            return false;
+        }
+
+        return ((LudoAudio) obj).getTitle().equals(getTitle());
     }
 }

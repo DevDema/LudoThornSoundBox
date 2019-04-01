@@ -6,6 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textViewStyle">@style/TextView</item>
+        <item name="android:buttonStyle">@style/Button</item>
+        <item name="android:itemTextAppearance">@style/itemTextStyle.AppTheme</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerItemTheme</item>
         <!--<item name="android:fontFamily">@font/knewave</item>-->
     </style>
 
@@ -19,4 +23,21 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="TextView" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="Button" parent="android:Widget.Button">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:background">@drawable/button_white</item>
+    </style>
+    <style name="itemTextStyle.AppTheme" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="SpinnerItemTheme">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 </resources>

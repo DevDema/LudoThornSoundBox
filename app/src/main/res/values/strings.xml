@@ -41,4 +41,8 @@
     <string name="max_audio_reached_label">Hai raggiunto il massimo di audio!</string>
     <string name="randombutton">A CASO!</string>
     <string name="randomdescription">Stanco di scegliere? Fai fare tutto a Ludo! Schiavizzalo facendogli scegliere delle frasi a caso da dire!</string>
+    <string name="thumbnail_label">Thumbnail</string>
+    <string name="dislike_label">Dislike</string>
+    <string name="views_label">Views</string>
+    <string name="likes_label">Likes</string>
 </resources>

@@ -2,6 +2,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 
 import android.content.Context;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.model.ChiaveValore;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.view.BaseAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.view.StringParsingAdapter;
@@ -32,7 +33,7 @@ public class SpinnerUtils {
 
     public static StringParsingAdapter<ChiaveValore<String>> createOrderAdapter(Context context) {
         return new StringParsingAdapter<>(context,
-                android.R.layout.simple_list_item_1,
+                R.layout.ludo_spinner_item,
                 createOrderList(AUDIO_NOME, AUDIO_DATA),
                 ChiaveValore::getValore);
     }

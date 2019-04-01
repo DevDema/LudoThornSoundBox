@@ -41,7 +41,7 @@ public class JsonUtil {
         try {
             return dateFormat.parse(string);
         } catch (ParseException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return null;
     }

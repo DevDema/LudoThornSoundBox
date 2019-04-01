@@ -41,6 +41,9 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.NetworkUtils;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 /**
  * Created by janisharali on 27/01/17.
@@ -67,6 +70,19 @@ public abstract class BaseActivity extends CoreActivity implements MvpView, Base
         return mActivityComponent;
     }
 
+    public void newDialogFragment(DialogFragment dialogFragment) {
+        newDialogFragment(dialogFragment, "dialog");
+    }
+
+    public void newDialogFragment(DialogFragment dialogFragment, String tag) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(tag);
+        dialogFragment.show(ft, tag);
+    }
 
     @TargetApi(Build.VERSION_CODES.M)
     public void requestPermissionsSafely(String[] permissions, int requestCode) {

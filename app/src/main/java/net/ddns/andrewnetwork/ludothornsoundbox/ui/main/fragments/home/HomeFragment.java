@@ -15,6 +15,8 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import com.michael.easydialog.EasyDialog;
+
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
@@ -23,6 +25,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.GifFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomeView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.ButtonViewPagerAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.OnButtonSelectedListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.model.ChiaveValore;
@@ -40,10 +43,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.ViewPager;
 
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
 @SuppressWarnings("unchecked")
@@ -71,6 +74,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
 
         mPresenter.getVideoInformationForAudios(audioList);
 
+
         return mBinding.getRoot();
     }
 
@@ -79,15 +83,20 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        audioList = AudioUtils.createAudioList(Objects.requireNonNull(mActivity));
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
 
-        audioList = AudioUtils.createAudioList(Objects.requireNonNull(getContext()));
     }
 
     @Override
     public void onButtonSelected(LudoAudio audio, int position, Button button) {
 
-        AudioUtils.playTrack(getContext(), audio, completionListener);
+        AudioUtils.playTrack(mActivity, audio, completionListener);
         play_pause.setImageResource(R.drawable.ic_pause_white);
     }
 
@@ -107,13 +116,19 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                         mPresenter.salvaPreferito(audio);
                         break;
                     case R.id.video_collegato:
-                        LudoVideo video = audio.getVideo();
+                        /*LudoVideo video = audio.getVideo();
                         if (getContext() != null) {
                             if (video != null && nonEmptyNonNull(video.getId())) {
                                 CommonUtils.openLink(getContext(), buildVideoUrl(video.getId()));
                             } else {
                                 CommonUtils.showDialog(getContext(), "Link non disponibile.");
                             }
+                        }*/
+                        if (mActivity != null && audio.getVideo() != null && nonEmptyNonNull(audio.getVideo().getId())) {
+                            mActivity.newDialogFragment(VideoInformationFragment.newInstance(audio.getVideo()));
+                        } else {
+                            CommonUtils.showDialog(getContext(), "Video non disponibile per questo audio!");
+
                         }
                         break;
                     case R.id.nascondi_audio:
@@ -153,8 +168,11 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
 
     @Override
     public void onAudioListReceived(List<LudoAudio> audioList) {
+        configAudioList(audioList);
+    }
 
-        mBinding.spinner.setAdapter(SpinnerUtils.createOrderAdapter(getContext()));
+    private void configAudioList(List<LudoAudio> audioList) {
+        mBinding.spinner.setAdapter(SpinnerUtils.createOrderAdapter(mActivity));
 
         mBinding.reverse.setOnClickListener(view2 -> {
                     ButtonViewPagerAdapter<LudoAudio> adapter = (ButtonViewPagerAdapter<LudoAudio>) mBinding.buttonsAudioPager.getAdapter();
@@ -169,7 +187,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                 }
         );
 
-        ButtonViewPagerAdapter<LudoAudio> adapter = new ButtonViewPagerAdapter<>(getContext(), audioList, LudoAudio::getTitle, mBinding.buttonsAudioPager, ludoaudio -> !ludoaudio.isHidden());
+        ButtonViewPagerAdapter<LudoAudio> adapter = new ButtonViewPagerAdapter<>(mActivity, audioList, LudoAudio::getTitle, mBinding.buttonsAudioPager, ludoaudio -> !ludoaudio.isHidden());
 
         ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
@@ -249,12 +267,12 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
 
     @Override
     public void onPreferitoEsistente(LudoAudio audio) {
-        CommonUtils.showDialog(getContext(), getString(R.string.audio_esistente_label));
+        CommonUtils.showDialog(mActivity, getString(R.string.audio_esistente_label));
     }
 
     @Override
     public void onPreferitoSalvataggioSuccess() {
-        CommonUtils.showDialog(getContext(), getString(R.string.salvato_correttamente_audio_label));
+        CommonUtils.showDialog(mActivity, getString(R.string.salvato_correttamente_audio_label));
 
     }
 
@@ -265,7 +283,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
             messaggio = getString(R.string.salvato_fallito_audio_label);
         }
 
-        CommonUtils.showDialog(getContext(), messaggio);
+        CommonUtils.showDialog(mActivity, messaggio);
 
     }
 
@@ -276,7 +294,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
 
     @Override
     public void onVideoInformationNotLoaded() {
-        CommonUtils.showDialog(getContext(), "Si è verificato un errore nel caricamento delle informazioni degli audio.");
+        CommonUtils.showDialog(mActivity, "Si è verificato un errore nel caricamento delle informazioni degli audio.");
     }
 
     @Override

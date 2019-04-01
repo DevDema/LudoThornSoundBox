@@ -122,7 +122,7 @@ public class VideoFragment extends ParentFragment implements IVideoView {
 
         mBinding.selectChannel.setAdapter(new StringParsingAdapter<>(
                         Objects.requireNonNull(getContext()),
-                        R.layout.support_simple_spinner_dropdown_item,
+                        R.layout.ludo_spinner_item,
                         selezionareChannel,
                         Channel::getChannelName
                 )
