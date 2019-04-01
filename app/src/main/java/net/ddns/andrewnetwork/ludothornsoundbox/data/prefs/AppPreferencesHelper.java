@@ -38,6 +38,8 @@ import java.util.function.Predicate;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.DAYS_BEFORE_ASKING_FEEDBACK;
+
 
 @Singleton
 public class AppPreferencesHelper implements PreferencesHelper {
@@ -46,6 +48,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN";
     private static final String PREF_KEY_PREFERITI = "PREF_KEY_PREFERITI";
     private static final String PREF_KEY_AUDIO = "PREF_KEY_AUDIO";
+    private static final String KEY_USAGE_COUNTER = "KEY_USAGE_COUNTER";
+    private static final String KEY_USAGE_THRESOLD = "KEY_USAGE_THRESOLD";
 
     private final SharedPreferences mPrefs;
 
@@ -151,4 +155,26 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
         saveAudioList(audioList);
     }
+
+    @Override
+    public int getUsageCounter() {
+        return mPrefs.getInt(KEY_USAGE_COUNTER, 0);
+    }
+
+    @Override
+    public void incrementUsageCounter(int counter) {
+        mPrefs.edit().putInt(KEY_USAGE_COUNTER, counter).apply();
+
+    }
+
+    @Override
+    public long getUsageThreshold() {
+        return mPrefs.getLong(KEY_USAGE_THRESOLD, DAYS_BEFORE_ASKING_FEEDBACK);
+    }
+
+    @Override
+    public void setUsageThreshold(long threshold) {
+        mPrefs.edit().putLong(KEY_USAGE_THRESOLD, threshold).apply();
+    }
+
 }

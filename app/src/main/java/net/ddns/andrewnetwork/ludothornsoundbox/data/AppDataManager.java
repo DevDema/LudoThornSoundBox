@@ -12,7 +12,6 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.network.ApiHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.persistence.DatabaseHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.prefs.PreferencesHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.ApplicationContext;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.RxBus;
 
 import java.util.ArrayList;
@@ -103,6 +102,26 @@ public class AppDataManager implements DataManager {
     @Override
     public void saveAudio(LudoAudio audio) {
         mPreferencesHelper.saveAudio(audio);
+    }
+
+    @Override
+    public int getUsageCounter() {
+        return mPreferencesHelper.getUsageCounter();
+    }
+
+    @Override
+    public void incrementUsageCounter(int counter) {
+        mPreferencesHelper.incrementUsageCounter(counter);
+    }
+
+    @Override
+    public long getUsageThreshold() {
+        return mPreferencesHelper.getUsageThreshold();
+    }
+
+    @Override
+    public void setUsageThreshold(long threshold) {
+        mPreferencesHelper.setUsageThreshold(threshold);
     }
 
     @Override

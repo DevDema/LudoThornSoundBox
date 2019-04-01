@@ -18,6 +18,10 @@ package net.ddns.andrewnetwork.ludothornsoundbox.di.module;
 import android.content.Context;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.di.ActivityContext;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomePresenter;
@@ -87,10 +91,10 @@ public class ActivityModule {
     }
 
     //      EXAMPLE CALL
-    /*@Provides
+    @Provides
     IMainPresenter<IMainView> provideMainPresenter(MainPresenter<IMainView> presenter) {
         return presenter;
-    }*/
+    }
 
     @Provides
     IVideoPresenter<IVideoView> provideVideoPresenter(VideoPresenter<IVideoView> presenter) {

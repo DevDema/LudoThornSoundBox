@@ -1,10 +1,10 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main;
 
+import android.app.AlertDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -21,16 +21,27 @@ import android.view.MenuItem;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
+import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
+
+import javax.inject.Inject;
+
+import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.DAYS_LATER_ASKING_FEEDBACK;
+import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.LINK_ASKING_FEEDBACK;
 
 
 public class MainActivity extends ParentActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, IMainView {
 
     private ActivityMainBinding mBinding;
+    @Inject
+    IMainPresenter<IMainView> mPresenter;
 
     @Override
     protected void setContentView() {
@@ -56,8 +67,42 @@ public class MainActivity extends ParentActivity
         mBinding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        ActivityComponent activityComponent = getActivityComponent();
+        if (activityComponent != null) {
+            activityComponent.inject(this);
+            mPresenter.onAttach(this);
+        }
+
         mBinding.navView.setNavigationItemSelectedListener(this);
         mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
+    }
+
+    private void manageFeedbackAlert() {
+        mPresenter.incrementUsageCounter();
+        if(mPresenter.getUsageCounter()>mPresenter.getUsageThreshold()) {
+            showFeedBackDialog();
+        }
+    }
+
+    private void showFeedBackDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.do_you_like_label))
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                    CommonUtils.openLink(this, LINK_ASKING_FEEDBACK);
+                    mPresenter.saveUsageThreshold(Long.MAX_VALUE);
+                    dialog.dismiss();
+                })
+                .setNeutralButton(getString(R.string.giammai_label), (dialog, which) -> {
+                    mPresenter.saveUsageThreshold(Long.MAX_VALUE);
+                    dialog.dismiss();
+                })
+                .setNegativeButton(getString(R.string.dopo_label), ((dialog, which) -> {
+                    mPresenter.saveUsageThreshold(mPresenter.getUsageThreshold()+DAYS_LATER_ASKING_FEEDBACK);
+                    dialog.dismiss();
+                }));
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
@@ -160,5 +205,9 @@ public class MainActivity extends ParentActivity
                     .detach(fragment)
                     .commit();
         }
+    }
+
+    public void onHomeFragmentReady() {
+        manageFeedbackAlert();
     }
 }

@@ -131,6 +131,7 @@ public final class CommonUtils {
         alert.show();
     }
 
+
     public static void openLink(Context context, String link) {
         Uri uri = Uri.parse(link);
 

@@ -31,6 +31,9 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 
 public final class AppUtils {
 
+    public static int DAYS_BEFORE_ASKING_FEEDBACK = 10;
+    public static int DAYS_LATER_ASKING_FEEDBACK = 5;
+    public static String LINK_ASKING_FEEDBACK = "https://play.google.com/store/apps/details?id=net.ddns.andrewnetwork.ludothornsoundbox&hl=it";
     private AppUtils() {
         // This class is not publicly instantiable
     }

@@ -2,7 +2,6 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -17,13 +16,11 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.Button;
 
-import com.michael.easydialog.EasyDialog;
-
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
-import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.FragmentHomeBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.GifFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomeView;
@@ -119,14 +116,6 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                         mPresenter.salvaPreferito(audio);
                         break;
                     case R.id.video_collegato:
-                        /*LudoVideo video = audio.getVideo();
-                        if (getContext() != null) {
-                            if (video != null && nonEmptyNonNull(video.getId())) {
-                                CommonUtils.openLink(getContext(), buildVideoUrl(video.getId()));
-                            } else {
-                                CommonUtils.showDialog(getContext(), "Link non disponibile.");
-                            }
-                        }*/
                         if (mActivity != null && audio.getVideo() != null && nonEmptyNonNull(audio.getVideo().getId())) {
                             mActivity.newDialogFragment(VideoInformationFragment.newInstance(audio.getVideo()));
                         } else {
@@ -190,6 +179,9 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
     @Override
     public void onAudioListReceived(List<LudoAudio> audioList) {
         configAudioList(audioList);
+        if(mActivity instanceof MainActivity) {
+            ((MainActivity) mActivity).onHomeFragmentReady();
+        }
     }
 
     private void configAudioList(List<LudoAudio> audioList) {

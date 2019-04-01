@@ -45,4 +45,12 @@ public interface PreferencesHelper {
     void removeAllVideosInPref();
 
     void saveAudio(LudoAudio audio);
+
+    int getUsageCounter();
+
+    void incrementUsageCounter(int counter);
+
+    long getUsageThreshold();
+
+    void setUsageThreshold(long threshold);
 }

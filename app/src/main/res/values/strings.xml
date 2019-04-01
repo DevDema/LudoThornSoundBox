@@ -51,4 +51,7 @@
     <string name="MIME_AUDIO_ANY">audio/*</string>
     <string name="ask_permission_label">Per condividere un audio, devi concedere all\'app il permesso di scrivere nella memoria.</string>
     <string name="generic_error_label">Si è verificato un errore.</string>
+    <string name="dopo_label">DOPO</string>
+    <string name="giammai_label">Giammai!</string>
+    <string name="do_you_like_label">Ti piace l\'app? Lasciaci un feedback sul Play Store!</string>
 </resources>
