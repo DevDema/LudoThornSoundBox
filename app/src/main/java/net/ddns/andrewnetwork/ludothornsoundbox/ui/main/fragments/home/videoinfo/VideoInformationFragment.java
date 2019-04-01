@@ -15,12 +15,12 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.VideoInformation;
-import net.ddns.andrewnetwork.ludothornsoundbox.data.network.AppApiHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.DialogVideoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.view.ReducedDialogFragment;
@@ -31,6 +31,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
+
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
 
 public class VideoInformationFragment extends ReducedDialogFragment implements IVideoInformationView {
 
@@ -109,6 +111,8 @@ public class VideoInformationFragment extends ReducedDialogFragment implements I
 
             mBinding.audioListLayout.addView(button);
         }
+
+        mBinding.thumbnailImage.setOnClickListener(v -> CommonUtils.openLink(getContext(), buildVideoUrl(video.getId())));
     }
 
     @NonNull

@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.media.MediaPlayer;
@@ -9,6 +10,9 @@ import android.widget.ImageView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public abstract class ParentFragment extends BaseFragment {
     Bundle bundle;
@@ -21,6 +25,7 @@ public abstract class ParentFragment extends BaseFragment {
             play_pause.setImageResource(R.drawable.ic_play_white);
         }
     };
+    private Context mContext;
 
 
     @Override
@@ -46,6 +51,19 @@ public abstract class ParentFragment extends BaseFragment {
         Point size = new Point();
         getActivity().getWindowManager().getDefaultDisplay().getSize(size);        // Checks the orientation of the screen
         return size.y;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        this.mContext = context;
+    }
+
+    @NonNull
+    @Override
+    public Context getContext() {
+        return super.getContext() != null ? super.getContext() : mContext;
     }
 
     //                                  DECOMMENTA SE VUOI INTERROMPERE I VIDEO QUANDO CAMBI I FRAGMENT

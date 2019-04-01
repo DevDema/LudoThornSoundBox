@@ -2,6 +2,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.utils.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +12,11 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseDialog;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public abstract class LoadingDialog extends BaseDialog {
+
+    private Context mContext;
 
     @Override
     public void showLoading() {
@@ -62,6 +66,19 @@ public abstract class LoadingDialog extends BaseDialog {
 
         return dialog;
 
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        this.mContext = context;
+    }
+
+    @NonNull
+    @Override
+    public Context getContext() {
+        return super.getContext() != null ? super.getContext() : mContext;
     }
 
     protected abstract ProgressBar getProgressDialog();
