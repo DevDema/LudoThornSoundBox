@@ -141,6 +141,11 @@ public class LudoVideo implements Comparable<LudoVideo>, Serializable {
 
         if (obj.getClass() == this.getClass()) {
             LudoVideo video2 = (LudoVideo) obj;
+
+            if(this.getId() == null) {
+                return video2.getId() == null;
+            }
+
             return this.getId().equals(video2.getId());
         }
         return false;
