@@ -27,6 +27,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings.SettingsFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 
@@ -160,8 +161,8 @@ public class MainActivity extends ParentActivity
             case R.id.action_favorites:
                 fragment = new PreferitiFragment();
                 break;
-            case R.id.action_info:
-                fragment = new HomeFragment();
+            case R.id.action_settings:
+                fragment = new SettingsFragment();
                 break;
         }
 

@@ -46,6 +46,7 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
     implementation 'com.google.android.gms:play-services-ads:17.2.0'
     implementation 'com.github.michaelye.easydialog:easydialog:1.4'
+    implementation group: 'androidx.preference', name: 'preference', version: '1.0.0-alpha1'
 
     implementation('com.google.apis:google-api-services-youtube:v3-rev205-1.24.1') {
         exclude group: 'org.apache.httpcomponents'

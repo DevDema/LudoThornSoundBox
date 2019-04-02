@@ -38,6 +38,10 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomP
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings.SettingsPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings.SettingsViewPresenterBinder;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings.SettingsViewPresenterBinder.ISettingsPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings.SettingsViewPresenterBinder.ISettingsView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
@@ -118,6 +122,11 @@ public class ActivityModule {
 
     @Provides
     IVideoInformationPresenter<IVideoInformationView> provideVideoInformationPresenter(VideoInformationPresenter<IVideoInformationView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ISettingsPresenter<ISettingsView> provideSettingsPresenter(SettingsPresenter<ISettingsView> presenter) {
         return presenter;
     }
 }
