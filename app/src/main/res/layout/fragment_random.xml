@@ -18,11 +18,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <include
-                android:id="@+id/audio_header"
-                layout="@layout/content_audio"
+            <net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioPlayer
+                android:id="@+id/audio_player"
+                android:layout_marginTop="10dp"
+
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/header_audio_dim" />
+                android:layout_height="@dimen/input_size_xxs" />
             <include
                 android:id="@+id/random_layout"
                 layout="@layout/content_random"

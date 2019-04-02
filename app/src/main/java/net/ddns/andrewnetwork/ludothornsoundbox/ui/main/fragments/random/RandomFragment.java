@@ -54,15 +54,13 @@ public class RandomFragment extends GifFragment implements IRandomView {
 
         super.onViewCreated(view, savedInstanceState);
 
-        mBinding.audioHeader.searchlabel.setVisibility(View.INVISIBLE);
-        mBinding.audioHeader.searchstring.setVisibility(View.INVISIBLE);
-
         mBinding.randomLayout.randombutton.setOnClickListener(view2 -> {
 
             int index = randomGenerator.nextInt(audioList.size());
             LudoAudio audio = audioList.get(index);
 
-            AudioUtils.playTrack(getContext(), audio, null);
+            mBinding.audioPlayer.setAudio(audio);
+            mBinding.audioPlayer.play();
         });
     }
 }

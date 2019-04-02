@@ -87,10 +87,14 @@ public abstract class AudioUtils {
 
     public static void stopTrack() {
         //TODO BUG CON IL MEDIAPLAYER.
-        if (DataSingleTon.getInstance().getMediaPlayer() != null && DataSingleTon.getInstance().getMediaPlayer().isPlaying()) {
-            DataSingleTon.getInstance().getMediaPlayer().stop();
-            DataSingleTon.getInstance().getMediaPlayer().reset();
-            DataSingleTon.getInstance().getMediaPlayer().release();
+        try {
+            if (DataSingleTon.getInstance().getMediaPlayer() != null) {
+                DataSingleTon.getInstance().getMediaPlayer().stop();
+                DataSingleTon.getInstance().getMediaPlayer().reset();
+                DataSingleTon.getInstance().getMediaPlayer().release();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

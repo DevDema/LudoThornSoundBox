@@ -96,8 +96,8 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
     @Override
     public void onButtonSelected(LudoAudio audio, int position, Button button) {
 
-        AudioUtils.playTrack(mActivity, audio, completionListener);
-        play_pause.setImageResource(R.drawable.ic_pause_white);
+        mBinding.audioPlayer.setAudio(audio);
+        mBinding.audioPlayer.play();
     }
 
 
@@ -130,8 +130,8 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                         audio.setHidden(true);
                         mPresenter.salvaAudio(audio);
                         if (mBinding.buttonsAudioPager.getAdapter() != null) {
-                            if (mBinding.audioHeader.searchstring.getText() != null) {
-                                ((ButtonViewPagerAdapter) mBinding.buttonsAudioPager.getAdapter()).getFilter().filter(mBinding.audioHeader.searchstring.getText().toString());
+                            if (mBinding.searchstring.getText() != null) {
+                                ((ButtonViewPagerAdapter) mBinding.buttonsAudioPager.getAdapter()).getFilter().filter(mBinding.searchstring.getText().toString());
                             }
                         }
                         break;
@@ -228,7 +228,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
 
         mBinding.buttonLeft.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_LEFT));
 
-        mBinding.audioHeader.searchstring.addTextChangedListener(new TextWatcher() {
+        mBinding.searchstring.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
