@@ -11,4 +11,5 @@
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
     <color name="colorAccentDark" >#E24905</color>
+    <color name="blue_light" >#5D77F0</color>
 </resources>

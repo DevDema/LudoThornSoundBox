@@ -29,6 +29,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.Pref
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings.SettingsFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.PreferencesListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 
 import javax.inject.Inject;
@@ -38,7 +39,7 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.LINK_ASKIN
 
 
 public class MainActivity extends ParentActivity
-        implements NavigationView.OnNavigationItemSelectedListener, IMainView {
+        implements NavigationView.OnNavigationItemSelectedListener, IMainView, PreferencesListener {
 
     private ActivityMainBinding mBinding;
     @Inject
@@ -210,5 +211,10 @@ public class MainActivity extends ParentActivity
 
     public void onHomeFragmentReady() {
         manageFeedbackAlert();
+    }
+
+    @Override
+    public void onFontChanged(boolean isFontFromApp) {
+
     }
 }

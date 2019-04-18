@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.Settings;
@@ -40,6 +41,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -127,6 +129,18 @@ public final class CommonUtils {
                 .setCancelable(false)
                 .setPositiveButton(context.getString(R.string.positive_label), positiveListener)
                 .setNegativeButton("Annulla", negativeListener);
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public static void showDialog(Context context, String title, String message, DialogInterface.OnClickListener positiveListener, boolean showCancel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("OK", positiveListener);
+        if (showCancel)
+            builder.setNegativeButton("Annulla", (dialog, id) -> dialog.dismiss());
         AlertDialog alert = builder.create();
         alert.show();
     }

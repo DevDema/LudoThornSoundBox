@@ -57,4 +57,7 @@
     <string name="extra_audio_info"><![CDATA[Audio disponibile nell\'app LudoThornSoundBox: https://play.google.com/store/apps/details?id=net.ddns.andrewnetwork.ludothornsoundbox&hl=it \n\n Voce di Ludo Thorn!]]></string>
     <string name="nessun_audio_in_riproduzione_label">Nessun audio in riproduzione</string>
     <string name="audio_nascosti_label">Audio nascosti</string>
+    <string name="usa_font_app_label">Usa font dell\'app</string>
+    <string name="usa_font_app_descruzuibe_label">Usa font dell\'app invece del classico font di sistema per tutta l\'app.</string>
+    <string name="usa_font_app_key">usa_font_app_key</string>
 </resources>

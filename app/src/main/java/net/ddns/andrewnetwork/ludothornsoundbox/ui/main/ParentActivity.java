@@ -1,5 +1,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main;
 
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -16,8 +18,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
+import androidx.annotation.StyleRes;
 
 public abstract class ParentActivity extends BaseActivity {
 
@@ -25,11 +26,11 @@ public abstract class ParentActivity extends BaseActivity {
 
         void onAdLoaded();
     }
+
     AdView mAdView;
     InterstitialAd interstitialAd;
     AdCustomListener adCustomListener;
 
-    float adcounter = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,39 +38,75 @@ public abstract class ParentActivity extends BaseActivity {
 
         MobileAds.initialize(this, AppConstants.ADS_CODE);
 
-            mAdView = findViewById(R.id.adView);
-            Bundle extras = new Bundle();
-            //extras.putString("max_ad_content_rating", "T");
-            AdListener adListener = new AdListener() {
+        mAdView = findViewById(R.id.adView);
+        Bundle extras = new Bundle();
+        //extras.putString("max_ad_content_rating", "T");
+        AdListener adListener = new AdListener() {
 
-                @Override
-                public void onAdLoaded() {
-                    mAdView.setVisibility(View.VISIBLE);
-                    if(adCustomListener != null)
-                        adCustomListener.onAdLoaded();
-                }
+            @Override
+            public void onAdLoaded() {
+                mAdView.setVisibility(View.VISIBLE);
+                if (adCustomListener != null)
+                    adCustomListener.onAdLoaded();
+            }
 
-                @Override
-                public void onAdFailedToLoad(int error) {
-                    mAdView.setVisibility(View.GONE);
-                    if(adCustomListener != null)
-                        adCustomListener.onAdLoaded();
-                }
+            @Override
+            public void onAdFailedToLoad(int error) {
+                mAdView.setVisibility(View.GONE);
+                if (adCustomListener != null)
+                    adCustomListener.onAdLoaded();
+            }
 
-                @Override
-                public void onAdClosed() {
-                    AdRequest adRequest = new AdRequest.Builder().build();
-                    interstitialAd.loadAd(adRequest);
-                }
+            @Override
+            public void onAdClosed() {
+                AdRequest adRequest = new AdRequest.Builder().build();
+                interstitialAd.loadAd(adRequest);
+            }
 
-            };
-            mAdView.setAdListener(adListener);
-            interstitialAd = new InterstitialAd(this);
+        };
+        mAdView.setAdListener(adListener);
+        interstitialAd = new InterstitialAd(this);
 
-            interstitialAd.setAdUnitId("ca-app-pub-3889032681139142/3864341552");
-            interstitialAd.setAdListener(adListener);
-            mAdView.loadAd(new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
-            interstitialAd.loadAd(new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+        interstitialAd.setAdUnitId("ca-app-pub-3889032681139142/3864341552");
+        interstitialAd.setAdListener(adListener);
+        mAdView.loadAd(new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+        interstitialAd.loadAd(new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        managePreferences();
+    }
+
+    private void managePreferences() {
+
+        SharedPreferences settings = getSharedPreferences("net.ddns.andrewnetwork.ludothornsoundbox_preferences", MODE_PRIVATE);
+
+        setFontPreference(settings);
+    }
+
+    private void setFontPreference(SharedPreferences settings) {
+        boolean isAppFont = settings.getBoolean(getString(R.string.usa_font_app_key), false);
+
+        Resources.Theme theme = getTheme();
+
+        @StyleRes int themeID = R.style.DefaultFont;
+
+        if (isAppFont) {
+            themeID = R.style.AppFont;
+        }
+
+        theme.applyStyle(themeID, true);
+
+    }
+
+    public void restartActivity() {
+        managePreferences();
+        finish();
+        startActivity(getIntent());
     }
 
     public int getDisplayHeight() {
