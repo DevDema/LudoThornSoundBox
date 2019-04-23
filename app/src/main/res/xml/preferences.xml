@@ -10,7 +10,10 @@
     <Preference
         android:key="@string/cambia_icona_key"
         android:summary="@string/cambia_icona_summary"
-        android:title="@string/cambia_icona_title" />
+        android:title="@string/cambia_icona_title" >
+        <intent
+            android:action="net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity" />
+    </Preference>
 
 
     <PreferenceCategory android:title="@string/audio_options">

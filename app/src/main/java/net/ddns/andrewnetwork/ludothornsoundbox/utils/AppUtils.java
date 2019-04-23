@@ -16,13 +16,22 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.net.Uri;
 import android.view.Display;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity.LAUNCHER_ICON_1;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity.LAUNCHER_ICON_2;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity.LAUNCHER_ICON_3;
 
 
 /**
@@ -34,6 +43,11 @@ public final class AppUtils {
     public static int DAYS_BEFORE_ASKING_FEEDBACK = 10;
     public static int DAYS_LATER_ASKING_FEEDBACK = 5;
     public static String LINK_ASKING_FEEDBACK = "https://play.google.com/store/apps/details?id=net.ddns.andrewnetwork.ludothornsoundbox&hl=it";
+
+    private static final String ALIAS_1 = "MainActivity1";
+    private static final String ALIAS_2 = "MainActivity2";
+    private static final String ALIAS_3 = "MainActivity3";
+
     private AppUtils() {
         // This class is not publicly instantiable
     }
@@ -59,5 +73,57 @@ public final class AppUtils {
         display.getSize(size);
         int width = size.x;
         return width > 1500;
+    }
+
+    public static void changeIcon(Context context, int position) {
+        deleteIcon(context, position);
+        putIcon(context, position);
+    }
+
+    private static void deleteIcon(Context context, int position) {
+        String packageName = context.getPackageName();
+        List<String> otherIcons = new ArrayList<>();
+        switch (position) {
+            default:
+            case LAUNCHER_ICON_1:
+                otherIcons.add(ALIAS_2);
+                otherIcons.add(ALIAS_3);
+                break;
+            case LAUNCHER_ICON_2:
+                otherIcons.add(ALIAS_1);
+                otherIcons.add(ALIAS_3);
+                break;
+            case LAUNCHER_ICON_3:
+                otherIcons.add(ALIAS_1);
+                otherIcons.add(ALIAS_2);
+                break;
+        }
+
+        for (String className : otherIcons) {
+            className = packageName +"." + className;
+            context.getPackageManager().setComponentEnabledSetting(
+                    new ComponentName(packageName, className),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        }
+    }
+
+    private static void putIcon(Context context, int position) {
+        String packageName = context.getPackageName();
+        String className = packageName+".";
+        switch (position) {
+            default:
+            case LAUNCHER_ICON_1:
+                className += ALIAS_1;
+                break;
+            case LAUNCHER_ICON_2:
+                className += ALIAS_2;
+                break;
+            case LAUNCHER_ICON_3:
+                className += ALIAS_3;
+                break;
+        }
+        context.getPackageManager().setComponentEnabledSetting(
+                new ComponentName(packageName, className),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
     }
 }

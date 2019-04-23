@@ -1,8 +1,10 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +16,11 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePrefencesFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpView;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.PreferencesManagerActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.ParentActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsView;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 
 import javax.inject.Inject;
@@ -29,7 +31,11 @@ import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 
-public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener, MvpView, BaseFragment.Callback {
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity.CURRENT_POSITION;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity.EXTRA_ICON_SELECTED;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity.REQUEST_ICON_SELECTED;
+
+public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener, MvpView, BaseFragment.Callback, Preference.OnPreferenceClickListener{
 
     @Inject
     ISettingsPresenter<ISettingsView> mPresenter;
@@ -56,6 +62,8 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
 
         bindPreferenceSummaryToValue(findPreference(getString(R.string.usa_font_app_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.carica_audio_insieme_key)));
+
+        findPreference(getString(R.string.cambia_icona_key)).setOnPreferenceClickListener(this);
     }
 
     @Override
@@ -165,5 +173,40 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     @Override
     public void onFragmentDetached(String tag) {
 
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        String key = preference.getKey();
+        final String iconKey = getString(R.string.cambia_icona_key);
+        int currentPosition = getPreferenceManager().getSharedPreferences().getInt(preference.getKey(), 0);
+
+        if(key.equals(iconKey)) {
+            Intent iconIntent = new Intent(mActivity, SettingsIconActivity.class);
+            iconIntent.putExtra(CURRENT_POSITION, currentPosition);
+            startActivityForResult(iconIntent, REQUEST_ICON_SELECTED);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null && data.getExtras() != null) {
+            switch (requestCode) {
+                case REQUEST_ICON_SELECTED:
+                    Preference iconPreference = findPreference(getString(R.string.cambia_icona_key));
+                    int position = (int) data.getExtras().get(EXTRA_ICON_SELECTED);
+                    //save to preferences
+                    getPreferenceManager().getSharedPreferences().edit().putInt(iconPreference.getKey(), position).apply();
+                    AppUtils.changeIcon(mActivity, position);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

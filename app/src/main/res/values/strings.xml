@@ -8,6 +8,7 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Impostazioni</string>
+    <string name="action_icon_preferences">Cambia Icona</string>
     <string name="send_email">Inviare Email?</string>
     <string name="ok">OK</string>
     <string name="app_market_link">"market://details?id="</string>
@@ -85,4 +86,8 @@
     <string name="credits_title">Crediti</string>
     <string name="credits_summary">Visualizza crediti su Ludo Thorn e autore dell\'app.</string>
     <string name="nessun_audio_in_riproduzione_label">Nessun audio in riproduzione</string>
+    <string name="icon_1_content_description">Icona di default con busto e radio.</string>
+    <string name="icon_1_description">Icona di default con busto.</string>
+    <string name="icon_2_description">Icona classica del canale</string>
+    <string name="icon_3_description">Icona disegnata male</string>
 </resources>
