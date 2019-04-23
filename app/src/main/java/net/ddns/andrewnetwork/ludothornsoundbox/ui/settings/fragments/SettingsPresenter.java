@@ -1,9 +1,9 @@
-package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings;
+package net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.DataManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings.SettingsViewPresenterBinder.ISettingsPresenter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings.SettingsViewPresenterBinder.ISettingsView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.SchedulerProvider;
 import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;

@@ -85,4 +85,8 @@ public class ActivitiesManager implements Application.ActivityLifecycleCallbacks
         }
         return activity;
     }
+
+    public Stack<Activity> getActivityStack() {
+        return mActivityStack;
+    }
 }

@@ -1,6 +1,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -18,6 +19,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
@@ -27,7 +30,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings.SettingsFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.PreferencesListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
@@ -77,11 +81,12 @@ public class MainActivity extends ParentActivity
 
         mBinding.navView.setNavigationItemSelectedListener(this);
         mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
+
     }
 
     private void manageFeedbackAlert() {
         mPresenter.incrementUsageCounter();
-        if(mPresenter.getUsageCounter()>mPresenter.getUsageThreshold()) {
+        if (mPresenter.getUsageCounter() > mPresenter.getUsageThreshold()) {
             showFeedBackDialog();
         }
     }
@@ -100,7 +105,7 @@ public class MainActivity extends ParentActivity
                     dialog.dismiss();
                 })
                 .setNegativeButton(getString(R.string.dopo_label), ((dialog, which) -> {
-                    mPresenter.saveUsageThreshold(mPresenter.getUsageThreshold()+DAYS_LATER_ASKING_FEEDBACK);
+                    mPresenter.saveUsageThreshold(mPresenter.getUsageThreshold() + DAYS_LATER_ASKING_FEEDBACK);
                     dialog.dismiss();
                 }));
         AlertDialog alert = builder.create();
@@ -146,9 +151,10 @@ public class MainActivity extends ParentActivity
         int id = item.getItemId();
 
         mBinding.drawerLayout.closeDrawer(GravityCompat.START);
-        Fragment fragment;
+        Fragment fragment = null;
 
         switch (id) {
+            //BOTTOM NAVIGATION MENU
             default:
             case R.id.action_home:
                 fragment = new HomeFragment();
@@ -162,12 +168,16 @@ public class MainActivity extends ParentActivity
             case R.id.action_favorites:
                 fragment = new PreferitiFragment();
                 break;
+            //NAVIGATION DRAWER
             case R.id.action_settings:
-                fragment = new SettingsFragment();
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
                 break;
         }
 
-        replaceFragmentIfNotExists(fragment);
+        if(fragment != null) {
+            replaceFragmentIfNotExists(fragment);
+        }
         return true;
     }
 
@@ -182,7 +192,7 @@ public class MainActivity extends ParentActivity
             }
         }
 
-        if(found) {
+        if (found) {
             for (Fragment fragment : getSupportFragmentManager().getFragments()) {
                 if (!newFragment.getClass().isInstance(fragment)) {
                     fragmentTransaction.hide(fragment);
@@ -190,9 +200,7 @@ public class MainActivity extends ParentActivity
             }
 
             fragmentTransaction.commit();
-        }
-
-        else addFragment(newFragment);
+        } else addFragment(newFragment);
 
     }
 
@@ -201,7 +209,7 @@ public class MainActivity extends ParentActivity
         super.onConfigurationChanged(newConfig);
 
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("dialog");
-        if(fragment != null) {
+        if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .detach(fragment)
@@ -217,4 +225,5 @@ public class MainActivity extends ParentActivity
     public void onFontChanged(boolean isFontFromApp) {
 
     }
+
 }

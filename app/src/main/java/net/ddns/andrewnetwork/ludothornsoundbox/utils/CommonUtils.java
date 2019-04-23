@@ -40,6 +40,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.StyleRes;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -112,6 +113,28 @@ public final class CommonUtils {
         alert.show();
     }
 
+    public static void showDialog(Context context, String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(context.getString(R.string.positive_label), (dialog, id) ->
+                        dialog.dismiss());
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public static void showDialog(Context context, @StyleRes int themeId, String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, themeId);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(context.getString(R.string.positive_label), (dialog, id) ->
+                        dialog.dismiss());
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     public static void showDialog(Context context, String message, DialogInterface.OnClickListener positiveListener, boolean showCancel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message)
@@ -135,6 +158,18 @@ public final class CommonUtils {
 
     public static void showDialog(Context context, String title, String message, DialogInterface.OnClickListener positiveListener, boolean showCancel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("OK", positiveListener);
+        if (showCancel)
+            builder.setNegativeButton("Annulla", (dialog, id) -> dialog.dismiss());
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public static void showDialog(Context context, @StyleRes int themeId, String title, String message, DialogInterface.OnClickListener positiveListener, boolean showCancel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, themeId);
         builder.setTitle(title);
         builder.setMessage(message)
                 .setCancelable(false)
@@ -171,5 +206,6 @@ public final class CommonUtils {
             @Override
             public void onPermissionRepeated() {
             }
-        }).build().checkPermission(WRITE_EXTERNAL_STORAGE, EXPORT_REQUEST);    }
+        }).build().checkPermission(WRITE_EXTERNAL_STORAGE, EXPORT_REQUEST);
+    }
 }

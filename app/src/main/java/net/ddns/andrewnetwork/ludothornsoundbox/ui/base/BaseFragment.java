@@ -36,6 +36,7 @@ public abstract class BaseFragment extends CoreFragment implements MvpView {
 
     protected BaseActivity mActivity;
     private ProgressDialog mProgressDialog;
+    protected Context mContext;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +52,8 @@ public abstract class BaseFragment extends CoreFragment implements MvpView {
             this.mActivity = activity;
             activity.onFragmentAttached();
         }
+
+        this.mContext = context;
     }
 
     @Override

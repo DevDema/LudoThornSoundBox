@@ -61,7 +61,7 @@ public class PreferitiFragment extends ParentFragment implements IPreferitiView 
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
-        if(!hidden) {
+        if (!hidden) {
             createList();
         }
     }
@@ -87,13 +87,11 @@ public class PreferitiFragment extends ParentFragment implements IPreferitiView 
                     return true;
                 });
 
-                if(getContext() != null) {
-                    button.setTypeface(ResourcesCompat.getFont(getContext(), R.font.knewave));
-                    button.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_white));
-                }
+                button.setTypeface(ResourcesCompat.getFont(getContext(), R.font.knewave));
+                button.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_white));
                 button.setMaxLines(2);
+                button.setHeight((int) getResources().getDimension(R.dimen.input_size_xxs));
                 button.setVisibility(View.VISIBLE);
-                button.setHeight(Objects.requireNonNull(getView()).getHeight() / 9);
                 button.setGravity(Gravity.CENTER_VERTICAL);
                 mBinding.linear.addView(button);
             }

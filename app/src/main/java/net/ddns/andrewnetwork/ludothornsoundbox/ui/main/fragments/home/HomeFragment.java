@@ -185,7 +185,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
     }
 
     private void configAudioList(List<LudoAudio> audioList) {
-        mBinding.spinner.setAdapter(SpinnerUtils.createOrderAdapter(mActivity));
+        mBinding.spinner.setAdapter(SpinnerUtils.createOrderAdapter(mContext));
 
         mBinding.reverse.setOnClickListener(view2 -> {
                     ButtonViewPagerAdapter<LudoAudio> adapter = (ButtonViewPagerAdapter<LudoAudio>) mBinding.buttonsAudioPager.getAdapter();
@@ -200,7 +200,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                 }
         );
 
-        ButtonViewPagerAdapter<LudoAudio> adapter = new ButtonViewPagerAdapter<>(mActivity, audioList, LudoAudio::getTitle, mBinding.buttonsAudioPager, ludoaudio -> !ludoaudio.isHidden());
+        ButtonViewPagerAdapter<LudoAudio> adapter = new ButtonViewPagerAdapter<>(mContext, audioList, LudoAudio::getTitle, mBinding.buttonsAudioPager, ludoaudio -> !ludoaudio.isHidden());
 
         ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override

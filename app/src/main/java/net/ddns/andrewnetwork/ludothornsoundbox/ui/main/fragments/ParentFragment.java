@@ -25,7 +25,6 @@ public abstract class ParentFragment extends BaseFragment {
             play_pause.setImageResource(R.drawable.ic_play_white);
         }
     };
-    private Context mContext;
 
 
     @Override

@@ -16,11 +16,13 @@ import com.google.android.gms.ads.MobileAds;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.NavigationDrawerActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.PreferencesManagerActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants;
 
 import androidx.annotation.StyleRes;
 
-public abstract class ParentActivity extends BaseActivity {
+public abstract class ParentActivity extends PreferencesManagerActivity {
 
     public interface AdCustomListener {
 
@@ -74,40 +76,7 @@ public abstract class ParentActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
 
-        managePreferences();
-    }
-
-    private void managePreferences() {
-
-        SharedPreferences settings = getSharedPreferences("net.ddns.andrewnetwork.ludothornsoundbox_preferences", MODE_PRIVATE);
-
-        setFontPreference(settings);
-    }
-
-    private void setFontPreference(SharedPreferences settings) {
-        boolean isAppFont = settings.getBoolean(getString(R.string.usa_font_app_key), false);
-
-        Resources.Theme theme = getTheme();
-
-        @StyleRes int themeID = R.style.DefaultFont;
-
-        if (isAppFont) {
-            themeID = R.style.AppFont;
-        }
-
-        theme.applyStyle(themeID, true);
-
-    }
-
-    public void restartActivity() {
-        managePreferences();
-        finish();
-        startActivity(getIntent());
-    }
 
     public int getDisplayHeight() {
         return getSize().y;
@@ -128,4 +97,9 @@ public abstract class ParentActivity extends BaseActivity {
         return interstitialAd;
     }
 
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+
+    }
 }

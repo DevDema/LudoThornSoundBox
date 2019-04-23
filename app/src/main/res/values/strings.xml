@@ -61,7 +61,7 @@
     <string name="usa_font_app_key">usa_font_app_key</string>
     <string name="cambia_icona_key">cambia_icona_key</string>
     <string name="mandatory_setting_label">Opzione obbligatoria</string>
-    <string name="mandatory_setting_summary_label">Per effettuare la modifica è necessario riavviare l\'app. Procedere?</string>
+    <string name="mandatory_setting_summary_label">Per effettuare la modifica è necessario riavviare l\'app.</string>
     <string name="cambia_icona_summary">Cambia icona dalla quale l\'app viene lanciata.</string>
     <string name="cambia_icona_title">Cambia icona del Launcher</string>
     <string name="carica_audio_insieme_key">carica_audio_insieme_key</string>

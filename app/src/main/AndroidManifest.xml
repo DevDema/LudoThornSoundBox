@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.ddns.andrewnetwork.ludothornsoundbox">
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:name=".MvpApp"
         android:allowBackup="true"
@@ -13,11 +13,12 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3889032681139142~8858308706"/>
+            android:value="ca-app-pub-3889032681139142~8858308706" />
+
         <activity
             android:name=".ui.main.MainActivity"
-            android:label="@string/app_name"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +30,11 @@
 
         <activity
             android:name=".ui.web.WebActivity"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name" />
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:label="@string/action_settings"
+            android:theme="@style/PreferenceActivityTheme"/>
     </application>
 
 </manifest>

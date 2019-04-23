@@ -1,8 +1,9 @@
-package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings;
+package net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,15 @@ import android.view.ViewGroup;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePrefencesFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.PreferencesManagerActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.ParentActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings.SettingsViewPresenterBinder.ISettingsPresenter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings.SettingsViewPresenterBinder.ISettingsView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
-
-import java.lang.reflect.Array;
 
 import javax.inject.Inject;
 
@@ -24,14 +27,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
+import androidx.preference.Preference;
 
-public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener, MvpView, BaseFragment.Callback {
 
     @Inject
     ISettingsPresenter<ISettingsView> mPresenter;
 
-    private @StringRes int[] mandatoryPreferences = { R.string.usa_font_app_key };
-    public SettingsFragment() {
+    private @StringRes
+    int[] mandatoryPreferences = {R.string.usa_font_app_key};
+
+    public static SettingsFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        SettingsFragment fragment = new SettingsFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -40,6 +52,10 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
 
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
+
+
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.usa_font_app_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.carica_audio_insieme_key)));
     }
 
     @Override
@@ -54,6 +70,18 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
         }
 
         return view;
+    }
+
+    private void bindPreferenceSummaryToValue(Preference preference) {
+        // Set the listener to watch for value changes.
+        preference.setOnPreferenceChangeListener(this);
+
+        // Trigger the listener immediately with the preference's
+        // current value.
+        /*onPreferenceChange(preference,
+                PreferenceManager
+                        .getDefaultSharedPreferences(preference.getContext())
+                        .getBoolean(preference.getKey(), true));*/
     }
 
     @Override
@@ -85,21 +113,19 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        if(isMandatory(key)) {
-            onMandatoryPreferenceChanged(sharedPreferences, key);
-        }
+
     }
 
-    private void onMandatoryPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    private void onMandatoryPreferenceChanged(String key) {
         CommonUtils.showDialog(mActivity,
-                "Opzione obbligatoria",
-                "Per effettuare la modifica è necessario riavviare l'app. Procedere?",
-                (dialog, which) -> ((ParentActivity) mActivity).restartActivity(),
-                true);
+                R.style.PreferenceActivityTheme_DialogTheme,
+                getString(R.string.mandatory_setting_label),
+                getString(R.string.mandatory_setting_summary_label), (dialog, which) -> ((SettingsActivity) mActivity).restartApp(),
+                false);
     }
 
     private boolean isMandatory(String key) {
-        for (int mandatoryPreference : mandatoryPreferences) {
+        for (@StringRes int mandatoryPreference : mandatoryPreferences) {
             if (getString(mandatoryPreference).equals(key)) {
                 return true;
             }
@@ -114,5 +140,30 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
         super.onDestroy();
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+        Log.d("PrefListener", "Selezionata preferenza " + newValue + " per: " + preference);
+
+        String key = preference.getKey();
+
+        if (isMandatory(key)) {
+            onMandatoryPreferenceChanged(key);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onFragmentAttached() {
+
+    }
+
+    @Override
+    public void onFragmentDetached(String tag) {
+
     }
 }

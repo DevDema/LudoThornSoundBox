@@ -2,11 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="Preferenze App">
 
-    <Preference
-        android:key="@string/cambia_icona_key"
-        android:summary="@string/cambia_icona_summary"
-        android:title="@string/cambia_icona_title" />
-
     <SwitchPreference
         android:key="@string/usa_font_app_key"
         android:summary="@string/usa_font_app_descruzuibe_label"

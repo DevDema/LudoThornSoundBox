@@ -1,4 +1,4 @@
-package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.settings;
+package net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpView;
