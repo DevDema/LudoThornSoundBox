@@ -1,6 +1,9 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.base.core.application;
 
 import android.app.Activity;
+import android.content.Context;
+
+import androidx.multidex.MultiDex;
 
 public abstract class BaseApplication extends android.app.Application implements IBaseApplication {
 
@@ -38,5 +41,11 @@ public abstract class BaseApplication extends android.app.Application implements
     @Override
     public void onFirstLaunchCompleted() {
         mDelegate.onFirstLaunchCompleted();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

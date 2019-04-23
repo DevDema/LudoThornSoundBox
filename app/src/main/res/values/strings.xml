@@ -55,9 +55,34 @@
     <string name="giammai_label">Giammai!</string>
     <string name="do_you_like_label">Ti piace l\'app? Lasciaci un feedback sul Play Store!</string>
     <string name="extra_audio_info"><![CDATA[Audio disponibile nell\'app LudoThornSoundBox: https://play.google.com/store/apps/details?id=net.ddns.andrewnetwork.ludothornsoundbox&hl=it \n\n Voce di Ludo Thorn!]]></string>
-    <string name="nessun_audio_in_riproduzione_label">Nessun audio in riproduzione</string>
     <string name="audio_nascosti_label">Audio nascosti</string>
     <string name="usa_font_app_label">Usa font dell\'app</string>
     <string name="usa_font_app_descruzuibe_label">Usa font dell\'app invece del classico font di sistema per tutta l\'app.</string>
     <string name="usa_font_app_key">usa_font_app_key</string>
+    <string name="cambia_icona_key">cambia_icona_key</string>
+    <string name="mandatory_setting_label">Opzione obbligatoria</string>
+    <string name="mandatory_setting_summary_label">Per effettuare la modifica è necessario riavviare l\'app. Procedere?</string>
+    <string name="cambia_icona_summary">Cambia icona dalla quale l\'app viene lanciata.</string>
+    <string name="cambia_icona_title">Cambia icona del Launcher</string>
+    <string name="carica_audio_insieme_key">carica_audio_insieme_key</string>
+    <string name="carica_audio_insieme_title">Carica audio in gruppo</string>
+    <string name="carica_audio_insieme_summary">Se abilitato, le informazioni degli audio verranno caricate tutte in una volta,  all\'avvio dell\'app. Questa scelta potrebbe richiedere molta attesa in fase di avvio.</string>
+    <string name="audio_options">Opzioni audio</string>
+    <string name="mostra_info_in_audio_key">mostra_info_in_audio_key</string>
+    <string name="mostra_info_in_audio_title">Mostra pulsante info audio</string>
+    <string name="mostra_info_in_audio_summary">Mostra pulsante per le opzioni di ogni audio all\'interno del bottone audio. Questa interazione evita di dover tenere premuto su un audio per visualizzarne le opzioni.</string>
+    <string name="audio_nascosti_title">Audio nascosti</string>
+    <string name="audio_nascosti_summary">Visualizza gli audio che hai nascosto nella home.</string>
+    <string name="audio_nascosti_key">audio_nascosti_key</string>
+    <string name="dimensione_pulsanti_key">dimensione_pulsanti_key</string>
+    <string name="dimensione_pulsanti_title">Dimensione pulsanti</string>
+    <string name="dimensione_pulsanti_summary">Modifica la dimensione dei pulsanti nella Home.</string>
+    <string name="opzioni_extra_title">Opzioni extra</string>
+    <string name="reset_app_title">Resetta applicazione</string>
+    <string name="reset_app_summary">Riporta l\'applicazione alle impostazioni di base.</string>
+    <string name="reset_app_key">reset_app_key</string>
+    <string name="credits_key">credits_key</string>
+    <string name="credits_title">Crediti</string>
+    <string name="credits_summary">Visualizza crediti su Ludo Thorn e autore dell\'app.</string>
+    <string name="nessun_audio_in_riproduzione_label">Nessun audio in riproduzione</string>
 </resources>
