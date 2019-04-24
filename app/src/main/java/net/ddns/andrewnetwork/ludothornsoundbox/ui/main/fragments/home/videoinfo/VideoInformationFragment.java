@@ -32,24 +32,27 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment.KEY_LOAD_AT_ONCE;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
 
 public class VideoInformationFragment extends ReducedDialogFragment implements IVideoInformationView {
 
-    private static final String KEY_VIDEO = "KEY_VIDEO";
+    private static final String KEY_AUDIO = "KEY_AUDIO";
     private Bundle savedInstanceState;
     private DialogVideoBinding mBinding;
-    private LudoVideo video;
+    private LudoAudio audio;
 
     @Inject
     IVideoInformationPresenter<IVideoInformationView> mPresenter;
+    private boolean loadAtOnce;
 
-    public static VideoInformationFragment newInstance(LudoVideo video) {
+    public static VideoInformationFragment newInstance(boolean audioAtonce, LudoAudio audio) {
 
         VideoInformationFragment videoInformationFragment = new VideoInformationFragment();
         Bundle bundle = new Bundle();
 
-        bundle.putString(KEY_VIDEO, JsonUtil.getGson().toJson(video));
+        bundle.putString(KEY_AUDIO, JsonUtil.getGson().toJson(audio));
+        bundle.putBoolean(KEY_LOAD_AT_ONCE, audioAtonce);
 
         videoInformationFragment.setArguments(bundle);
 
@@ -60,7 +63,14 @@ public class VideoInformationFragment extends ReducedDialogFragment implements I
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        video = getArguments() != null ? JsonUtil.getGson().fromJson(getArguments().getString(KEY_VIDEO), LudoVideo.class) : new LudoVideo();
+        audio = getArguments() != null ? JsonUtil.getGson().fromJson(getArguments().getString(KEY_AUDIO), LudoAudio.class) : new LudoAudio();
+
+        if (getArguments() != null) {
+            loadAtOnce = getArguments().getBoolean(KEY_LOAD_AT_ONCE);
+        }
+        else {
+            loadAtOnce = false;
+        }
     }
 
     @Nullable
@@ -82,7 +92,11 @@ public class VideoInformationFragment extends ReducedDialogFragment implements I
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setVideo(getActivity(), video);
+        if(!loadAtOnce) {
+            mPresenter.getVideoInformation(audio);
+        } else {
+            setVideo(getActivity(), audio.getVideo());
+        }
     }
 
     private void setVideo(Context context, LudoVideo video) {
@@ -145,6 +159,17 @@ public class VideoInformationFragment extends ReducedDialogFragment implements I
     @Override
     public void onThumbnailLoadFailed() {
         showDialog("Ooops! Non sono riuscito a caricare la thumbnail di questo video.");
+    }
+
+    @Override
+    public void onVideoInformationLoadFailed() {
+        showDialog("Ooops! Non sono riuscito a caricare le informazioni di questo video.", (dialog, which) -> dismiss(), false);
+
+    }
+
+    @Override
+    public void onVideoInformationLoadSuccess(LudoAudio audio) {
+        setVideo(getActivity(), audio.getVideo());
     }
 
     @Override

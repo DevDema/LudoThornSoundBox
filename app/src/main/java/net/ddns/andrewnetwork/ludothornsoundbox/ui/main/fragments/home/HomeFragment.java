@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
@@ -52,13 +54,24 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmpt
 @SuppressWarnings("unchecked")
 public class HomeFragment extends GifFragment implements OnButtonSelectedListener<LudoAudio>, IHomeView {
 
+    public static final String KEY_LOAD_AT_ONCE = "KEY_LOAD_AT_ONCE";
     private FragmentHomeBinding mBinding;
     private List<LudoAudio> audioList;
     public static final int AUDIO_NOME = 1;
     public static final int AUDIO_DATA = 2;
     @Inject
     IHomePresenter<IHomeView> mPresenter;
+    private boolean loadAtOnce;
 
+    public static HomeFragment newInstance(boolean loadAtOnce) {
+
+        Bundle args = new Bundle();
+
+        HomeFragment fragment = new HomeFragment();
+        args.putBoolean(KEY_LOAD_AT_ONCE, loadAtOnce);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -72,7 +85,9 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
             mPresenter.onAttach(this);
         }
 
-        mPresenter.getVideoInformationForAudios(audioList);
+        if (loadAtOnce) {
+            mPresenter.getVideoInformationForAudios(audioList);
+        }
 
 
         return mBinding.getRoot();
@@ -84,6 +99,18 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
         super.onCreate(savedInstanceState);
 
         audioList = AudioUtils.createAudioList(Objects.requireNonNull(mActivity));
+        if (getArguments() != null) {
+            loadAtOnce = getArguments().getBoolean(KEY_LOAD_AT_ONCE);
+        }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (!loadAtOnce) {
+            new Handler().postDelayed(() -> onAudioListReceived(audioList), 1000);
+        }
     }
 
     @Override
@@ -117,7 +144,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                         break;
                     case R.id.video_collegato:
                         if (mActivity != null && audio.getVideo() != null && nonEmptyNonNull(audio.getVideo().getId())) {
-                            mActivity.newDialogFragment(VideoInformationFragment.newInstance(audio.getVideo()));
+                            mActivity.newDialogFragment(VideoInformationFragment.newInstance(loadAtOnce, audio));
                         } else {
                             CommonUtils.showDialog(getContext(), "Video non disponibile per questo audio!");
 
@@ -179,7 +206,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
     @Override
     public void onAudioListReceived(List<LudoAudio> audioList) {
         configAudioList(audioList);
-        if(mActivity instanceof MainActivity) {
+        if (mActivity instanceof MainActivity) {
             ((MainActivity) mActivity).onHomeFragmentReady();
         }
     }

@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpPresenter;
@@ -16,10 +17,16 @@ public interface VideoInformationViewPresenterBinder {
         void onThumbnailLoadSuccess(Thumbnail thumbnail);
 
         void onThumbnailLoadFailed();
+
+        void onVideoInformationLoadFailed();
+
+        void onVideoInformationLoadSuccess(LudoAudio audio);
     }
 
     interface IVideoInformationPresenter<V extends IVideoInformationView> extends MvpPresenter<V> {
 
         void getThumbnail(LudoVideo video);
+
+        void getVideoInformation(LudoAudio id);
     }
 }

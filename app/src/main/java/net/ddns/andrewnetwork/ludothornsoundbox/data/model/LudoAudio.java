@@ -17,6 +17,9 @@ public class LudoAudio implements Serializable, Cloneable {
 
     public static Comparator<LudoAudio> COMPARE_BY_NAME = (one, other) -> one.title.compareTo(other.title);
 
+    public LudoAudio() {
+
+    }
     public LudoAudio(String filename, int audio, LudoVideo ludoVideo) {
         this.referredVideo = ludoVideo;
 

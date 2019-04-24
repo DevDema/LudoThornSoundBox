@@ -43,4 +43,5 @@ public interface ApiHelper {
     Observable<List<LudoVideo>> getMoreVideos(Channel channel, Date beforeDate);
 
     Observable<LudoAudio> getVideoById(LudoAudio audio);
+
 }

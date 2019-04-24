@@ -23,17 +23,17 @@ public abstract class PreferencesManagerActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        managePreferences();
-    }
-
-    private void managePreferences() {
-
         SharedPreferences settings = getSharedPreferences("net.ddns.andrewnetwork.ludothornsoundbox_preferences", MODE_PRIVATE);
 
-        setFontPreference(settings);
+        managePreferences(settings);
     }
 
-    private void setFontPreference(SharedPreferences settings) {
+    protected void managePreferences(SharedPreferences settings) {
+
+        getFontPreference(settings);
+    }
+
+    private void getFontPreference(SharedPreferences settings) {
         boolean isAppFont = settings.getBoolean(getString(R.string.usa_font_app_key), false);
 
         Resources.Theme theme = getTheme();
@@ -48,6 +48,7 @@ public abstract class PreferencesManagerActivity extends BaseActivity {
 
     }
 
+    //OLD METHOD TO RESTART APP
     public static void doRestart(Context c) {
         try {
             //check if the context is given

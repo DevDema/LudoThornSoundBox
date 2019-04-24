@@ -2,6 +2,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -48,6 +49,7 @@ public class MainActivity extends ParentActivity
     private ActivityMainBinding mBinding;
     @Inject
     IMainPresenter<IMainView> mPresenter;
+    private boolean loadAtOnce;
 
     @Override
     protected void setContentView() {
@@ -62,8 +64,6 @@ public class MainActivity extends ParentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        replaceFragment(new HomeFragment());
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -82,6 +82,8 @@ public class MainActivity extends ParentActivity
         mBinding.navView.setNavigationItemSelectedListener(this);
         mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
+        replaceFragment(HomeFragment.newInstance(loadAtOnce));
+
     }
 
     private void manageFeedbackAlert() {
@@ -89,6 +91,17 @@ public class MainActivity extends ParentActivity
         if (mPresenter.getUsageCounter() > mPresenter.getUsageThreshold()) {
             showFeedBackDialog();
         }
+    }
+
+    @Override
+    protected void managePreferences(SharedPreferences settings) {
+        super.managePreferences(settings);
+
+        getLoadAtOnce(settings);
+    }
+
+    private void getLoadAtOnce(SharedPreferences settings) {
+        this.loadAtOnce = settings.getBoolean(getString(R.string.carica_audio_insieme_key), true);
     }
 
     private void showFeedBackDialog() {
@@ -157,7 +170,7 @@ public class MainActivity extends ParentActivity
             //BOTTOM NAVIGATION MENU
             default:
             case R.id.action_home:
-                fragment = new HomeFragment();
+                fragment = HomeFragment.newInstance(loadAtOnce);
                 break;
             case R.id.action_random:
                 fragment = new RandomFragment();

@@ -90,4 +90,5 @@
     <string name="icon_1_description">Icona di default con busto.</string>
     <string name="icon_2_description">Icona classica del canale</string>
     <string name="icon_3_description">Icona disegnata male</string>
+    <string name="sblocca_label">Sblocca</string>
 </resources>

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.DataManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationPresenter;
@@ -41,6 +42,22 @@ public class VideoInformationPresenter<V extends IVideoInformationView> extends 
                             getMvpView().hideLoading();
                         }, throwable -> {
                             getMvpView().onThumbnailLoadFailed();
+                            getMvpView().hideLoading();
+                        }
+                ));
+    }
+
+    @Override
+    public void getVideoInformation(LudoAudio audio) {
+        getMvpView().showLoading();
+        getCompositeDisposable().add(Single.fromObservable(getDataManager().getVideoById(audio))
+                .observeOn(getSchedulerProvider().ui())
+                .subscribeOn(getSchedulerProvider().io())
+                .subscribe(thumbnail -> {
+                            getMvpView().onVideoInformationLoadSuccess(audio);
+                            getMvpView().hideLoading();
+                        }, throwable -> {
+                            getMvpView().onVideoInformationLoadFailed();
                             getMvpView().hideLoading();
                         }
                 ));
