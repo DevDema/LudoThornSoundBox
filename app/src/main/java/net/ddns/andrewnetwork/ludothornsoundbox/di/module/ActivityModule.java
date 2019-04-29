@@ -34,6 +34,9 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.Pref
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioViewPresenterBinder.ISettingsHiddenAudioPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioViewPresenterBinder.ISettingsHiddenAudioView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsView;
@@ -121,6 +124,11 @@ public class ActivityModule {
 
     @Provides
     ISettingsPresenter<ISettingsView> provideSettingsPresenter(SettingsPresenter<ISettingsView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ISettingsHiddenAudioPresenter<ISettingsHiddenAudioView> provideSettingsHiddenAudioPresenter(SettingsHiddenAudioPresenter<ISettingsHiddenAudioView> presenter) {
         return presenter;
     }
 }

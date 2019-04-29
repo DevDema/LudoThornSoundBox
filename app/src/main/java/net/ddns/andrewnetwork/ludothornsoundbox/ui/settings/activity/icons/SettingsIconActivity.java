@@ -1,4 +1,4 @@
-package net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity;
+package net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,8 +26,12 @@ public class SettingsIconActivity extends PreferencesManagerActivity implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setHomeButtonEnabled(true);
-        setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            mIsHomeButtonEnabled = true;
+            mIsDisplayHomeAsUpEnabled = true;
+            getSupportActionBar().setHomeButtonEnabled(mIsHomeButtonEnabled);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(mIsDisplayHomeAsUpEnabled);
+        }
 
         //STRICTLY IN THIS ORDER.
         checkCurrentPosition();

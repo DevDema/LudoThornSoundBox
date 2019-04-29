@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,12 +40,13 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 
 import javax.inject.Inject;
 
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity.REQUEST_SETTINGS_CHANGE;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.DAYS_LATER_ASKING_FEEDBACK;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.LINK_ASKING_FEEDBACK;
 
 
 public class MainActivity extends ParentActivity
-        implements NavigationView.OnNavigationItemSelectedListener, IMainView, PreferencesListener {
+        implements NavigationView.OnNavigationItemSelectedListener, IMainView, PreferencesListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private ActivityMainBinding mBinding;
     @Inject
@@ -83,6 +85,8 @@ public class MainActivity extends ParentActivity
         mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         replaceFragment(HomeFragment.newInstance(loadAtOnce));
+
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).registerOnSharedPreferenceChangeListener(this);
 
     }
 
@@ -239,4 +243,24 @@ public class MainActivity extends ParentActivity
 
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(getString(R.string.audio_nascosti_key))) {
+            HomeFragment fragment = getFragmentByClass(HomeFragment.class);
+
+            if(fragment != null) {
+                fragment.onAudioListChanged();
+            }
+        }
+    }
+
+    private <T extends Fragment> T getFragmentByClass(Class<T> fragmentClass) {
+        for(Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if(fragment.getClass().equals(fragmentClass)) {
+                return (T) fragment;
+            }
+        }
+
+        return null;
+    }
 }

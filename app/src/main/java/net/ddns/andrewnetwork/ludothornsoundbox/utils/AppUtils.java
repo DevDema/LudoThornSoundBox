@@ -29,9 +29,9 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity.LAUNCHER_ICON_1;
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity.LAUNCHER_ICON_2;
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity.LAUNCHER_ICON_3;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.LAUNCHER_ICON_1;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.LAUNCHER_ICON_2;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.LAUNCHER_ICON_3;
 
 
 /**

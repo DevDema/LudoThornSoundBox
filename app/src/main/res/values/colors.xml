@@ -12,4 +12,5 @@
     <color name="transparent">#00000000</color>
     <color name="colorAccentDark" >#E24905</color>
     <color name="blue_light" >#5D77F0</color>
+    <color name="gray">#777777</color>
 </resources>

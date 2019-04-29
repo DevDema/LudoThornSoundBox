@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.settings;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -9,6 +10,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.PreferencesManagerActivi
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsFragment;
 
 public class SettingsActivity extends PreferencesManagerActivity {
+
+    public static final int REQUEST_SETTINGS_CHANGE = 2022;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

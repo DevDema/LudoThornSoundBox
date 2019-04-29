@@ -154,13 +154,17 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                         shareAudio(audio);
                         break;
                     case R.id.nascondi_audio:
+                        ButtonViewPagerAdapter adapter = ((ButtonViewPagerAdapter) mBinding.buttonsAudioPager.getAdapter());
                         audio.setHidden(true);
                         mPresenter.salvaAudio(audio);
-                        if (mBinding.buttonsAudioPager.getAdapter() != null) {
+                        if (adapter != null) {
                             if (mBinding.searchstring.getText() != null) {
-                                ((ButtonViewPagerAdapter) mBinding.buttonsAudioPager.getAdapter()).getFilter().filter(mBinding.searchstring.getText().toString());
+                                adapter.getFilter().filter(mBinding.searchstring.getText().toString());
                             }
+
+                            setCounter(adapter, mBinding.buttonsAudioPager.getCurrentItem());
                         }
+
                         break;
 
                 }
@@ -250,6 +254,8 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
         adapter.setOnButtonSelectedListener(this);
 
         mBinding.buttonsAudioPager.setAdapter(adapter);
+
+        adapter.getFilter().filter("");
 
         mBinding.buttonRight.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_RIGHT));
 
@@ -350,5 +356,11 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                 }
             });
         }
+    }
+
+    public void onAudioListChanged() {
+        this.audioList = mPresenter.getAudioListFromPreferences();
+
+        onAudioListReceived(audioList);
     }
 }

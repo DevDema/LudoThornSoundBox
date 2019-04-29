@@ -145,4 +145,9 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
             }
         }
     }
+
+    @Override
+    public List<LudoAudio> getAudioListFromPreferences() {
+        return getDataManager().getAudioSavedList();
+    }
 }

@@ -36,9 +36,12 @@
             android:theme="@style/PreferenceActivityTheme" />
 
         <activity
-            android:name=".ui.settings.activity.SettingsIconActivity"
+            android:name=".ui.settings.activity.icons.SettingsIconActivity"
             android:label="@string/action_icon_preferences"
             android:theme="@style/PreferenceActivityTheme" />
+        <activity android:name=".ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity"
+            android:label="@string/audio_nascosti_label"
+            android:theme="@style/PreferenceActivityTheme"/>
 
         <activity-alias
             android:name=".MainActivity1"

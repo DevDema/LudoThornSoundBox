@@ -91,4 +91,8 @@
     <string name="icon_2_description">Icona classica del canale</string>
     <string name="icon_3_description">Icona disegnata male</string>
     <string name="sblocca_label">Sblocca</string>
+    <string name="audio_number_description_label">Audio n°%d</string>
+    <string name="info_not_available_label">Informazione non disponibile</string>
+    <string name="nessun_audio_nascosto_label">Nessun audio nascosto!</string>
+    <string name="select_all_label">Seleziona Tutto</string>
 </resources>

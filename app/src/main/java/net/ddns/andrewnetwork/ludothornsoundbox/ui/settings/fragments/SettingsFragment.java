@@ -10,17 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePrefencesFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 
 import javax.inject.Inject;
 
@@ -30,9 +33,17 @@ import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity.CURRENT_POSITION;
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity.EXTRA_ICON_SELECTED;
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity.REQUEST_ICON_SELECTED;
+import com.google.api.client.json.Json;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
+
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity.REQUEST_HIDDEN_SELECTED;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity.RESULT_CODE_HIDDEN_AUDIO;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity.RESULT_HIDDEN_AUDIO_LIST;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.CURRENT_POSITION;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.EXTRA_ICON_SELECTED;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.REQUEST_ICON_SELECTED;
 
 public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener, MvpView, BaseFragment.Callback, Preference.OnPreferenceClickListener{
 
@@ -63,6 +74,7 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
         bindPreferenceSummaryToValue(findPreference(getString(R.string.carica_audio_insieme_key)));
 
         findPreference(getString(R.string.cambia_icona_key)).setOnPreferenceClickListener(this);
+        findPreference(getString(R.string.audio_nascosti_key)).setOnPreferenceClickListener(this);
     }
 
     @Override
@@ -178,12 +190,20 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     public boolean onPreferenceClick(Preference preference) {
         String key = preference.getKey();
         final String iconKey = getString(R.string.cambia_icona_key);
-        int currentPosition = getPreferenceManager().getSharedPreferences().getInt(preference.getKey(), 0);
+        final String hiddenKey = getString(R.string.audio_nascosti_key);
 
         if(key.equals(iconKey)) {
+            int currentPosition = getPreferenceManager().getSharedPreferences().getInt(iconKey, 0);
+
             Intent iconIntent = new Intent(mActivity, SettingsIconActivity.class);
             iconIntent.putExtra(CURRENT_POSITION, currentPosition);
             startActivityForResult(iconIntent, REQUEST_ICON_SELECTED);
+
+            return true;
+        } else if(key.equals(hiddenKey)) {
+            Intent hiddenIntent = new Intent(mActivity, SettingsHiddenAudioActivity.class);
+
+            startActivityForResult(hiddenIntent, REQUEST_HIDDEN_SELECTED);
 
             return true;
         }
@@ -203,6 +223,14 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
                     getPreferenceManager().getSharedPreferences().edit().putInt(iconPreference.getKey(), position).apply();
                     AppUtils.changeIcon(mActivity, position);
                     break;
+                case REQUEST_HIDDEN_SELECTED:
+                    if(resultCode == RESULT_CODE_HIDDEN_AUDIO) {
+                        Preference hiddenPreference = findPreference(getString(R.string.audio_nascosti_key));
+
+                        getPreferenceManager().getSharedPreferences().edit().putString(hiddenPreference.getKey(),
+                                (String) data.getExtras().get(RESULT_HIDDEN_AUDIO_LIST)
+                        ).apply();
+                    }
                 default:
                     break;
             }

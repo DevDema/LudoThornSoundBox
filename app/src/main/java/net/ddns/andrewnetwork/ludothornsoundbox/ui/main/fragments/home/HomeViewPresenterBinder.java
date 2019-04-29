@@ -30,5 +30,7 @@ public interface HomeViewPresenterBinder {
         void getVideoInformationForAudios(List<LudoAudio> audioList);
 
         void salvaAudio(LudoAudio audio);
+
+        List<LudoAudio> getAudioListFromPreferences();
     }
 }
