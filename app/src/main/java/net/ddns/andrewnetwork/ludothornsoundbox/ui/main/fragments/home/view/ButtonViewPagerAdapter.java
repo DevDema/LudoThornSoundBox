@@ -2,6 +2,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view;
 
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +89,7 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
     }
 
     private void computeMaxItemsPerPage() {
-        int buttonWidth = (int) mContext.getResources().getDimension(R.dimen.input_size_m);
+        int buttonWidth = ButtonsView.getWidthFromPreferences(mContext);
         int buttonHeight = (int) mContext.getResources().getDimension(R.dimen.input_size_xxxs);
 
         final int MAX_COLUMNS = (int) Math.floor(collection.getWidth() * 1.0 / buttonWidth);

@@ -31,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 
 import com.google.api.client.json.Json;
@@ -72,9 +73,11 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
 
         bindPreferenceSummaryToValue(findPreference(getString(R.string.usa_font_app_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.carica_audio_insieme_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.dimensione_pulsanti_key)));
 
         findPreference(getString(R.string.cambia_icona_key)).setOnPreferenceClickListener(this);
         findPreference(getString(R.string.audio_nascosti_key)).setOnPreferenceClickListener(this);
+        findPreference(getString(R.string.dimensione_pulsanti_key)).setOnPreferenceClickListener(this);
     }
 
     @Override

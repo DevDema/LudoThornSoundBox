@@ -245,7 +245,7 @@ public class MainActivity extends ParentActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(getString(R.string.audio_nascosti_key))) {
+        if(key.equals(getString(R.string.audio_nascosti_key)) || key.equals(getString(R.string.dimensione_pulsanti_key))) {
             HomeFragment fragment = getFragmentByClass(HomeFragment.class);
 
             if(fragment != null) {

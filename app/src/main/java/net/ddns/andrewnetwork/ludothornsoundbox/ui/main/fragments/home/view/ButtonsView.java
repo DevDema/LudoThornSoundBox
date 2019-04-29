@@ -2,6 +2,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,7 +113,7 @@ public class ButtonsView<T> extends LinearLayout {
     }
 
     public void inflateButtons(Context context) {
-        int buttonWidth = (int) context.getResources().getDimension(R.dimen.input_size_m);
+        int buttonWidth = getWidthFromPreferences(context);
         int buttonHeight = (int) context.getResources().getDimension(R.dimen.input_size_xxxs);
         MAX_COLUMNS = (int) Math.floor(getWidth() * 1.0 / (buttonWidth + 2 * MARGIN));
         MAX_ROWS = (int) Math.floor(getHeight() * 1.0 / (buttonHeight + 2 * MARGIN));
@@ -154,5 +155,22 @@ public class ButtonsView<T> extends LinearLayout {
 
     public void setOnViewReadyListener(OnViewReadyListener onViewReadyListener) {
         this.onViewReadyListener = onViewReadyListener;
+    }
+
+    static int getWidthFromPreferences(Context context) {
+        final String DEFAULT_VALUE = "Media";
+        String widthString = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.dimensione_pulsanti_key), DEFAULT_VALUE);
+
+        widthString = widthString != null ? widthString : DEFAULT_VALUE;
+        switch (widthString) {
+            case "Piccola":
+                return (int) context.getResources().getDimension(R.dimen.input_size_xs2);
+            default:
+            case "Media":
+                return (int) context.getResources().getDimension(R.dimen.input_size_m);
+            case "Grande":
+                return (int) context.getResources().getDimension(R.dimen.input_size_l);
+
+        }
     }
 }
