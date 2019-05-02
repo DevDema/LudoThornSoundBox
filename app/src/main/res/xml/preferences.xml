@@ -2,6 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="Preferenze App">
 
+    <ListPreference
+        android:key="@string/pag_iniziale_key"
+        android:summary="@string/pag_iniziale_summary"
+        android:entries="@array/schermate_list"
+        android:entryValues="@array/schermate_list"
+        android:title="@string/pag_iniziale_title"/>
+
     <SwitchPreference
         android:key="@string/usa_font_app_key"
         android:summary="@string/usa_font_app_descruzuibe_label"

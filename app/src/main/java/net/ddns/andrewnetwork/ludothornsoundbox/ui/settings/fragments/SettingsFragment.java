@@ -2,7 +2,6 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,7 +38,7 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icon
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.EXTRA_ICON_SELECTED;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.REQUEST_ICON_SELECTED;
 
-public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener, MvpView, BaseFragment.Callback, Preference.OnPreferenceClickListener{
+public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, Preference.OnPreferenceChangeListener, MvpView, BaseFragment.Callback, Preference.OnPreferenceClickListener{
 
     @Inject
     ISettingsPresenter<ISettingsView> mPresenter;
@@ -59,9 +58,6 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getPreferenceScreen().getSharedPreferences()
-                .registerOnSharedPreferenceChangeListener(this);
 
 
         bindPreferenceSummaryToValue(findPreference(getString(R.string.usa_font_app_key)));
@@ -127,12 +123,6 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
 
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-
-    }
-
     private void onMandatoryPreferenceChanged(String key) {
         CommonUtils.showDialog(mActivity,
                 R.style.PreferenceActivityTheme_DialogTheme,
@@ -155,8 +145,6 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
 

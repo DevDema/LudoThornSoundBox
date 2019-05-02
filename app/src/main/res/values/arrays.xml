@@ -6,4 +6,12 @@
         <item>Media</item>
         <item>Grande</item>
     </string-array>
+
+    <string-array name="schermate_list">
+
+        <item>Home</item>
+        <item>Casuale</item>
+        <item>Video</item>
+        <item>Preferiti</item>
+    </string-array>
 </resources>

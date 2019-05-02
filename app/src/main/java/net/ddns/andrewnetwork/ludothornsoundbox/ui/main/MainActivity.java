@@ -7,9 +7,12 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 
 
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.ActionMenuItem;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -22,7 +25,10 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
@@ -52,6 +58,7 @@ public class MainActivity extends ParentActivity
     @Inject
     IMainPresenter<IMainView> mPresenter;
     private boolean loadAtOnce;
+    @IdRes int fragmentFirstSelection;
 
     @Override
     protected void setContentView() {
@@ -84,7 +91,7 @@ public class MainActivity extends ParentActivity
         mBinding.navView.setNavigationItemSelectedListener(this);
         mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
-        replaceFragment(HomeFragment.newInstance(loadAtOnce));
+        mBinding.appBarMain.navigation.setSelectedItemId(fragmentFirstSelection);
 
         PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).registerOnSharedPreferenceChangeListener(this);
 
@@ -101,11 +108,36 @@ public class MainActivity extends ParentActivity
     protected void managePreferences(SharedPreferences settings) {
         super.managePreferences(settings);
 
-        getLoadAtOnce(settings);
+        this.loadAtOnce = getLoadAtOnce(settings);
+        this.fragmentFirstSelection = getFirstFragment(settings);
     }
 
-    private void getLoadAtOnce(SharedPreferences settings) {
-        this.loadAtOnce = settings.getBoolean(getString(R.string.carica_audio_insieme_key), true);
+    private @IdRes int getFirstFragment(SharedPreferences settings) {
+        String fragment = settings.getString(getString(R.string.pag_iniziale_key), "Home");
+        @IdRes int selection;
+
+        switch (fragment) {
+            default:
+            case "Home":
+                selection = R.id.action_home;
+                break;
+            case "Preferiti":
+                selection = R.id.action_favorites;
+                break;
+            case "Casuale":
+                selection = R.id.action_random;
+                break;
+            case "Video":
+                selection = R.id.action_video;
+                break;
+        }
+
+        return selection;
+    }
+
+
+    private boolean getLoadAtOnce(SharedPreferences settings) {
+        return settings.getBoolean(getString(R.string.carica_audio_insieme_key), true);
     }
 
     private void showFeedBackDialog() {
@@ -192,7 +224,7 @@ public class MainActivity extends ParentActivity
                 break;
         }
 
-        if(fragment != null) {
+        if (fragment != null) {
             replaceFragmentIfNotExists(fragment);
         }
         return true;
@@ -245,21 +277,21 @@ public class MainActivity extends ParentActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(getString(R.string.audio_nascosti_key))
+        if (key.equals(getString(R.string.audio_nascosti_key))
                 || key.equals(getString(R.string.dimensione_pulsanti_key))
                 || key.equals(getString(R.string.mostra_info_in_audio_key))
         ) {
             HomeFragment fragment = getFragmentByClass(HomeFragment.class);
 
-            if(fragment != null) {
+            if (fragment != null) {
                 fragment.onAudioListChanged();
             }
         }
     }
 
     private <T extends Fragment> T getFragmentByClass(Class<T> fragmentClass) {
-        for(Fragment fragment : getSupportFragmentManager().getFragments()) {
-            if(fragment.getClass().equals(fragmentClass)) {
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment.getClass().equals(fragmentClass)) {
                 return (T) fragment;
             }
         }

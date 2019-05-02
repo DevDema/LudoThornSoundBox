@@ -95,4 +95,7 @@
     <string name="info_not_available_label">Informazione non disponibile</string>
     <string name="nessun_audio_nascosto_label">Nessun audio nascosto!</string>
     <string name="select_all_label">Seleziona Tutto</string>
+    <string name="pag_iniziale_key">pag_iniziale</string>
+    <string name="pag_iniziale_title">Pagina iniziale</string>
+    <string name="pag_iniziale_summary">Imposta la pagina iniziale da caricare all\'avvio dell\'app.</string>
 </resources>
