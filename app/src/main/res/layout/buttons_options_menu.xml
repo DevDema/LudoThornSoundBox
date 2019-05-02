@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="1"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/button_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toStartOf="@id/button_options"
+        android:textAllCaps="true"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:background="@color/transparent" />
+
+    <ImageButton
+        android:id="@+id/button_options"
+        android:layout_width="@dimen/input_size_xxs"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/audio_options"
+        android:background="@color/transparent"
+        android:scaleType="fitCenter"
+        android:layout_alignParentEnd="true"
+        app:srcCompat="@drawable/ic_more_vert_black_24dp"/>
+</RelativeLayout>

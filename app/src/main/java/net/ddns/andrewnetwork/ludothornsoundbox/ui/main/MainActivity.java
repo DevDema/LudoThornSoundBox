@@ -139,7 +139,7 @@ public class MainActivity extends ParentActivity
         }
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -159,7 +159,7 @@ public class MainActivity extends ParentActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -245,7 +245,10 @@ public class MainActivity extends ParentActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(getString(R.string.audio_nascosti_key)) || key.equals(getString(R.string.dimensione_pulsanti_key))) {
+        if(key.equals(getString(R.string.audio_nascosti_key))
+                || key.equals(getString(R.string.dimensione_pulsanti_key))
+                || key.equals(getString(R.string.mostra_info_in_audio_key))
+        ) {
             HomeFragment fragment = getFragmentByClass(HomeFragment.class);
 
             if(fragment != null) {

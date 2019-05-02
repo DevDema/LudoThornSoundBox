@@ -34,11 +34,13 @@ public class ButtonsView<T> extends LinearLayout {
     private static int MARGIN;
     private List<T> list;
     private LinearLayout masterLayout;
+    private boolean infoVisible;
 
     public ButtonsView(Context context) {
         super(context);
 
         this.mContext = context;
+        this.infoVisible = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(mContext.getString(R.string.mostra_info_in_audio_key), false);
         inflate();
     }
 
@@ -61,12 +63,16 @@ public class ButtonsView<T> extends LinearLayout {
         for (int i = 0; i < MAX_ROWS; i++) {
             LinearLayout linearLayout = (LinearLayout) masterLayout.getChildAt(i);
             for (int j = 0; j < MAX_COLUMNS; j++) {
-                Button button = (Button) linearLayout.getChildAt(j);
+                View button = linearLayout.getChildAt(j);
                 int index = i * MAX_COLUMNS + j;
                 if (index < list.size()) {
                     T object = list.get(index);
                     if (object != null) {
-                        button.setText(parser.parseToString(object));
+                        if (button instanceof Button) {
+                            ((Button) button).setText(parser.parseToString(object));
+                        } else if (button instanceof OptionsMenuButton) {
+                            ((OptionsMenuButton) button).setText(parser.parseToString(object));
+                        }
                         button.setVisibility(View.VISIBLE);
                     }
                 } else if (lastIndex == 0) {
@@ -93,19 +99,24 @@ public class ButtonsView<T> extends LinearLayout {
 
 
     public void setOnButtonSelectedListener(OnButtonSelectedListener<T> listener) {
-        if (list == null)
+        if (list == null) {
             throw new IllegalArgumentException("Trying to set listener on a empty array or list");
+        }
 
         for (int i = 0; i < MAX_ROWS; i++) {
             LinearLayout linearLayout = (LinearLayout) masterLayout.getChildAt(i);
             for (int j = 0; j < MAX_COLUMNS; j++) {
-                Button button = (Button) linearLayout.getChildAt(j);
+                View button = linearLayout.getChildAt(j);
                 int position = i * MAX_COLUMNS + j;
                 if (position < list.size()) {
                     T object = list.get(position);
                     if (object != null) {
-                        button.setOnClickListener(view -> listener.onButtonSelected(object, position, (Button) view));
-                        button.setOnLongClickListener(v -> listener.onButtonLongSelected(object, position, (Button) v));
+                        button.setOnClickListener(view -> listener.onButtonSelected(object, position, view));
+                        if (infoVisible) {
+                            ((OptionsMenuButton) button).setOnMoreButtonClickListener(v -> listener.onButtonLongSelected(object, position, v));
+                        } else {
+                            button.setOnLongClickListener(v -> listener.onButtonLongSelected(object, position, v));
+                        }
                     }
                 }
             }
@@ -124,7 +135,16 @@ public class ButtonsView<T> extends LinearLayout {
             linearLayout.setWeightSum(MAX_COLUMNS);
             linearLayout.setOrientation(HORIZONTAL);
             for (int j = 0; j < MAX_COLUMNS; j++) {
-                Button button = new Button(context);
+                View button;
+                if (infoVisible) {
+                    button = new OptionsMenuButton(context);
+                    ((OptionsMenuButton) button).setTypeface(ResourcesCompat.getFont(mContext, R.font.knewave));
+                    ((OptionsMenuButton) button).setMaxLines(1);
+                } else {
+                    button = new Button(context);
+                    ((Button) button).setTypeface(ResourcesCompat.getFont(mContext, R.font.knewave));
+                    ((Button) button).setMaxLines(1);
+                }
                 LayoutParams layoutParams = new LayoutParams(buttonWidth, buttonHeight);
                 layoutParams.gravity = Gravity.CENTER;
                 layoutParams.weight = 1;
@@ -135,10 +155,8 @@ public class ButtonsView<T> extends LinearLayout {
 
                 button.setLayoutParams(layoutParams);
 
-                button.setTypeface(ResourcesCompat.getFont(mContext, R.font.knewave));
                 button.setBackground(ContextCompat.getDrawable(mContext, R.drawable.button_white));
                 button.setVisibility(View.INVISIBLE);
-                button.setMaxLines(1);
                 linearLayout.addView(button);
             }
             masterLayout.addView(linearLayout);

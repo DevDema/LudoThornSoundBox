@@ -28,6 +28,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewP
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.ButtonViewPagerAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.OnButtonSelectedListener;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.OptionsMenuButton;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.model.ChiaveValore;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
@@ -121,7 +122,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
     }
 
     @Override
-    public void onButtonSelected(LudoAudio audio, int position, Button button) {
+    public void onButtonSelected(LudoAudio audio, int position, View button) {
 
         mBinding.audioPlayer.setAudio(audio);
         mBinding.audioPlayer.play();
@@ -130,7 +131,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
 
     @SuppressLint("RestrictedApi")
     @Override
-    public boolean onButtonLongSelected(LudoAudio audio, int position, Button button) {
+    public boolean onButtonLongSelected(LudoAudio audio, int position, View button) {
         MenuBuilder menuBuilder = new MenuBuilder(mActivity);
         MenuInflater inflater = new MenuInflater(mActivity);
         MenuPopupHelper optionsMenu = new MenuPopupHelper(mActivity, menuBuilder, button);
