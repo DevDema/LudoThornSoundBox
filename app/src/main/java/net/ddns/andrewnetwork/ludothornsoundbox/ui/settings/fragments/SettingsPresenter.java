@@ -15,4 +15,8 @@ public class SettingsPresenter<V extends ISettingsView> extends BasePresenter<V>
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
+    @Override
+    public void clearSharedPreferences() {
+        getDataManager().clearSharedPreferences();
+    }
 }

@@ -12,5 +12,6 @@ public interface SettingsViewPresenterBinder {
 
     interface ISettingsPresenter<V extends ISettingsView> extends MvpPresenter<V> {
 
+        void clearSharedPreferences();
     }
 }

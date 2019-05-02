@@ -158,4 +158,9 @@ public class AppDataManager implements DataManager {
     public boolean rimuoviPreferito(LudoAudio audio) {
         return mPreferencesHelper.rimuoviPreferito(audio);
     }
+
+    @Override
+    public void clearSharedPreferences() {
+        mPreferencesHelper.clearSharedPreferences();
+    }
 }

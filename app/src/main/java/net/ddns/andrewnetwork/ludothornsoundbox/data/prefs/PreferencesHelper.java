@@ -53,4 +53,6 @@ public interface PreferencesHelper {
     long getUsageThreshold();
 
     void setUsageThreshold(long threshold);
+
+    void clearSharedPreferences();
 }

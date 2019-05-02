@@ -177,4 +177,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
         mPrefs.edit().putLong(KEY_USAGE_THRESOLD, threshold).apply();
     }
 
+    @Override
+    public void clearSharedPreferences() {
+        mPrefs.edit().clear().apply();
+    }
+
 }
