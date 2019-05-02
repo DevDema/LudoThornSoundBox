@@ -7,12 +7,10 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 
 
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
-import androidx.appcompat.view.menu.ActionMenuItem;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -22,13 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.preference.PreferenceManager;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
@@ -39,14 +31,12 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragm
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.PreferencesListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 
 import javax.inject.Inject;
 
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity.REQUEST_SETTINGS_CHANGE;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.DAYS_LATER_ASKING_FEEDBACK;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.LINK_ASKING_FEEDBACK;
 
