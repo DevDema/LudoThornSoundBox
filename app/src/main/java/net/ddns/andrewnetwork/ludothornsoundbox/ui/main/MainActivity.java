@@ -104,25 +104,18 @@ public class MainActivity extends ParentActivity
 
     private @IdRes int getFirstFragment(SharedPreferences settings) {
         String fragment = settings.getString(getString(R.string.pag_iniziale_key), "Home");
-        @IdRes int selection;
 
         switch (fragment) {
             default:
             case "Home":
-                selection = R.id.action_home;
-                break;
+                return R.id.action_home;
             case "Preferiti":
-                selection = R.id.action_favorites;
-                break;
+                return R.id.action_favorites;
             case "Casuale":
-                selection = R.id.action_random;
-                break;
+                return R.id.action_random;
             case "Video":
-                selection = R.id.action_video;
-                break;
+                return R.id.action_video;
         }
-
-        return selection;
     }
 
 
