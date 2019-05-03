@@ -42,6 +42,9 @@
         <activity android:name=".ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity"
             android:label="@string/audio_nascosti_label"
             android:theme="@style/PreferenceActivityTheme"/>
+        <activity android:name=".ui.settings.activity.navigationItems.SettingsNavigationItemsActivity"
+            android:theme="@style/PreferenceActivityTheme"
+            android:label="@string/cambia_ordine_title"/>
 
         <activity-alias
             android:name=".MainActivity1"

@@ -17,12 +17,14 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 
 import javax.inject.Inject;
+import javax.xml.transform.sax.TemplatesHandler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,20 +39,25 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hidd
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.CURRENT_POSITION;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.EXTRA_ICON_SELECTED;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.REQUEST_ICON_SELECTED;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.KEY_CURRENT_POSITION_BOT_NAV_MENU;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.KEY_NAVIGATION_ITEMS;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.KEY_SAVED_NAVIGATION_ITEMS;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.REQUEST_NAVIGATION_SELECTED;
 
-public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, Preference.OnPreferenceChangeListener, MvpView, BaseFragment.Callback, Preference.OnPreferenceClickListener{
+public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, Preference.OnPreferenceChangeListener, MvpView, BaseFragment.Callback, Preference.OnPreferenceClickListener {
 
     @Inject
     ISettingsPresenter<ISettingsView> mPresenter;
 
-    private @StringRes
-    int[] mandatoryPreferences = {R.string.usa_font_app_key, R.string.reset_app_key};
-
-    public static SettingsFragment newInstance() {
+    private @StringRes int[] mandatoryPreferences = {R.string.usa_font_app_key, R.string.reset_app_key};
+    private int currentNavigationItemPosition;
+    public static SettingsFragment newInstance(int currentPosition) {
 
         Bundle args = new Bundle();
 
         SettingsFragment fragment = new SettingsFragment();
+
+        args.putInt(KEY_CURRENT_POSITION_BOT_NAV_MENU, currentPosition);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,6 +67,9 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
         super.onCreate(savedInstanceState);
 
 
+        if(getArguments() != null) {
+            currentNavigationItemPosition = getArguments().getInt(KEY_CURRENT_POSITION_BOT_NAV_MENU);
+        }
         bindPreferenceSummaryToValue(findPreference(getString(R.string.usa_font_app_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.carica_audio_insieme_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.dimensione_pulsanti_key)));
@@ -69,6 +79,7 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
         findPreference(getString(R.string.audio_nascosti_key)).setOnPreferenceClickListener(this);
         findPreference(getString(R.string.dimensione_pulsanti_key)).setOnPreferenceClickListener(this);
         findPreference(getString(R.string.reset_app_key)).setOnPreferenceClickListener(this);
+        findPreference(getString(R.string.cambia_ordine_key)).setOnPreferenceClickListener(this);
     }
 
     @Override
@@ -160,7 +171,6 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
         }
 
 
-
         return true;
     }
 
@@ -178,9 +188,10 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     public boolean onPreferenceClick(Preference preference) {
         String key = preference.getKey();
         final String iconKey = getString(R.string.cambia_icona_key);
+        final String ordineKey = getString(R.string.cambia_ordine_key);
         final String hiddenKey = getString(R.string.audio_nascosti_key);
 
-        if(key.equals(iconKey)) {
+        if (key.equals(iconKey)) {
             int currentPosition = getPreferenceManager().getSharedPreferences().getInt(iconKey, 0);
 
             Intent iconIntent = new Intent(mActivity, SettingsIconActivity.class);
@@ -188,13 +199,21 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
             startActivityForResult(iconIntent, REQUEST_ICON_SELECTED);
 
             return true;
-        } else if(key.equals(hiddenKey)) {
+        } else if (key.equals(ordineKey)) {
+
+            Intent ordineIntent = new Intent(mActivity, SettingsNavigationItemsActivity.class);
+            ordineIntent.putExtra(KEY_SAVED_NAVIGATION_ITEMS, getPreferenceManager().getSharedPreferences().getString(ordineKey, ""));
+            ordineIntent.putExtra(KEY_CURRENT_POSITION_BOT_NAV_MENU, currentNavigationItemPosition);
+            startActivityForResult(ordineIntent, REQUEST_NAVIGATION_SELECTED);
+
+            return true;
+        } else if (key.equals(hiddenKey)) {
             Intent hiddenIntent = new Intent(mActivity, SettingsHiddenAudioActivity.class);
 
             startActivityForResult(hiddenIntent, REQUEST_HIDDEN_SELECTED);
 
             return true;
-        } else if(key.equals(getString(R.string.reset_app_key))) {
+        } else if (key.equals(getString(R.string.reset_app_key))) {
 
             onPreferenceChange(preference, true);
             PreferenceManager.getDefaultSharedPreferences(mActivity).edit().clear().apply();
@@ -209,7 +228,7 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && data.getExtras() != null) {
+        if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
             switch (requestCode) {
                 case REQUEST_ICON_SELECTED:
                     Preference iconPreference = findPreference(getString(R.string.cambia_icona_key));
@@ -219,13 +238,19 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
                     AppUtils.changeIcon(mActivity, position);
                     break;
                 case REQUEST_HIDDEN_SELECTED:
-                    if(resultCode == RESULT_CODE_HIDDEN_AUDIO) {
                         Preference hiddenPreference = findPreference(getString(R.string.audio_nascosti_key));
 
                         getPreferenceManager().getSharedPreferences().edit().putString(hiddenPreference.getKey(),
                                 (String) data.getExtras().get(RESULT_HIDDEN_AUDIO_LIST)
                         ).apply();
-                    }
+                    break;
+                case REQUEST_NAVIGATION_SELECTED:
+                    Preference navigationPreference = findPreference(getString(R.string.cambia_ordine_key));
+
+                    getPreferenceManager().getSharedPreferences().edit().putString(navigationPreference.getKey(),
+                            (String) data.getExtras().get(KEY_NAVIGATION_ITEMS)
+                    ).apply();
+                    break;
                 default:
                     break;
             }

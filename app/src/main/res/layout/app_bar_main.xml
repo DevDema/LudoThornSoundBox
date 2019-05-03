@@ -50,10 +50,7 @@
                 app:itemTextColor="@color/nav_bar_selector"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:menu="@menu/bottomnavigationmenu">
-
-            </com.google.android.material.bottomnavigation.BottomNavigationView>
+                app:layout_constraintRight_toRightOf="parent"/>
 
             <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/adView"

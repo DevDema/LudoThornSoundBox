@@ -98,4 +98,8 @@
     <string name="pag_iniziale_key">pag_iniziale</string>
     <string name="pag_iniziale_title">Pagina iniziale</string>
     <string name="pag_iniziale_summary">Imposta la pagina iniziale da caricare all\'avvio dell\'app.</string>
+    <string name="salva_label">Salva</string>
+    <string name="cambia_ordine_key">cambia_ordine_key</string>
+    <string name="cambia_ordine_summary">Cambia l\'ordine delle icone nel menù di navigazione.</string>
+    <string name="cambia_ordine_title">Cambia ordine pagine</string>
 </resources>

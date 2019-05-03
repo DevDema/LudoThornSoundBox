@@ -31,11 +31,14 @@ import android.provider.Settings;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.LudoNavigationItem;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -207,5 +210,16 @@ public final class CommonUtils {
             public void onPermissionRepeated() {
             }
         }).build().checkPermission(WRITE_EXTERNAL_STORAGE, EXPORT_REQUEST);
+    }
+
+    public static List<LudoNavigationItem> createNavigationItemsList(Context context) {
+        List<LudoNavigationItem> navigationItemList = new ArrayList<>();
+
+        navigationItemList.add(new LudoNavigationItem(R.id.action_home, R.drawable.ic_home_white_24dp, context.getString(R.string.home)));
+        navigationItemList.add(new LudoNavigationItem(R.id.action_random,R.drawable.ic_action_name, context.getString(R.string.random)));
+        navigationItemList.add(new LudoNavigationItem(R.id.action_video, R.drawable.ic_video_white_24dp, context.getString(R.string.video)));
+        navigationItemList.add(new LudoNavigationItem(R.id.action_favorites, R.drawable.ic_star_white_24dp, context.getString(R.string.favorites)));
+
+        return navigationItemList;
     }
 }

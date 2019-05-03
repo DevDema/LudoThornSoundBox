@@ -80,7 +80,7 @@ public class SettingsIconActivity extends PreferencesManagerActivity implements 
             intent.putExtra(EXTRA_ICON_SELECTED, LAUNCHER_ICON_3);
         }
 
-        setResult(RESULT_ICON_SELECTED, intent);
+        setResult(RESULT_OK, intent);
 
         finish();
     }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.reflect.TypeToken;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.preference.PreferenceManager;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
@@ -33,22 +35,30 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomF
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.PreferencesListener;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.LudoNavigationItem;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.KEY_CURRENT_POSITION_BOT_NAV_MENU;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.DAYS_LATER_ASKING_FEEDBACK;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.LINK_ASKING_FEEDBACK;
+import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
 
 public class MainActivity extends ParentActivity
         implements NavigationView.OnNavigationItemSelectedListener, IMainView, PreferencesListener, SharedPreferences.OnSharedPreferenceChangeListener {
+
 
     private ActivityMainBinding mBinding;
     @Inject
     IMainPresenter<IMainView> mPresenter;
     private boolean loadAtOnce;
     @IdRes int fragmentFirstSelection;
+    private List<LudoNavigationItem> orderedNavigationMenu;
 
     @Override
     protected void setContentView() {
@@ -78,6 +88,8 @@ public class MainActivity extends ParentActivity
             mPresenter.onAttach(this);
         }
 
+        createBottomNavigationMenu();
+
         mBinding.navView.setNavigationItemSelectedListener(this);
         mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
@@ -85,6 +97,22 @@ public class MainActivity extends ParentActivity
 
         PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).registerOnSharedPreferenceChangeListener(this);
 
+    }
+
+    private void createBottomNavigationMenu(List<LudoNavigationItem> navigationItemList) {
+        Menu menu = mBinding.appBarMain.navigation.getMenu();
+
+        menu.clear();
+
+        for(LudoNavigationItem navigationItem : navigationItemList) {
+            if(navigationItem.isVisible()) {
+                menu.add(Menu.NONE, navigationItem.getId(), Menu.NONE, navigationItem.getName()).setIcon(navigationItem.getDrawableRes());
+            }
+        }
+    }
+
+    private void createBottomNavigationMenu() {
+        createBottomNavigationMenu(orderedNavigationMenu);
     }
 
     private void manageFeedbackAlert() {
@@ -100,22 +128,34 @@ public class MainActivity extends ParentActivity
 
         this.loadAtOnce = getLoadAtOnce(settings);
         this.fragmentFirstSelection = getFirstFragment(settings);
+        this.orderedNavigationMenu = getOrderedNavigationMenu(settings);
+    }
+
+    private List<LudoNavigationItem> getOrderedNavigationMenu(SharedPreferences settings) {
+        String serializedNavigationMenu = settings.getString(getString(R.string.cambia_ordine_key), "");
+        return nonEmptyNonNull(serializedNavigationMenu) ?
+                JsonUtil.getGson().fromJson(serializedNavigationMenu, new TypeToken<List<LudoNavigationItem>>(){}.getType()) :
+                CommonUtils.createNavigationItemsList(this);
     }
 
     private @IdRes int getFirstFragment(SharedPreferences settings) {
         String fragment = settings.getString(getString(R.string.pag_iniziale_key), "Home");
 
-        switch (fragment) {
-            default:
-            case "Home":
-                return R.id.action_home;
-            case "Preferiti":
-                return R.id.action_favorites;
-            case "Casuale":
-                return R.id.action_random;
-            case "Video":
-                return R.id.action_video;
+        if(fragment != null) {
+            switch (fragment) {
+                default:
+                case "Home":
+                    return R.id.action_home;
+                case "Preferiti":
+                    return R.id.action_favorites;
+                case "Casuale":
+                    return R.id.action_random;
+                case "Video":
+                    return R.id.action_video;
+            }
         }
+
+        return R.id.action_home;
     }
 
 
@@ -146,7 +186,7 @@ public class MainActivity extends ParentActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -154,29 +194,6 @@ public class MainActivity extends ParentActivity
         }
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
-
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -203,6 +220,7 @@ public class MainActivity extends ParentActivity
             //NAVIGATION DRAWER
             case R.id.action_settings:
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                settingsIntent.putExtra(KEY_CURRENT_POSITION_BOT_NAV_MENU, mBinding.appBarMain.navigation.getSelectedItemId());
                 startActivity(settingsIntent);
                 break;
         }
@@ -269,7 +287,22 @@ public class MainActivity extends ParentActivity
             if (fragment != null) {
                 fragment.onAudioListChanged();
             }
+        } else if(key.equals(getString(R.string.cambia_ordine_key))) {
+            onBottomNavigationMenuChanged(JsonUtil.getGson().fromJson(sharedPreferences.getString(key, ""), new TypeToken<List<LudoNavigationItem>>(){}.getType()));
         }
+    }
+
+    private void onBottomNavigationMenuChanged(List<LudoNavigationItem> navigationItemList) {
+
+        int id = mBinding.appBarMain.navigation.getSelectedItemId();
+
+        createBottomNavigationMenu(navigationItemList);
+
+        mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(null);
+
+        mBinding.appBarMain.navigation.setSelectedItemId(id);
+
+        mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
     }
 
     private <T extends Fragment> T getFragmentByClass(Class<T> fragmentClass) {

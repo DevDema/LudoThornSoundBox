@@ -9,6 +9,10 @@
         android:entryValues="@array/schermate_list"
         android:title="@string/pag_iniziale_title"/>
 
+    <Preference
+        android:key="@string/cambia_ordine_key"
+        android:summary="@string/cambia_ordine_summary"
+        android:title="@string/cambia_ordine_title"/>
     <SwitchPreference
         android:key="@string/usa_font_app_key"
         android:summary="@string/usa_font_app_descruzuibe_label"
@@ -17,10 +21,7 @@
     <Preference
         android:key="@string/cambia_icona_key"
         android:summary="@string/cambia_icona_summary"
-        android:title="@string/cambia_icona_title" >
-        <intent
-            android:action="net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.SettingsIconActivity" />
-    </Preference>
+        android:title="@string/cambia_icona_title" />
 
 
     <PreferenceCategory android:title="@string/audio_options">

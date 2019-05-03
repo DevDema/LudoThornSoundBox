@@ -57,7 +57,7 @@ public class SettingsHiddenAudioActivity extends PreferencesManagerActivity impl
 
             Intent resultIntent = new Intent();
             resultIntent.putExtra(RESULT_HIDDEN_AUDIO_LIST, JsonUtil.getGson().toJson(hiddenAudioList));
-            setResult(RESULT_CODE_HIDDEN_AUDIO, resultIntent);
+            setResult(RESULT_OK, resultIntent);
             finish();
         });
         if (!hiddenAudioList.isEmpty()) {
