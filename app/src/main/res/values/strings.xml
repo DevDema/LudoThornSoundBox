@@ -108,4 +108,12 @@
     <string name="preferenze_audio_title">Preferenze generali audio</string>
     <string name="preferenze_audio_summary">Preferenze grafiche e funzionali</string>
     <string name="opzioni_generali_title">Opzioni generali</string>
+    <string name="foto_creatore_dell_app">Foto creatore dell\'app</string>
+    <string name="foto_di_ludo">Foto di Ludo</string>
+    <string name="l_app_fa_cagare_label">L\'app fa cagare? Segnalacelo a:</string>
+    <string name="ringraziamenti_label">Ringraziamenti:</string>
+    <string name="ringraziamenti_value">Franco Giuseppe e Piero Gattuso</string>
+    <string name="mail_label_value">Mail: %s</string>
+    <string name="app_sviluppata_label">App sviluppata da: Andrea De Matteis</string>
+    <string name="ludo_thorn_label">Ludo Thorn</string>
 </resources>

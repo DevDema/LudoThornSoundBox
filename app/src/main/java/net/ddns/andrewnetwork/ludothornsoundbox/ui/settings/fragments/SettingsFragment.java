@@ -12,6 +12,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePrefencesFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.credits.CreditsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity;
@@ -66,6 +67,7 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
         bindPreferenceSummaryToValue(findPreference(getString(R.string.cambia_ordine_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.audio_nascosti_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.reset_app_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.credits_key)));
     }
 
     @Override
@@ -185,6 +187,11 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
             PreferenceManager.getDefaultSharedPreferences(mActivity).edit().clear().apply();
 
             return true;
+        } else if(key.equals(getString(R.string.credits_key))) {
+            onPreferenceChange(preference, key);
+            Intent creditsIntent = new Intent(mActivity, CreditsActivity.class);
+
+            startActivity(creditsIntent);
         }
 
         return false;
