@@ -7,6 +7,7 @@
         android:summary="@string/pag_iniziale_summary"
         android:entries="@array/schermate_list"
         android:entryValues="@array/schermate_list"
+        android:defaultValue="Home"
         android:title="@string/pag_iniziale_title"/>
 
     <Preference
@@ -47,7 +48,8 @@
             android:entryValues="@array/pulsanti_dimensione_list"
             android:key="@string/dimensione_pulsanti_key"
             android:summary="@string/dimensione_pulsanti_summary"
-            android:title="@string/dimensione_pulsanti_title" />
+            android:title="@string/dimensione_pulsanti_title"
+            android:defaultValue="Media" />
 
     </PreferenceCategory>
 
