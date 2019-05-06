@@ -136,7 +136,6 @@ public final class AppUtils {
 
     public static boolean canWriteSettings(Context context) {
         boolean settingsCanWrite = true;
-        ;
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 
