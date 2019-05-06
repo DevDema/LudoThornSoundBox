@@ -51,7 +51,7 @@
     <string name="MIME_AUDIO_MP3">audio/mpeg</string>
     <string name="MIME_AUDIO_ANY">audio/*</string>
     <string name="ask_permission_label">Per condividere un audio, devi concedere all\'app il permesso di scrivere nella memoria.</string>
-    <string name="generic_error_label">Si è verificato un errore.</string>
+    <string name="generic_error_label">Oops! Si è verificato un errore.</string>
     <string name="dopo_label">DOPO</string>
     <string name="giammai_label">Giammai!</string>
     <string name="do_you_like_label">Ti piace l\'app? Lasciaci un feedback sul Play Store!</string>
@@ -116,4 +116,10 @@
     <string name="mail_label_value">Mail: %s</string>
     <string name="app_sviluppata_label">App sviluppata da: Andrea De Matteis</string>
     <string name="ludo_thorn_label">Ludo Thorn</string>
+    <string name="imposta_come_suoneria">Imposta come suoneria</string>
+    <string name="suoneria_cambiata_label">Suoneria cambiata con successo</string>
+    <string name="suoneria_notifiche_cambiata_label">Suoneria delle notifiche cambiata con successo</string>
+    <string name="imposta_come_notifica">Imposta come suono di notifica</string>
+    <string name="generic_error_suoneria_label">Oops! Si è verificato un errore. Verificare se sono state concesse all\'app le autorizzazioni necessarie.</string>
+    <string name="necessary_write_settings_permission">Per cambiare la suoneria è necessario concedere all\'app l\'autorizzazione di cambiare le impostazioni di sistema.</string>
 </resources>

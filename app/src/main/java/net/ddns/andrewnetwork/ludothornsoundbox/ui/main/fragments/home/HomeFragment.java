@@ -4,11 +4,11 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
-import android.widget.Button;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
@@ -29,13 +28,12 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewP
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.ButtonViewPagerAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.OnButtonSelectedListener;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.OptionsMenuButton;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.model.ChiaveValore;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.PermissionListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.SpinnerUtils;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.view.OnUserStoppedListener;
 
 import java.util.List;
 import java.util.Locale;
@@ -45,11 +43,11 @@ import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
@@ -169,6 +167,12 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                         }
 
                         break;
+                    case R.id.suoneria_audio:
+                        checkAndChangeRingtone(audio, RingtoneManager.TYPE_RINGTONE, R.string.suoneria_cambiata_label);
+                        break;
+                    case R.id.suoneria_notifica_audio:
+                        checkAndChangeRingtone(audio, RingtoneManager.TYPE_NOTIFICATION, R.string.suoneria_notifiche_cambiata_label);
+                        break;
 
                 }
                 return true;
@@ -185,6 +189,33 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
         optionsMenu.show();
 
         return true;
+    }
+
+    private void checkAndChangeRingtone(LudoAudio audio, int typeNotification, @StringRes int stringResource) {
+        PermissionListener permissionListener = () -> changeRingtone(audio, typeNotification, stringResource);
+
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            CommonUtils.showDialog(getContext(), getResources().getString(R.string.ask_permission_label), (dialog, which) ->
+                            CommonUtils.askForStoragePermission(HomeFragment.this,
+                                    permissionListener
+                            )
+                    , true);
+        } else {
+            permissionListener.onPermissionGranted();
+        }
+
+    }
+    private void changeRingtone(LudoAudio audio, int typeNotification, @StringRes int stringResource) {
+
+        String messageNotification = getString(R.string.generic_error_suoneria_label);
+
+        if(AppUtils.canWriteSettings(mActivity) && AudioUtils.setAsRingtone(mActivity, audio, typeNotification)) {
+            messageNotification = getString(stringResource);
+        }
+
+        if(AppUtils.canWriteSettings(mActivity)) {
+            CommonUtils.showDialog(mActivity, messageNotification);
+        }
     }
 
     private void shareAudio(LudoAudio audio) {

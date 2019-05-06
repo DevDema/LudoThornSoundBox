@@ -1,11 +1,14 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 
 import com.google.api.client.util.Charsets;
 
@@ -17,6 +20,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -46,7 +51,7 @@ public abstract class AudioUtils {
                 resourcename = field.getName();
                 if (resourcename.charAt(resourcename.length() - 1) != '_') {
                     int resourceInfoId = resources.getIdentifier(resourcename + "_", "raw", context.getPackageName());
-                    LudoVideo ludoVideo = resourceInfoId != 0 ? JsonUtil.getGson().fromJson(readTextFile(resources.openRawResource(resourceInfoId)), LudoVideo.class): new LudoVideo();
+                    LudoVideo ludoVideo = resourceInfoId != 0 ? JsonUtil.getGson().fromJson(readTextFile(resources.openRawResource(resourceInfoId)), LudoVideo.class) : new LudoVideo();
                     resourceid = field.getInt(rawResources);
                     audioList.add(new LudoAudio(resourcename, resourceid, ludoVideo));
                 }
@@ -129,12 +134,12 @@ public abstract class AudioUtils {
     public static void shareAudio(@NonNull BaseFragment fragment, @NonNull LudoAudio audio) {
         Uri fileUri = writeToExternalStorage(fragment, audio);
 
-        if(fileUri == null) {
+        if (fileUri == null) {
             fragment.showMessage(fragment.getResources().getText(R.string.generic_error_label).toString());
             return;
         }
 
-        if(fragment.getContext() != null) {
+        if (fragment.getContext() != null) {
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
@@ -160,7 +165,6 @@ public abstract class AudioUtils {
             }
 
 
-
             inputStream.close();
             fileOutputStream.close();
             return Uri.fromFile(file);
@@ -172,6 +176,89 @@ public abstract class AudioUtils {
 
     private static String createAudioFileName(LudoAudio audio) {
         return audio.getTitle() + ".mp3";
+    }
+
+    public static boolean setAsRingtone(Context context, LudoAudio audio, int type) {
+        byte[] buffer;
+        InputStream fIn = context.getResources().openRawResource(
+                audio.getAudio());
+        int size = 0;
+
+        try {
+            size = fIn.available();
+            buffer = new byte[size];
+            fIn.read(buffer);
+            fIn.close();
+        } catch (IOException e) {
+            return false;
+        }
+
+
+        String filename = audio.getTitle();
+        String exStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String path=(exStoragePath +"/media/alarms/");
+
+        boolean exists = (new File(path)).exists();
+        if (!exists) {
+            new File(path).mkdirs();
+        }
+
+        FileOutputStream save;
+        try {
+            save = new FileOutputStream(path + filename);
+            save.write(buffer);
+            save.flush();
+            save.close();
+        } catch (FileNotFoundException e) {
+            return false;
+        } catch (IOException e) {
+            return false;
+        }
+
+
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path + filename + ".mp3"
+                + Environment.getExternalStorageDirectory())));
+
+
+        File k = new File(path, filename);
+
+        ContentValues values = new ContentValues(4);
+        long current = System.currentTimeMillis();
+        values.put(MediaStore.MediaColumns.DATA, path + filename);
+        values.put(MediaStore.MediaColumns.TITLE, filename);
+        values.put(MediaStore.Audio.Media.DATE_ADDED, (int) (current / 1000));
+        values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/mp3");
+
+        //new
+        values.put(MediaStore.Audio.Media.ARTIST, context.getString(R.string.ludo_thorn_label));
+        values.put(MediaStore.Audio.Media.IS_RINGTONE, false);
+        values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
+        values.put(MediaStore.Audio.Media.IS_ALARM, true);
+        values.put(MediaStore.Audio.Media.IS_MUSIC, false);
+
+        Uri uri = MediaStore.Audio.Media.getContentUriForPath(k
+                .getAbsolutePath());
+
+        context.getContentResolver().delete(
+                uri,
+                MediaStore.MediaColumns.DATA + "=\""
+                        + k.getAbsolutePath() + "\"", null);
+        // Insert it into the database
+        Uri newUri = context.getContentResolver()
+                .insert(uri, values);
+
+        if(newUri == null) {
+            return false;
+        }
+
+        try {
+            RingtoneManager.setActualDefaultRingtoneUri(context, type, newUri);
+
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }
 

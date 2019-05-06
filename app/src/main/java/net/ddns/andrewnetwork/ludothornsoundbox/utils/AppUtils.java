@@ -22,7 +22,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.Settings;
 import android.view.Display;
+
+import androidx.appcompat.view.menu.MenuBuilder;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 
@@ -103,7 +107,7 @@ public final class AppUtils {
         }
 
         for (String className : otherIcons) {
-            className = packageName +"." + className;
+            className = packageName + "." + className;
             context.getPackageManager().setComponentEnabledSetting(
                     new ComponentName(packageName, className),
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
@@ -112,7 +116,7 @@ public final class AppUtils {
 
     private static void putIcon(Context context, int position) {
         String packageName = context.getPackageName();
-        String className = packageName+".";
+        String className = packageName + ".";
         switch (position) {
             default:
             case LAUNCHER_ICON_1:
@@ -128,5 +132,24 @@ public final class AppUtils {
         context.getPackageManager().setComponentEnabledSetting(
                 new ComponentName(packageName, className),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+    }
+
+    public static boolean canWriteSettings(Context context) {
+        boolean settingsCanWrite = true;
+        ;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+
+            settingsCanWrite = Settings.System.canWrite(context);
+
+            if (!settingsCanWrite) {
+                CommonUtils.showDialog(context, context.getString(R.string.necessary_write_settings_permission), (dialog, which) -> {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                    context.startActivity(intent);
+                    dialog.dismiss();
+                }, true);
+            }
+        }
+        return settingsCanWrite;
     }
 }

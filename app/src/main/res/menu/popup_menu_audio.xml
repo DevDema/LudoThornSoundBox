@@ -12,4 +12,10 @@
     <item android:id="@+id/nascondi_audio"
         android:icon="@drawable/ic_audio_black"
     android:title="@string/nascondi_audio_label"/>
+    <item android:id="@+id/suoneria_audio"
+    android:icon="@drawable/ic_notifications_black"
+    android:title="@string/imposta_come_suoneria"/>
+    <item android:id="@+id/suoneria_notifica_audio"
+        android:icon="@drawable/ic_notifications_black"
+        android:title="@string/imposta_come_notifica"/>
 </menu>
