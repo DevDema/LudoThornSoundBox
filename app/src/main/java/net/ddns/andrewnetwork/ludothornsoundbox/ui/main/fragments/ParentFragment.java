@@ -65,15 +65,5 @@ public abstract class ParentFragment extends BaseFragment {
         return super.getContext() != null ? super.getContext() : mContext;
     }
 
-    //                                  DECOMMENTA SE VUOI INTERROMPERE I VIDEO QUANDO CAMBI I FRAGMENT
-   /* @Override
-    public void onDetach() {
-        super.onDetach();
-
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-            mediaPlayer.reset();
-        }
-    }*/
 }
 

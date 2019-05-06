@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
-import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePrefencesFragment;
@@ -18,13 +15,9 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
-
-import javax.inject.Inject;
-import javax.xml.transform.sax.TemplatesHandler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +27,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity.REQUEST_HIDDEN_SELECTED;
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity.RESULT_CODE_HIDDEN_AUDIO;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity.RESULT_HIDDEN_AUDIO_LIST;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.CURRENT_POSITION;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.EXTRA_ICON_SELECTED;
@@ -45,9 +37,6 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navi
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.REQUEST_NAVIGATION_SELECTED;
 
 public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, Preference.OnPreferenceChangeListener, MvpView, BaseFragment.Callback, Preference.OnPreferenceClickListener {
-
-    @Inject
-    ISettingsPresenter<ISettingsView> mPresenter;
 
     private @StringRes int[] mandatoryPreferences = {R.string.usa_font_app_key, R.string.reset_app_key};
     private int currentNavigationItemPosition;
@@ -66,46 +55,29 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         if(getArguments() != null) {
             currentNavigationItemPosition = getArguments().getInt(KEY_CURRENT_POSITION_BOT_NAV_MENU);
         }
+
         bindPreferenceSummaryToValue(findPreference(getString(R.string.usa_font_app_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.carica_audio_insieme_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.dimensione_pulsanti_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.cambia_icona_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.cambia_ordine_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.audio_nascosti_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.reset_app_key)));
-
-        findPreference(getString(R.string.cambia_icona_key)).setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.audio_nascosti_key)).setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.dimensione_pulsanti_key)).setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.reset_app_key)).setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.cambia_ordine_key)).setOnPreferenceClickListener(this);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        ActivityComponent activityComponent = getActivityComponent();
-
-        if (activityComponent != null) {
-            activityComponent.inject(this);
-            mPresenter.onAttach(this);
-        }
-
-        return view;
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.preferences, rootKey);
     }
 
     private void bindPreferenceSummaryToValue(Preference preference) {
-        // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(this);
-
-        // Trigger the listener immediately with the preference's
-        // current value.
-        /*onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getBoolean(preference.getKey(), true));*/
+        if(preference != null) {
+            preference.setOnPreferenceChangeListener(this);
+            preference.setOnPreferenceClickListener(this);
+        }
     }
 
     @Override
@@ -126,12 +98,6 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
         super.onViewCreated(view, savedInstanceState);
 
         view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.colorAccent));
-    }
-
-    @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.preferences, rootKey);
-
     }
 
     private void onMandatoryPreferenceChanged(String key) {
@@ -215,9 +181,8 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
             return true;
         } else if (key.equals(getString(R.string.reset_app_key))) {
 
-            onPreferenceChange(preference, true);
+            onPreferenceChange(preference, key);
             PreferenceManager.getDefaultSharedPreferences(mActivity).edit().clear().apply();
-            mPresenter.clearSharedPreferences();
 
             return true;
         }

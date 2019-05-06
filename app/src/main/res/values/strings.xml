@@ -1,7 +1,7 @@
 <resources>
     <string name="banner_ad_unit_id">ca-app-pub-3889032681139142/8666737012</string>
 
-    <string name="app_name">LudoThornSoundbox</string>
+    <string name="app_name">Ludo Thorn App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -102,4 +102,10 @@
     <string name="cambia_ordine_key">cambia_ordine_key</string>
     <string name="cambia_ordine_summary">Cambia l\'ordine delle icone nel menù di navigazione.</string>
     <string name="cambia_ordine_title">Cambia ordine pagine</string>
+    <string name="main_activity_label">Ludo Thorn App</string>
+    <string name="modifiche_layout_title">Modifiche Layout</string>
+    <string name="modifiche_layout_summary">Altre modifiche grafiche generali</string>
+    <string name="preferenze_audio_title">Preferenze generali audio</string>
+    <string name="preferenze_audio_summary">Preferenze grafiche e funzionali</string>
+    <string name="opzioni_generali_title">Opzioni generali</string>
 </resources>

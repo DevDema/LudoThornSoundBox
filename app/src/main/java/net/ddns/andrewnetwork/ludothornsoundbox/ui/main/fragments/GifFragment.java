@@ -21,9 +21,6 @@ import pl.droidsonroids.gif.GifTextView;
 public abstract class GifFragment extends ParentFragment {
 
     GifTextView gif;
-    ImageView stop;
-    EditText searchstring;
-    TextView searchlabel;
 
 
 

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.PermissionListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.SpinnerUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.view.OnUserStoppedListener;
 
 import java.util.List;
 import java.util.Locale;
@@ -159,8 +161,8 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
                         audio.setHidden(true);
                         mPresenter.salvaAudio(audio);
                         if (adapter != null) {
-                            if (mBinding.searchstring.getText() != null) {
-                                adapter.getFilter().filter(mBinding.searchstring.getText().toString());
+                            if (mBinding.searchString.getText() != null) {
+                                adapter.getFilter().filter(mBinding.searchString.getText().toString());
                             }
 
                             setCounter(adapter, mBinding.buttonsAudioPager.getCurrentItem());
@@ -262,7 +264,7 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
 
         mBinding.buttonLeft.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_LEFT));
 
-        mBinding.searchstring.addTextChangedListener(new TextWatcher() {
+        mBinding.searchString.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -276,8 +278,14 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
             @Override
             public void afterTextChanged(Editable s) {
                 adapter.getFilter().filter(s);
+
+
             }
         });
+
+        mBinding.searchString.setDelay(3000L);
+
+        mBinding.searchString.setOnUserStoppedListener((editText, editable) -> editText.clearFocus());
 
         mBinding.buttonsAudioPager.setOffscreenPageLimit(2);
 

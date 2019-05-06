@@ -160,7 +160,7 @@ public class MainActivity extends ParentActivity
 
 
     private boolean getLoadAtOnce(SharedPreferences settings) {
-        return settings.getBoolean(getString(R.string.carica_audio_insieme_key), true);
+        return settings.getBoolean(getString(R.string.carica_audio_insieme_key), false);
     }
 
     private void showFeedBackDialog() {

@@ -16,6 +16,7 @@ import androidx.annotation.StyleRes;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.core.extras.ActivitiesManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
 
 public abstract class PreferencesManagerActivity extends BaseActivity {
 
@@ -90,12 +91,13 @@ public abstract class PreferencesManagerActivity extends BaseActivity {
 
     public void restartApp() {
 
-        closeOtherActivities();
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-
-        finish();
+        Intent mStartActivity = new Intent(this, MainActivity.class);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId, mStartActivity,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
 
     }
 

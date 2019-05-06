@@ -1,55 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="Preferenze App">
+    <PreferenceCategory android:title="@string/opzioni_generali_title">
+        <ListPreference
+            android:defaultValue="Home"
+            android:entries="@array/schermate_list"
+            android:entryValues="@array/schermate_list"
+            android:key="@string/pag_iniziale_key"
+            android:summary="@string/pag_iniziale_summary"
+            android:title="@string/pag_iniziale_title" />
 
-    <ListPreference
-        android:key="@string/pag_iniziale_key"
-        android:summary="@string/pag_iniziale_summary"
-        android:entries="@array/schermate_list"
-        android:entryValues="@array/schermate_list"
-        android:defaultValue="Home"
-        android:title="@string/pag_iniziale_title"/>
+        <Preference
+            android:key="@string/cambia_ordine_key"
+            android:summary="@string/cambia_ordine_summary"
+            android:title="@string/cambia_ordine_title" />
 
-    <Preference
-        android:key="@string/cambia_ordine_key"
-        android:summary="@string/cambia_ordine_summary"
-        android:title="@string/cambia_ordine_title"/>
-    <SwitchPreference
-        android:key="@string/usa_font_app_key"
-        android:summary="@string/usa_font_app_descruzuibe_label"
-        android:title="@string/usa_font_app_label" />
+        <PreferenceScreen
+            android:key="modifiche_layout_key"
+            android:summary="@string/modifiche_layout_summary"
+            android:title="@string/modifiche_layout_title">
 
-    <Preference
-        android:key="@string/cambia_icona_key"
-        android:summary="@string/cambia_icona_summary"
-        android:title="@string/cambia_icona_title" />
+            <Preference
+                android:key="@string/cambia_icona_key"
+                android:summary="@string/cambia_icona_summary"
+                android:title="@string/cambia_icona_title" />
 
+            <SwitchPreference
+                android:key="@string/usa_font_app_key"
+                android:summary="@string/usa_font_app_descruzuibe_label"
+                android:title="@string/usa_font_app_label" />
 
+        </PreferenceScreen>
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/audio_options">
 
-        <SwitchPreference
-            android:key="@string/carica_audio_insieme_key"
-            android:summary="@string/carica_audio_insieme_summary"
-            android:title="@string/carica_audio_insieme_title" />
+        <PreferenceScreen
+            android:key="preferenze_audio_key"
+            android:summary="@string/preferenze_audio_summary"
+            android:title="@string/preferenze_audio_title">
+
+            <ListPreference
+                android:defaultValue="Media"
+                android:dialogTitle="@string/dimensione_pulsanti_title"
+                android:entries="@array/pulsanti_dimensione_list"
+                android:entryValues="@array/pulsanti_dimensione_list"
+                android:key="@string/dimensione_pulsanti_key"
+                android:summary="@string/dimensione_pulsanti_summary"
+                android:title="@string/dimensione_pulsanti_title" />
+
+            <SwitchPreference
+                android:key="@string/carica_audio_insieme_key"
+                android:summary="@string/carica_audio_insieme_summary"
+                android:title="@string/carica_audio_insieme_title" />
+
+            <SwitchPreference
+                android:key="@string/mostra_info_in_audio_key"
+                android:summary="@string/mostra_info_in_audio_summary"
+                android:title="@string/mostra_info_in_audio_title" />
+
+
+        </PreferenceScreen>
+
 
         <Preference
             android:key="@string/audio_nascosti_key"
             android:summary="@string/audio_nascosti_summary"
             android:title="@string/audio_nascosti_title" />
 
-        <SwitchPreference
-            android:key="@string/mostra_info_in_audio_key"
-            android:summary="@string/mostra_info_in_audio_summary"
-            android:title="@string/mostra_info_in_audio_title" />
-
-        <ListPreference
-            android:dialogTitle="@string/dimensione_pulsanti_title"
-            android:entries="@array/pulsanti_dimensione_list"
-            android:entryValues="@array/pulsanti_dimensione_list"
-            android:key="@string/dimensione_pulsanti_key"
-            android:summary="@string/dimensione_pulsanti_summary"
-            android:title="@string/dimensione_pulsanti_title"
-            android:defaultValue="Media" />
 
     </PreferenceCategory>
 
