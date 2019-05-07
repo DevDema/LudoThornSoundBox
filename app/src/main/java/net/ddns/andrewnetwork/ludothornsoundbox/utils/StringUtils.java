@@ -55,4 +55,9 @@ public abstract class StringUtils {
 
         return R.id.action_home;
     }
+
+    public static String abbreviate(String longString) {
+        return longString.substring(0, 3) + ".";
+    }
+
 }

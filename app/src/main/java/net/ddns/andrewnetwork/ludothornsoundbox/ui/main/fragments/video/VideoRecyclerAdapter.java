@@ -21,6 +21,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controll
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.DateHourUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
 import java.util.ArrayList;
@@ -126,8 +127,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
 
                 }
                 if (updated != null)
-                    if (AppUtils.isTablet(Objects.requireNonNull(fragment.getActivity()))) updated.setText(p.getDateTime().toString());
-                    else updated.setText(p.getDateTime().toString());
+                    updated.setText(DateHourUtils.convertToTimestamp(p.getDateTime()));
             }
             viewHolder.itemView.setOnClickListener(v -> {
                 if(p != null) {
