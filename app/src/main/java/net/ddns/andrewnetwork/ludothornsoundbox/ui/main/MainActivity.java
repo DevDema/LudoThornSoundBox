@@ -28,7 +28,6 @@ import android.view.MenuItem;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.core.Utils;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
@@ -39,6 +38,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFra
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.PreferencesListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.credits.CreditsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.LudoNavigationItem;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.web.WebActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils;
@@ -51,6 +52,7 @@ import javax.inject.Inject;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.BlankFragmentActivity.KEY_EXTRA_FRAGMENT_ACTION;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.BlankFragmentActivity.REQUEST_BLANK_ACTIVITY;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.KEY_CURRENT_POSITION_BOT_NAV_MENU;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.web.WebActivity.KEY_WEB_LINK;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.DAYS_LATER_ASKING_FEEDBACK;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.LINK_ASKING_FEEDBACK;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
@@ -73,7 +75,6 @@ public class MainActivity extends ParentActivity
         int id = menuItem.getItemId();
 
         mBinding.drawerLayout.closeDrawer(GravityCompat.START);
-        Fragment fragment = null;
 
         switch (id) {
             case R.id.action_home:
@@ -96,6 +97,16 @@ public class MainActivity extends ParentActivity
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
                 settingsIntent.putExtra(KEY_CURRENT_POSITION_BOT_NAV_MENU, mBinding.appBarMain.navigation.getSelectedItemId());
                 startActivityForResult(settingsIntent, SettingsActivity.REQUEST_SETTINGS);
+                return true;
+            case R.id.action_patreon:
+                Intent webPatreonIntent = new Intent(this, WebActivity.class);
+                webPatreonIntent.putExtra(KEY_WEB_LINK, AppUtils.PATREON_LINK);
+                startActivityForResult(webPatreonIntent, WebActivity.REQUEST_WEB);
+                return true;
+            case R.id.action_merchandise:
+                Intent webMerchandiseIntent = new Intent(this, WebActivity.class);
+                webMerchandiseIntent.putExtra(KEY_WEB_LINK, AppUtils.MERCHANDISE_LINK);
+                startActivityForResult(webMerchandiseIntent, WebActivity.REQUEST_WEB);
                 return true;
         }
 
@@ -152,20 +163,21 @@ public class MainActivity extends ParentActivity
 
     }
 
-    private @IdRes int getIdByCurrentFragment() {
-        if(currentFragment.getClass() == HomeFragment.class) {
-            return R.id.action_home;
-        } else if(currentFragment.getClass() == RandomFragment.class) {
-            return R.id.action_random;
-        } else if(currentFragment.getClass() == PreferitiFragment.class) {
-            return R.id.action_favorites;
-        } else if(currentFragment.getClass() == VideoFragment.class) {
-            return R.id.action_video;
-        } else {
-
-            //DIFFERENT FRAGMENT
-            return -1;
+    private @IdRes
+    int getIdByCurrentFragment() {
+        if (currentFragment != null) {
+            if (currentFragment.getClass() == HomeFragment.class) {
+                return R.id.action_home;
+            } else if (currentFragment.getClass() == RandomFragment.class) {
+                return R.id.action_random;
+            } else if (currentFragment.getClass() == PreferitiFragment.class) {
+                return R.id.action_favorites;
+            } else if (currentFragment.getClass() == VideoFragment.class) {
+                return R.id.action_video;
+            }
         }
+
+        return -1;
     }
 
     private void createBottomNavigationMenu(List<LudoNavigationItem> navigationItemList) {
@@ -208,13 +220,12 @@ public class MainActivity extends ParentActivity
                 CommonUtils.createNavigationItemsList(this);
     }
 
-    private @IdRes int getFirstFragment(SharedPreferences settings) {
+    private @IdRes
+    int getFirstFragment(SharedPreferences settings) {
         String fragment = settings.getString(getString(R.string.pag_iniziale_key), "Home");
 
         return StringUtils.getActionIdByString(fragment);
     }
-
-
 
 
     private void showFeedBackDialog() {

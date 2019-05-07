@@ -129,4 +129,7 @@
     <string name="schermate_label">Schermate</string>
     <string name="error_current_position">Non è possibile cambiare la visibilità di questa schermata poiché attualmente visualizzata nella sezione principale.</string>
     <string name="error_first_position">Non è possibile cambiare la visibilità di questa schermata poiché attualmente impostata come pagina iniziale.</string>
+    <string name="web_browser_label">Browser web</string>
+    <string name="close_label">Chiudi</string>
+    <string name="open_browser_label">Apri nel tuo browser</string>
 </resources>

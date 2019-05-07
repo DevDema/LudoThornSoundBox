@@ -1,40 +1,71 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.web;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Window;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.PhoneUtils;
 
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class WebActivity extends BaseActivity {
     public static final String KEY_WEB_LINK = "KEY_WEB_LINK";
+    public static final int REQUEST_WEB = 3033;
     private WebView mWebView;
+    private ArrayList<String> searchHistory = new ArrayList<>();
 
-    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        if (getSupportActionBar() != null) {
+            mIsHomeButtonEnabled = true;
+            mIsDisplayHomeAsUpEnabled = true;
+            getSupportActionBar().setHomeButtonEnabled(mIsHomeButtonEnabled);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(mIsDisplayHomeAsUpEnabled);
+        }
+
+        if(!PhoneUtils.isPhoneConnected(this)) {
+            CommonUtils.showDialog(this, "Non sembra tu sia connesso ad internet." +
+                    "", (dialog, which) -> finish(), false);
+            return;
+        }
+
         mWebView = new WebView(this);
-        mWebView.getSettings().setJavaScriptEnabled(true);
+
         mWebView.loadUrl(getUrl());
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        searchHistory.add(getUrl());
+
+        mWebView.setWebChromeClient(new WebChromeClient());
+
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+
+        mWebView.getSettings().setJavaScriptEnabled(true);
+
+        mWebView.getSettings().setGeolocationEnabled(true);
+
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
+
+                searchHistory.add(url);
+
                 return true;
             }
         });
-        this.setContentView(mWebView);
+        setContentView(mWebView);
     }
 
     @Override
@@ -49,7 +80,7 @@ public class WebActivity extends BaseActivity {
 
     private String getUrl() {
         Intent intent = getIntent();
-        if(intent != null && intent.getExtras() != null && intent.getExtras().getString(KEY_WEB_LINK) != null) {
+        if (intent != null && intent.getExtras() != null && intent.getExtras().getString(KEY_WEB_LINK) != null) {
             return intent.getExtras().getString(KEY_WEB_LINK);
         }
 
@@ -64,5 +95,48 @@ public class WebActivity extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if(canGoBack()) {
+            searchHistory.remove(searchHistory.size()-1);
+
+            String url = searchHistory.get(searchHistory.size()-1);
+
+
+            mWebView.loadUrl(url);
+        } else {
+            finish();
+        }
+    }
+
+    private boolean canGoBack() {
+        return searchHistory.size() > 1;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_action_web_activity, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_close:
+                finish();
+                return true;
+            case R.id.action_open_browser:
+                CommonUtils.showDialog(this, "Apri nel tuo browser di sistema?", (dialog, which) -> {
+                    Intent webExternalIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(searchHistory.get(searchHistory.size()-1)));
+                    startActivity(webExternalIntent);
+                    dialog.dismiss();
+                }, true);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

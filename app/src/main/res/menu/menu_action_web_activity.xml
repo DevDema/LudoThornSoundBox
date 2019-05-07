@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_open_browser"
+        android:icon="@drawable/ic_browser_open_white"
+        android:orderInCategory="0"
+        android:title="@string/open_browser_label"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_close"
+        android:icon="@drawable/ic_close_white_24dp"
+        android:orderInCategory="0"
+        android:title="@string/close_label"
+        app:showAsAction="ifRoom" />
+
+</menu>
