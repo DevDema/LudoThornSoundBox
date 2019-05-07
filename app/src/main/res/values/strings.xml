@@ -51,6 +51,7 @@
     <string name="MIME_AUDIO_MP3">audio/mpeg</string>
     <string name="MIME_AUDIO_ANY">audio/*</string>
     <string name="ask_permission_label">Per condividere un audio, devi concedere all\'app il permesso di scrivere nella memoria.</string>
+    <string name="ask_permission_suoneria_label">Per impostare questa suoneria, devi concedere all\'app il permesso di scrivere nella memoria.</string>
     <string name="generic_error_label">Oops! Si è verificato un errore.</string>
     <string name="dopo_label">DOPO</string>
     <string name="giammai_label">Giammai!</string>

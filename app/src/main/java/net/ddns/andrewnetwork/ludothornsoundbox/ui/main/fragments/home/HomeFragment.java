@@ -195,10 +195,12 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
         PermissionListener permissionListener = () -> changeRingtone(audio, typeNotification, stringResource);
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            CommonUtils.showDialog(getContext(), getResources().getString(R.string.ask_permission_label), (dialog, which) ->
-                            CommonUtils.askForStoragePermission(HomeFragment.this,
-                                    permissionListener
-                            )
+            CommonUtils.showDialog(getContext(), getResources().getString(R.string.ask_permission_label), (dialog, which) -> {
+                        CommonUtils.askForStoragePermission(HomeFragment.this,
+                                permissionListener
+                        );
+                        dialog.dismiss();
+                    }
                     , true);
         } else {
             permissionListener.onPermissionGranted();
