@@ -3,6 +3,8 @@ package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.R;
+
 import java.math.BigInteger;
 import java.util.List;
 
@@ -34,5 +36,23 @@ public abstract class StringUtils {
         }
 
         return String.valueOf(bigInteger.intValue());
+    }
+
+    public static int getActionIdByString(String fragment) {
+        if (fragment != null) {
+            switch (fragment) {
+                default:
+                case "Home":
+                    return R.id.action_home;
+                case "Preferiti":
+                    return R.id.action_favorites;
+                case "Casuale":
+                    return R.id.action_random;
+                case "Video":
+                    return R.id.action_video;
+            }
+        }
+
+        return R.id.action_home;
     }
 }

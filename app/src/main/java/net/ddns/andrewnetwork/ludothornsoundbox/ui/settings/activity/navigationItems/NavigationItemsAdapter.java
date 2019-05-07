@@ -21,12 +21,14 @@ class NavigationItemsAdapter extends RecyclerView.Adapter {
     private final List<LudoNavigationItem> list;
     private boolean[] checkedArray;
     private int currentPosition;
+    private int firstPosition;
 
-    NavigationItemsAdapter(@NonNull SettingsNavigationItemsActivity context, List<LudoNavigationItem> ludoNavigationItemList, int currentPosition) {
+    NavigationItemsAdapter(@NonNull SettingsNavigationItemsActivity context, List<LudoNavigationItem> ludoNavigationItemList, int currentPosition, int firstPosition) {
         this.mContext = context;
         this.list = ludoNavigationItemList;
         this.checkedArray = new boolean[ludoNavigationItemList.size()];
         this.currentPosition = currentPosition;
+        this.firstPosition = firstPosition;
 
         for(int i=0; i<ludoNavigationItemList.size();i++) {
             checkedArray[i] = ludoNavigationItemList.get(i).getVisible();
@@ -66,8 +68,16 @@ class NavigationItemsAdapter extends RecyclerView.Adapter {
 
             changeVisibleBackground(navigationItem, position);
 
-            if(navigationItem.getId() == currentPosition) {
+            if(navigationItem.getId() == currentPosition || navigationItem.getId() == firstPosition) {
                 mBinding.checkbox.setEnabled(false);
+                mBinding.errorLabel.setVisibility(View.VISIBLE);
+                if(navigationItem.getId() == currentPosition) {
+                    mBinding.errorLabel.setText(mContext.getString(R.string.error_current_position));
+                } else if(navigationItem.getId() == firstPosition) {
+                    mBinding.errorLabel.setText(mContext.getString(R.string.error_first_position));
+                }
+            } else {
+                mBinding.errorLabel.setVisibility(View.GONE);
             }
         }
 

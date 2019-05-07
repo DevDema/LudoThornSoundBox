@@ -127,4 +127,6 @@
     <string name="merchandise_title">Merchandise</string>
     <string name="patreon_title">Patreon</string>
     <string name="schermate_label">Schermate</string>
+    <string name="error_current_position">Non è possibile cambiare la visibilità di questa schermata poiché attualmente visualizzata nella sezione principale.</string>
+    <string name="error_first_position">Non è possibile cambiare la visibilità di questa schermata poiché attualmente impostata come pagina iniziale.</string>
 </resources>

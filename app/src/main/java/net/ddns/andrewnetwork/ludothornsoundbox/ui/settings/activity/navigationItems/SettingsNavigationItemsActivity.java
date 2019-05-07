@@ -1,6 +1,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,7 @@ public class SettingsNavigationItemsActivity extends PreferencesManagerActivity 
     public static final int REQUEST_NAVIGATION_SELECTED = 4044;
     public static final String KEY_NAVIGATION_ITEMS = "KEY_NAVIGATION_ITEMS";
     public static final String KEY_SAVED_NAVIGATION_ITEMS = "KEY_SAVED_NAVIGATION_ITEMS";
+    public static final String KEY_FIRST_POSITION_BOT_NAV_MENU = "KEY_FIRST_POSITION_BOT_NAV_MENU";
     private ActivitySettingsNavigationItemsBinding mBinding;
     private List<LudoNavigationItem> navigationItemList;
 
@@ -37,18 +39,21 @@ public class SettingsNavigationItemsActivity extends PreferencesManagerActivity 
             getSupportActionBar().setHomeButtonEnabled(mIsHomeButtonEnabled);
             getSupportActionBar().setDisplayHomeAsUpEnabled(mIsDisplayHomeAsUpEnabled);
         }
+
         int currentNavigationPosition = 0;
+        int firstNavigationPosition = 0;
 
         if(getIntent() != null && getIntent().getExtras() != null) {
             String serializedSavednavigationItemList = getIntent().getExtras().getString(KEY_SAVED_NAVIGATION_ITEMS);
             currentNavigationPosition = getIntent().getExtras().getInt(KEY_CURRENT_POSITION_BOT_NAV_MENU);
+            firstNavigationPosition = getIntent().getExtras().getInt(KEY_FIRST_POSITION_BOT_NAV_MENU);
 
             navigationItemList = createNavigationItemsList(this, serializedSavednavigationItemList);
         }
 
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mBinding.recyclerView.setAdapter(new NavigationItemsAdapter(this, navigationItemList, currentNavigationPosition));
+        mBinding.recyclerView.setAdapter(new NavigationItemsAdapter(this, navigationItemList, currentNavigationPosition, firstNavigationPosition));
 
         mBinding.recyclerView.setVisibility(View.VISIBLE);
 
@@ -73,12 +78,12 @@ public class SettingsNavigationItemsActivity extends PreferencesManagerActivity 
         return 0;
     }
 
-    private static List<LudoNavigationItem> createNavigationItemsList(Activity activity, String serializedNavigationItems) {
+    private static List<LudoNavigationItem> createNavigationItemsList(Context context, String serializedNavigationItems) {
         List<LudoNavigationItem> navigationItemList;
 
         List<LudoNavigationItem> navigationItemListFromPref = JsonUtil.getGson().fromJson(serializedNavigationItems, new TypeToken<List<LudoNavigationItem>>(){}.getType());
         navigationItemListFromPref = navigationItemListFromPref != null ? navigationItemListFromPref : new ArrayList<>();
-        List<LudoNavigationItem> defaultNavigationItems = CommonUtils.createNavigationItemsList(activity);
+        List<LudoNavigationItem> defaultNavigationItems = CommonUtils.createNavigationItemsList(context);
         if(navigationItemListFromPref.isEmpty()) {
             navigationItemList = defaultNavigationItems;
         } else {

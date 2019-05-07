@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.core.Utils;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
@@ -40,6 +41,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.credits.Cre
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.LudoNavigationItem;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ViewUtils;
 
 import java.util.List;
@@ -145,8 +147,6 @@ public class MainActivity extends ParentActivity
 
         mBinding.appBarMain.navigation.setSelectedItemId(fragmentFirstSelection);
 
-
-
         PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).registerOnSharedPreferenceChangeListener(this);
 
     }
@@ -207,25 +207,10 @@ public class MainActivity extends ParentActivity
                 CommonUtils.createNavigationItemsList(this);
     }
 
-    private @IdRes
-    int getFirstFragment(SharedPreferences settings) {
+    private @IdRes int getFirstFragment(SharedPreferences settings) {
         String fragment = settings.getString(getString(R.string.pag_iniziale_key), "Home");
 
-        if (fragment != null) {
-            switch (fragment) {
-                default:
-                case "Home":
-                    return R.id.action_home;
-                case "Preferiti":
-                    return R.id.action_favorites;
-                case "Casuale":
-                    return R.id.action_random;
-                case "Video":
-                    return R.id.action_video;
-            }
-        }
-
-        return R.id.action_home;
+        return StringUtils.getActionIdByString(fragment);
     }
 
 

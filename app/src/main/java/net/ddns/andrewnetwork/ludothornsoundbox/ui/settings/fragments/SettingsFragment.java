@@ -2,6 +2,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationI
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,14 +35,17 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icon
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.EXTRA_ICON_SELECTED;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity.REQUEST_ICON_SELECTED;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.KEY_CURRENT_POSITION_BOT_NAV_MENU;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.KEY_FIRST_POSITION_BOT_NAV_MENU;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.KEY_NAVIGATION_ITEMS;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.KEY_SAVED_NAVIGATION_ITEMS;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.REQUEST_NAVIGATION_SELECTED;
 
-public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, Preference.OnPreferenceChangeListener, MvpView, BaseFragment.Callback, Preference.OnPreferenceClickListener {
+public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, Preference.OnPreferenceChangeListener, MvpView, BaseFragment.Callback, Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private @StringRes int[] mandatoryPreferences = {R.string.usa_font_app_key, R.string.reset_app_key};
     private int currentNavigationItemPosition;
+    private int firstNavigationItemPosition;
+
     public static SettingsFragment newInstance(int currentPosition) {
 
         Bundle args = new Bundle();
@@ -58,6 +63,7 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
 
         if(getArguments() != null) {
             currentNavigationItemPosition = getArguments().getInt(KEY_CURRENT_POSITION_BOT_NAV_MENU);
+            firstNavigationItemPosition = getFirstNavigationItemPosition();
         }
 
         bindPreferenceSummaryToValue(findPreference(getString(R.string.usa_font_app_key)));
@@ -68,6 +74,16 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
         bindPreferenceSummaryToValue(findPreference(getString(R.string.audio_nascosti_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.reset_app_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.credits_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pag_iniziale_key)));
+
+
+        android.preference.PreferenceManager.getDefaultSharedPreferences(mActivity).registerOnSharedPreferenceChangeListener(this);
+
+    }
+
+    private int getFirstNavigationItemPosition() {
+        return StringUtils.getActionIdByString(PreferenceManager.getDefaultSharedPreferences(mActivity)
+                .getString(mActivity.getString(R.string.pag_iniziale_key), "Home"));
     }
 
     @Override
@@ -138,7 +154,6 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
             onMandatoryPreferenceChanged(key);
         }
 
-
         return true;
     }
 
@@ -172,6 +187,7 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
             Intent ordineIntent = new Intent(mActivity, SettingsNavigationItemsActivity.class);
             ordineIntent.putExtra(KEY_SAVED_NAVIGATION_ITEMS, getPreferenceManager().getSharedPreferences().getString(ordineKey, ""));
             ordineIntent.putExtra(KEY_CURRENT_POSITION_BOT_NAV_MENU, currentNavigationItemPosition);
+            ordineIntent.putExtra(KEY_FIRST_POSITION_BOT_NAV_MENU, firstNavigationItemPosition);
             startActivityForResult(ordineIntent, REQUEST_NAVIGATION_SELECTED);
 
             return true;
@@ -226,6 +242,13 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
                 default:
                     break;
             }
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(mActivity.getString(R.string.pag_iniziale_key))) {
+            firstNavigationItemPosition = getFirstNavigationItemPosition();
         }
     }
 }
