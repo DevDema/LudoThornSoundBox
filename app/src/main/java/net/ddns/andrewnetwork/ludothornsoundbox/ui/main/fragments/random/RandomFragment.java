@@ -32,6 +32,15 @@ public class RandomFragment extends GifFragment implements IRandomView {
     IRandomPresenter<IRandomView> mPresenter;
     private List<LudoAudio> audioList;
 
+    public static RandomFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        RandomFragment fragment = new RandomFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

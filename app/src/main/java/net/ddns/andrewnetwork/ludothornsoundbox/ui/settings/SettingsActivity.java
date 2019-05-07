@@ -16,6 +16,7 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navi
 public class SettingsActivity extends PreferencesManagerActivity implements PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
     public static final int REQUEST_SETTINGS_CHANGE = 2022;
+    public static final int REQUEST_SETTINGS = 2023;
     int currentNavigationItemPosition;
 
     @Override

@@ -34,6 +34,15 @@ public class PreferitiFragment extends ParentFragment implements IPreferitiView 
     @Inject
     IPreferitiPresenter<IPreferitiView> mPresenter;
 
+    public static PreferitiFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        PreferitiFragment fragment = new PreferitiFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

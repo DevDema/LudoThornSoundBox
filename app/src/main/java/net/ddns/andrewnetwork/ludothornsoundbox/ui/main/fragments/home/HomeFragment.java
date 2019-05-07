@@ -205,15 +205,16 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
         }
 
     }
+
     private void changeRingtone(LudoAudio audio, int typeNotification, @StringRes int stringResource) {
 
         String messageNotification = getString(R.string.generic_error_suoneria_label);
 
-        if(AppUtils.canWriteSettings(mActivity) && AudioUtils.setAsRingtone(mActivity, audio, typeNotification)) {
+        if (AppUtils.canWriteSettings(mActivity) && AudioUtils.setAsRingtone(mActivity, audio, typeNotification)) {
             messageNotification = getString(stringResource);
         }
 
-        if(AppUtils.canWriteSettings(mActivity)) {
+        if (AppUtils.canWriteSettings(mActivity)) {
             CommonUtils.showDialog(mActivity, messageNotification);
         }
     }

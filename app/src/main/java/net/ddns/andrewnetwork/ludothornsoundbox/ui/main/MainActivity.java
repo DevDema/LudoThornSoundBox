@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.reflect.TypeToken;
 
@@ -35,14 +36,17 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomF
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.PreferencesListener;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.credits.CreditsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.LudoNavigationItem;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.ViewUtils;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.BlankFragmentActivity.KEY_EXTRA_FRAGMENT_ACTION;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.KEY_CURRENT_POSITION_BOT_NAV_MENU;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.DAYS_LATER_ASKING_FEEDBACK;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.LINK_ASKING_FEEDBACK;
@@ -50,15 +54,61 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmpt
 
 
 public class MainActivity extends ParentActivity
-        implements NavigationView.OnNavigationItemSelectedListener, IMainView, PreferencesListener, SharedPreferences.OnSharedPreferenceChangeListener {
+        implements BottomNavigationView.OnNavigationItemSelectedListener, IMainView, PreferencesListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
 
     private ActivityMainBinding mBinding;
     @Inject
     IMainPresenter<IMainView> mPresenter;
-    private boolean loadAtOnce;
-    @IdRes int fragmentFirstSelection;
+
+    @IdRes
+    int fragmentFirstSelection;
+    private Fragment currentFragment;
     private List<LudoNavigationItem> orderedNavigationMenu;
+
+    private NavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = menuItem -> {
+        int id = menuItem.getItemId();
+
+        mBinding.drawerLayout.closeDrawer(GravityCompat.START);
+        Fragment fragment = null;
+
+        switch (id) {
+            case R.id.action_home:
+                selectOnBottomNavigationOrInstantiate(R.id.action_home);
+                return true;
+            case R.id.action_random:
+                selectOnBottomNavigationOrInstantiate(R.id.action_random);
+                return true;
+            case R.id.action_video:
+                selectOnBottomNavigationOrInstantiate(R.id.action_video);
+                return true;
+            case R.id.action_favorites:
+                selectOnBottomNavigationOrInstantiate(R.id.action_favorites);
+                return true;
+            case R.id.action_credits:
+                Intent creditsIntent = new Intent(this, CreditsActivity.class);
+                startActivityForResult(creditsIntent, CreditsActivity.REQUEST_CREDITS);
+                return true;
+            case R.id.action_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                settingsIntent.putExtra(KEY_CURRENT_POSITION_BOT_NAV_MENU, mBinding.appBarMain.navigation.getSelectedItemId());
+                startActivityForResult(settingsIntent, SettingsActivity.REQUEST_SETTINGS);
+                return true;
+        }
+
+        return false;
+    };
+
+
+    private void selectOnBottomNavigationOrInstantiate(@IdRes int actionId) {
+        if (ViewUtils.hasItemId(mBinding.appBarMain.navigation, actionId)) {
+            mBinding.appBarMain.navigation.setSelectedItemId(actionId);
+        } else {
+            Intent intent = new Intent(this, BlankFragmentActivity.class);
+            intent.putExtra(KEY_EXTRA_FRAGMENT_ACTION, actionId);
+            startActivity(intent);
+        }
+    }
 
     @Override
     protected void setContentView() {
@@ -90,13 +140,31 @@ public class MainActivity extends ParentActivity
 
         createBottomNavigationMenu();
 
-        mBinding.navView.setNavigationItemSelectedListener(this);
-        mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
+        mBinding.navView.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
+        mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this);
 
         mBinding.appBarMain.navigation.setSelectedItemId(fragmentFirstSelection);
 
+
+
         PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).registerOnSharedPreferenceChangeListener(this);
 
+    }
+
+    private @IdRes int getIdByCurrentFragment() {
+        if(currentFragment.getClass() == HomeFragment.class) {
+            return R.id.action_home;
+        } else if(currentFragment.getClass() == RandomFragment.class) {
+            return R.id.action_random;
+        } else if(currentFragment.getClass() == PreferitiFragment.class) {
+            return R.id.action_favorites;
+        } else if(currentFragment.getClass() == VideoFragment.class) {
+            return R.id.action_video;
+        } else {
+
+            //DIFFERENT FRAGMENT
+            return -1;
+        }
     }
 
     private void createBottomNavigationMenu(List<LudoNavigationItem> navigationItemList) {
@@ -104,8 +172,8 @@ public class MainActivity extends ParentActivity
 
         menu.clear();
 
-        for(LudoNavigationItem navigationItem : navigationItemList) {
-            if(navigationItem.isVisible()) {
+        for (LudoNavigationItem navigationItem : navigationItemList) {
+            if (navigationItem.isVisible()) {
                 menu.add(Menu.NONE, navigationItem.getId(), Menu.NONE, navigationItem.getName()).setIcon(navigationItem.getDrawableRes());
             }
         }
@@ -126,7 +194,7 @@ public class MainActivity extends ParentActivity
     protected void managePreferences(SharedPreferences settings) {
         super.managePreferences(settings);
 
-        this.loadAtOnce = getLoadAtOnce(settings);
+
         this.fragmentFirstSelection = getFirstFragment(settings);
         this.orderedNavigationMenu = getOrderedNavigationMenu(settings);
     }
@@ -134,14 +202,16 @@ public class MainActivity extends ParentActivity
     private List<LudoNavigationItem> getOrderedNavigationMenu(SharedPreferences settings) {
         String serializedNavigationMenu = settings.getString(getString(R.string.cambia_ordine_key), "");
         return nonEmptyNonNull(serializedNavigationMenu) ?
-                JsonUtil.getGson().fromJson(serializedNavigationMenu, new TypeToken<List<LudoNavigationItem>>(){}.getType()) :
+                JsonUtil.getGson().fromJson(serializedNavigationMenu, new TypeToken<List<LudoNavigationItem>>() {
+                }.getType()) :
                 CommonUtils.createNavigationItemsList(this);
     }
 
-    private @IdRes int getFirstFragment(SharedPreferences settings) {
+    private @IdRes
+    int getFirstFragment(SharedPreferences settings) {
         String fragment = settings.getString(getString(R.string.pag_iniziale_key), "Home");
 
-        if(fragment != null) {
+        if (fragment != null) {
             switch (fragment) {
                 default:
                 case "Home":
@@ -159,9 +229,7 @@ public class MainActivity extends ParentActivity
     }
 
 
-    private boolean getLoadAtOnce(SharedPreferences settings) {
-        return settings.getBoolean(getString(R.string.carica_audio_insieme_key), false);
-    }
+
 
     private void showFeedBackDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -209,23 +277,19 @@ public class MainActivity extends ParentActivity
                 fragment = HomeFragment.newInstance(loadAtOnce);
                 break;
             case R.id.action_random:
-                fragment = new RandomFragment();
+                fragment = RandomFragment.newInstance();
                 break;
             case R.id.action_video:
-                fragment = new VideoFragment();
+                fragment = VideoFragment.newInstance();
                 break;
             case R.id.action_favorites:
-                fragment = new PreferitiFragment();
-                break;
-            //NAVIGATION DRAWER
-            case R.id.action_settings:
-                Intent settingsIntent = new Intent(this, SettingsActivity.class);
-                settingsIntent.putExtra(KEY_CURRENT_POSITION_BOT_NAV_MENU, mBinding.appBarMain.navigation.getSelectedItemId());
-                startActivity(settingsIntent);
+                fragment = PreferitiFragment.newInstance();
                 break;
         }
 
         if (fragment != null) {
+            currentFragment = fragment;
+            ViewUtils.selectByItemId(mBinding.navView, id);
             replaceFragmentIfNotExists(fragment);
         }
         return true;
@@ -287,8 +351,9 @@ public class MainActivity extends ParentActivity
             if (fragment != null) {
                 fragment.onAudioListChanged();
             }
-        } else if(key.equals(getString(R.string.cambia_ordine_key))) {
-            onBottomNavigationMenuChanged(JsonUtil.getGson().fromJson(sharedPreferences.getString(key, ""), new TypeToken<List<LudoNavigationItem>>(){}.getType()));
+        } else if (key.equals(getString(R.string.cambia_ordine_key))) {
+            onBottomNavigationMenuChanged(JsonUtil.getGson().fromJson(sharedPreferences.getString(key, ""), new TypeToken<List<LudoNavigationItem>>() {
+            }.getType()));
         }
     }
 
@@ -313,5 +378,12 @@ public class MainActivity extends ParentActivity
         }
 
         return null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        ViewUtils.selectByItemId(mBinding.navView, getIdByCurrentFragment());
     }
 }

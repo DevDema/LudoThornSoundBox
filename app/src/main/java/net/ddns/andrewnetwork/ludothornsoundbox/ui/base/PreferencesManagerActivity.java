@@ -16,9 +16,9 @@ import androidx.annotation.StyleRes;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.core.extras.ActivitiesManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
 
 public abstract class PreferencesManagerActivity extends BaseActivity {
+    protected boolean loadAtOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,7 @@ public abstract class PreferencesManagerActivity extends BaseActivity {
 
     protected void managePreferences(SharedPreferences settings) {
 
+        this.loadAtOnce = getLoadAtOnce(settings);
         getFontPreference(settings);
     }
 
@@ -99,6 +100,10 @@ public abstract class PreferencesManagerActivity extends BaseActivity {
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
         System.exit(0);
 
+    }
+
+    private boolean getLoadAtOnce(SharedPreferences settings) {
+        return settings.getBoolean(getString(R.string.carica_audio_insieme_key), false);
     }
 
     private void closeOtherActivities() {

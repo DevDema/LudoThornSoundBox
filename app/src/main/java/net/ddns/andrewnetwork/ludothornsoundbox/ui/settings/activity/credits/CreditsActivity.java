@@ -13,6 +13,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 
 public class CreditsActivity extends PreferencesManagerActivity {
 
+    public static final int REQUEST_CREDITS = 2023;
     ActivityCreditsBinding mBinding;
 
     @Override

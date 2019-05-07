@@ -55,6 +55,7 @@
             android:name=".ui.settings.activity.credits.CreditsActivity"
             android:label="@string/credits_title"
             android:theme="@style/PreferenceActivityTheme" />
+        <activity android:name=".ui.main.BlankFragmentActivity" />
 
         <activity-alias
             android:name=".MainActivity1"

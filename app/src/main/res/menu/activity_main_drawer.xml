@@ -3,12 +3,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <item android:id="@+id/group_schermate"
+        android:title="@string/schermate_label">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@id/action_home"
+                    android:icon="@drawable/ic_home_black_24dp"
+                    android:title="@string/home" />
 
-    </group>
+                <item
+                    android:id="@id/action_random"
+                    android:icon="@drawable/ic_action_random_back"
+                    android:title="@string/random" />
 
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:icon="@drawable/ic_settings_black" />
+                <item
+                    android:id="@id/action_video"
+                    android:icon="@drawable/ic_video_black"
+                    android:title="@string/video" />
 
+                <item
+                    android:id="@id/action_favorites"
+                    android:icon="@drawable/ic_star_black_24dp"
+                    android:title="@string/favorites" />
+            </group>
+        </menu>
+    </item>
+    <item android:title="@string/money_label">
+        <menu>
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/action_merchandise"
+                    android:icon="@drawable/ic_settings_black"
+                    android:title="@string/merchandise_title" />
+
+                <item
+                    android:id="@+id/action_patreon"
+                    android:icon="@drawable/ic_settings_black"
+                    android:title="@string/patreon_title" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="@string/altro_label">
+        <menu>
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/action_credits"
+                    android:icon="@drawable/ic_settings_black"
+                    android:title="@string/credits_title" />
+
+                <item
+                    android:id="@+id/action_settings"
+                    android:icon="@drawable/ic_settings_black"
+                    android:title="@string/action_settings" />
+            </group>
+        </menu>
+    </item>
 </menu>

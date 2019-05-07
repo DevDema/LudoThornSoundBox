@@ -40,6 +40,15 @@ public class VideoFragment extends ParentFragment implements IVideoView {
     IVideoPresenter<IVideoView> mPresenter;
     private VideoRecyclerAdapter adapter;
 
+    public static VideoFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        VideoFragment fragment = new VideoFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,7 +82,7 @@ public class VideoFragment extends ParentFragment implements IVideoView {
                 } else {
                     Channel channel = ((Channel) parent.getSelectedItem());
                     adapter.getFilter().filter(channel.getId());
-                    if(getView() != null && getContext() != null) {
+                    if (getView() != null && getContext() != null) {
                         getView().setBackgroundColor(ContextCompat.getColor(getContext(), channel.getBackGroundColor()));
                     }
                 }
@@ -103,7 +112,7 @@ public class VideoFragment extends ParentFragment implements IVideoView {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (!recyclerView.canScrollVertically(1)) {
-                    if(!loadingMoreVideos) {
+                    if (!loadingMoreVideos) {
                         if (mBinding.selectChannel.getSelectedItemPosition() == 0) {
                             mPresenter.getMoreVideos(channelList, VideoUtils.getMostRecentDate(channelList));
                         } else {
