@@ -319,8 +319,6 @@ public class HomeFragment extends GifFragment implements OnButtonSelectedListene
 
         mBinding.searchString.setOnUserStoppedListener((editText, editable) -> editText.clearFocus());
 
-        mBinding.buttonsAudioPager.setOffscreenPageLimit(2);
-
         mBinding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

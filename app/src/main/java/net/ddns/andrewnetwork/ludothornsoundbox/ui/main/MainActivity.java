@@ -1,9 +1,12 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 
@@ -24,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
@@ -35,7 +39,6 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.Pref
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.PreferencesListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.credits.CreditsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.LudoNavigationItem;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.web.WebActivity;
@@ -59,7 +62,7 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmpt
 
 
 public class MainActivity extends ParentActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener, IMainView, PreferencesListener, SharedPreferences.OnSharedPreferenceChangeListener {
+        implements BottomNavigationView.OnNavigationItemSelectedListener, IMainView, SharedPreferences.OnSharedPreferenceChangeListener {
 
 
     private ActivityMainBinding mBinding;
@@ -332,10 +335,6 @@ public class MainActivity extends ParentActivity
         manageFeedbackAlert();
     }
 
-    @Override
-    public void onFontChanged(boolean isFontFromApp) {
-
-    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
