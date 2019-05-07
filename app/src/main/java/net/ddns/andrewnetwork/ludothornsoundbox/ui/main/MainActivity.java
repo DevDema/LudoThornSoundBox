@@ -49,6 +49,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.BlankFragmentActivity.KEY_EXTRA_FRAGMENT_ACTION;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.BlankFragmentActivity.REQUEST_BLANK_ACTIVITY;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.KEY_CURRENT_POSITION_BOT_NAV_MENU;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.DAYS_LATER_ASKING_FEEDBACK;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.LINK_ASKING_FEEDBACK;
@@ -108,7 +109,7 @@ public class MainActivity extends ParentActivity
         } else {
             Intent intent = new Intent(this, BlankFragmentActivity.class);
             intent.putExtra(KEY_EXTRA_FRAGMENT_ACTION, actionId);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_BLANK_ACTIVITY);
         }
     }
 

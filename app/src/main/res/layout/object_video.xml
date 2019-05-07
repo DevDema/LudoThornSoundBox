@@ -36,9 +36,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginStart="10dp"
                 android:layout_toRightOf="@id/icon"
-                android:fontFamily="@font/knewave"
                 android:maxLines="2"
-                android:text="Example application"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -52,15 +50,13 @@
                     android:id="@+id/videochannel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="TextView" />
+                    android:layout_marginStart="10dp" />
 
                 <TextView
                     android:id="@+id/Updated"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="10dp"
-                    android:text="TextView"
                     android:textAlignment="textEnd" />
             </LinearLayout>
 
@@ -120,7 +116,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:layout_toRightOf="@id/icon"
-                android:fontFamily="@font/knewave"
                 android:maxLines="1"
                 android:text="Description"
                 android:textSize="12sp"

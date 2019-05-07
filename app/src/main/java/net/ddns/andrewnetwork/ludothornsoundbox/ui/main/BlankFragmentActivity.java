@@ -19,6 +19,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFra
 public class BlankFragmentActivity extends PreferencesManagerActivity {
 
     static final String KEY_EXTRA_FRAGMENT_ACTION = "KEY_EXTRA_FRAGMENT_ACTION";
+    static final int REQUEST_BLANK_ACTIVITY = 2000;
 
     private ActivityBlankFragmentBinding mBinding;
     private @IdRes int actionId;
