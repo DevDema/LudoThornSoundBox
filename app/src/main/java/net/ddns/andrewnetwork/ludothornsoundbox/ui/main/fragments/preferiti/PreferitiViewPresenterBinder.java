@@ -25,10 +25,18 @@ public interface PreferitiViewPresenterBinder {
 
     interface IPreferitiPresenter<V extends IPreferitiView> extends MvpPresenter<V> {
 
+        List<LudoAudio> getPreferitiListFromPref();
+
+        void salvaAudio(LudoAudio audio);
+
         void getPreferitiList();
 
         void rimuoviPreferito(LudoAudio audio);
 
         void loadThumbnail(LudoVideo video, PreferitiListAdapter.ThumbnailLoadedListener thumbnailLoadedListener);
+
+        void loadVideo(LudoAudio audio, PreferitiListAdapter.VideoLoadedListener videoLoadedListener);
+
+        void saveAudioInPref(LudoAudio audio);
     }
 }

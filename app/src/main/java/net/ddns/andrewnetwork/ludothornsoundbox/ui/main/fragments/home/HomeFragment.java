@@ -224,7 +224,7 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
     private void shareAudio(LudoAudio audio) {
         PermissionListener permissionListener = () -> AudioUtils.shareAudio(HomeFragment.this, audio);
 
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             CommonUtils.showDialog(getContext(), getResources().getString(R.string.ask_permission_label), (dialog, which) ->
                             CommonUtils.askForStoragePermission(HomeFragment.this,
                                     permissionListener

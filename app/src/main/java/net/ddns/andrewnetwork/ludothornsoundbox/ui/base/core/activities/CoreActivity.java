@@ -454,4 +454,7 @@ public abstract class CoreActivity extends AppCompatActivity implements ICoreAct
         }
     }
 
+    public View getFragmentContainer() {
+        return findViewById(getFragmentContainerView());
+    }
 }

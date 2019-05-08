@@ -20,6 +20,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemPreferitiBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
+
 import java.util.List;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
@@ -37,6 +38,11 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
     interface ThumbnailLoadedListener {
 
         void onThumbnailLoaded(Thumbnail thumbnail);
+    }
+
+    interface VideoLoadedListener {
+
+        void onVideoLoaded(LudoVideo video);
     }
 
     PreferitiListAdapter(IFragmentAdapterBinder binder, Context context, List<LudoAudio> audioList) {
@@ -80,11 +86,16 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
                     mContext.getResources().getColor(R.color.white),
                     android.graphics.PorterDuff.Mode.SRC_IN);
 
+            mBinding.progressBar.getIndeterminateDrawable().setColorFilter(
+                    mContext.getResources().getColor(R.color.white),
+                    android.graphics.PorterDuff.Mode.SRC_IN);
+
+
             mBinding.titleLabel.setText(item.getTitle());
 
             LudoVideo video = item.getVideo();
 
-            setPreferitoListener();
+            setPreferitoListener(item);
 
             if (isPlaying.get(item.getAudio())) {
                 mBinding.playButton.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_stop_black_24dp));
@@ -94,33 +105,71 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
 
             setPlayPauseListener(item, position);
 
-            if (video != null && video.getTitle() != null) {
-                mBinding.videoTitleLabel.setText(video.getTitle());
-                mBinding.videoButton.setOnClickListener(v ->
-                        CommonUtils.showDialog(mContext, "Aprire il video corrispondente su youtube?",
-                                (dialog, which) -> {
-                                    CommonUtils.openLink(mContext, buildVideoUrl(video.getId()));
-                                    dialog.dismiss();
-                                },
-                                true
-                        )
-                );
-
-                mBinding.videoTitleLabel.setVisibility(View.VISIBLE);
-                mBinding.videoButton.setVisibility(View.VISIBLE);
-
-                loadDrawable(item);
-            } else {
-                mBinding.videoButton.setVisibility(View.GONE);
-
-                mBinding.videoTitleLabel.setText(mContext.getString(R.string.video_non_disponibile_label));
-
-                hideLoading();
-
-                mBinding.thumbnailImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_error_outline_white_24dp));
+            if (!isAnyPlaying()) {
+                if (video == null || video.getTitle() == null) {
+                    showLoading();
+                    mBinder.loadVideo(item, videoResponse -> {
+                        manageVideoResponse(item, videoResponse);
+                        hideLoading();
+                    });
+                } else {
+                    onVideoAvailableAndLoadDrawable(item, video);
+                    hideLoading();
+                }
             }
 
+        }
 
+        private boolean isAnyPlaying() {
+            for (int i = 0; i < isPlaying.size(); i++) {
+                if (isPlaying.valueAt(i)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void manageVideoResponse(LudoAudio item, LudoVideo video) {
+
+            if (video != null && video.getTitle() != null) {
+                onVideoAvailableAndLoadDrawable(item, video);
+            } else {
+                onVideoUnavailable();
+            }
+        }
+
+        private void onVideoAvailableAndLoadDrawable(LudoAudio item, LudoVideo video) {
+            item.setVideo(video);
+
+            onVideoAvailable(video);
+            callFinalizeVideoLoaded(item);
+            loadDrawable(item);
+        }
+
+        private void onVideoAvailable(LudoVideo video) {
+            mBinding.videoTitleLabel.setText(video.getTitle());
+            mBinding.videoButton.setOnClickListener(v ->
+                    CommonUtils.showDialog(mContext, "Aprire il video corrispondente su youtube?",
+                            (dialog, which) -> {
+                                CommonUtils.openLink(mContext, buildVideoUrl(video.getId()));
+                                dialog.dismiss();
+                            },
+                            true
+                    )
+            );
+
+            mBinding.videoTitleLabel.setVisibility(View.VISIBLE);
+            mBinding.videoButton.setVisibility(View.VISIBLE);
+        }
+
+        private void onVideoUnavailable() {
+            mBinding.videoButton.setVisibility(View.GONE);
+
+            mBinding.videoTitleLabel.setText(mContext.getString(R.string.video_non_disponibile_label));
+
+            hideThumbnailLoading();
+
+            mBinding.thumbnailImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_error_outline_white_24dp));
         }
 
         private void loadDrawable(LudoAudio item) {
@@ -129,15 +178,14 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
             }
 
             if (drawables.get(item.getAudio()) == null) {
-                showLoading();
+                showThumbnailLoading();
                 mBinder.loadThumbnail(item, thumbnail -> {
                     if (thumbnail != null) {
                         drawables.put(item.getAudio(), thumbnail.getImage());
 
-
                         setDrawable(item);
                     } else {
-                        hideLoading();
+                        hideThumbnailLoading();
 
                         mBinding.thumbnailImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_error_outline_white_24dp));
                     }
@@ -147,18 +195,32 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
             }
         }
 
+        private void callFinalizeVideoLoaded(LudoAudio audio) {
+            mBinder.saveAudioInPref(audio);
+        }
+
         private void setDrawable(LudoAudio audio) {
             mBinding.thumbnailImage.setImageBitmap(drawables.get(audio.getAudio()));
 
-            hideLoading();
+            hideThumbnailLoading();
         }
 
-        private void showLoading() {
+        private void showThumbnailLoading() {
             mBinding.thumbnailProgressBar.setVisibility(View.VISIBLE);
         }
 
-        private void hideLoading() {
+        private void hideThumbnailLoading() {
             mBinding.thumbnailProgressBar.setVisibility(View.INVISIBLE);
+        }
+
+        private void showLoading() {
+            mBinding.progressBar.setVisibility(View.VISIBLE);
+            mBinding.progressBackground.setVisibility(View.VISIBLE);
+        }
+
+        private void hideLoading() {
+            mBinding.progressBar.setVisibility(View.INVISIBLE);
+            mBinding.progressBackground.setVisibility(View.INVISIBLE);
         }
 
 
@@ -210,20 +272,21 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
             }
         }
 
-        private void setPreferitoListener() {
+        private void setPreferitoListener(LudoAudio audio) {
             Drawable isNotPreferito = ContextCompat.getDrawable(mContext, R.drawable.ic_star_border_yellow_24dp);
             Drawable isPreferito = ContextCompat.getDrawable(mContext, R.drawable.ic_star_yellow_24dp);
             if (compareDrawables(mBinding.preferitoButton.getDrawable(), isPreferito)) {
                 mBinding.preferitoButton.setOnClickListener(v -> {
                     mBinding.preferitoButton.setImageDrawable(isNotPreferito);
-                    //TODO cancella preferito
-                    setPreferitoListener();
+                    mBinder.onPreferitoIntentDelete(audio);
+
+                    setPreferitoListener(audio);
                 });
             } else {
                 mBinding.preferitoButton.setOnClickListener(v -> {
                     mBinding.preferitoButton.setImageDrawable(isPreferito);
-                    //TODO annulla cancellazione preferito
-                    setPreferitoListener();
+                    mBinder.cancelPreferitoIntentDelete();
+                    setPreferitoListener(audio);
                 });
             }
         }

@@ -2,6 +2,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +28,17 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import com.google.android.material.snackbar.Snackbar;
+
 public class PreferitiFragment extends BaseFragment implements IPreferitiView, IFragmentAdapterBinder {
+
+    private final static int TIMER_DURATION = 5000;
 
     private FragmentFavoriteBinding mBinding;
     @Inject
     IPreferitiPresenter<IPreferitiView> mPresenter;
+    private Snackbar snackbar;
+    private CountDownTimer timer;
 
     public static PreferitiFragment newInstance() {
 
@@ -61,7 +68,16 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mPresenter.getPreferitiList();
+        loadPreferiti();
+    }
+
+    private void loadPreferiti() {
+        List<LudoAudio> audioList = mPresenter.getPreferitiListFromPref();
+        if (audioList.isEmpty()) {
+            onPreferitiListEmpty();
+        } else {
+            onPreferitiListLoaded(audioList);
+        }
     }
 
     @Override
@@ -69,7 +85,7 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
         super.onHiddenChanged(hidden);
 
         if (!hidden) {
-            mPresenter.getPreferitiList();
+            loadPreferiti();
         }
     }
 
@@ -81,22 +97,33 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
 
     @Override
     public void onPreferitoRimossoSuccess() {
-        CommonUtils.showDialog(getContext(), getString(R.string.audio_rimosso_preferiti_label));
+        if (getView() != null) {
+            snackbar = Snackbar.make(getView(), mContext.getString(R.string.audio_rimosso_preferiti_label), Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
 
+        loadPreferiti();
     }
 
     @Override
     public void onPreferitoRimossoFailed(String message) {
-        CommonUtils.showDialog(getContext(), getString(R.string.audio_non_rimosso_preferiti_label));
+
+        if (getView() != null) {
+            snackbar = Snackbar.make(getView(), mContext.getString(R.string.audio_non_rimosso_preferiti_label), Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
 
     }
 
     @Override
     public void onPreferitiListLoaded(List<LudoAudio> audioList) {
 
+        mBinding.globalLinear.setVisibility(View.GONE);
+        mBinding.recyclerView.setVisibility(View.VISIBLE);
+
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
-        if(mBinding.recyclerView.getItemAnimator() != null) {
+        if (mBinding.recyclerView.getItemAnimator() != null) {
             ((SimpleItemAnimator) mBinding.recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         }
 
@@ -131,7 +158,7 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
     @Override
     public void loadThumbnail(LudoAudio audio, ThumbnailLoadedListener thumbnailLoadedListener) {
         LudoVideo video = audio.getVideo();
-        if(video != null) {
+        if (video != null) {
             mPresenter.loadThumbnail(video, thumbnailLoadedListener);
         } else {
             thumbnailLoadedListener.onThumbnailLoaded(null);
@@ -141,5 +168,55 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
     @Override
     public void setOnCompletionListener(MediaPlayer.OnCompletionListener onCompletionListener) {
         mBinding.audioPlayer.setOnCompletionListener(onCompletionListener);
+    }
+
+    @Override
+    public void loadVideo(LudoAudio audio, PreferitiListAdapter.VideoLoadedListener videoLoadedListener) {
+        mPresenter.loadVideo(audio, videoLoadedListener);
+    }
+
+    @Override
+    public void saveAudioInPref(LudoAudio audio) {
+        mPresenter.saveAudioInPref(audio);
+    }
+
+    @Override
+    public void onPreferitoIntentDelete(LudoAudio audio) {
+        if (getView() != null) {
+            snackbar = Snackbar.make(getView(), mContext.getString(R.string.countdown_delete_favorite_message, 5), Snackbar.LENGTH_INDEFINITE);
+
+            snackbar.show();
+
+            timer = new CountDownTimer(TIMER_DURATION, 1000) {
+
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    snackbar.setText(mContext.getString(R.string.countdown_delete_favorite_message, millisUntilFinished / 1000));
+                }
+
+                @Override
+                public void onFinish() {
+                    snackbar.dismiss();
+                    mPresenter.rimuoviPreferito(audio);
+                }
+
+            };
+
+            timer.start();
+
+        }
+    }
+
+    @Override
+    public void cancelPreferitoIntentDelete() {
+        if(timer != null) {
+            timer.cancel();
+
+            if(getView() != null) {
+                snackbar = Snackbar.make(getView(), mContext.getString(R.string.canceled_operation_message), Snackbar.LENGTH_SHORT);
+
+                snackbar.show();
+            }
+        }
     }
 }

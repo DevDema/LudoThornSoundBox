@@ -28,6 +28,16 @@ public class PreferitiPresenter<V extends IPreferitiView> extends BasePresenter<
 
 
     @Override
+    public List<LudoAudio> getPreferitiListFromPref() {
+        return getDataManager().getPreferitiList();
+    }
+
+    @Override
+    public void salvaAudio(LudoAudio audio) {
+        getDataManager().saveAudio(audio);
+    }
+
+    @Override
     public void getPreferitiList() {
         List<LudoAudio> preferitiList = getDataManager().getPreferitiList();
         if (preferitiList != null && !preferitiList.isEmpty()) {
@@ -86,6 +96,23 @@ public class PreferitiPresenter<V extends IPreferitiView> extends BasePresenter<
                             thumbnailLoadedListener.onThumbnailLoaded(null);
                         }
                 ));
+    }
+
+    @Override
+    public void loadVideo(LudoAudio audio, PreferitiListAdapter.VideoLoadedListener videoLoadedListener) {
+        getCompositeDisposable().add(getDataManager().getVideoById(audio)
+                .observeOn(getSchedulerProvider().ui())
+                .subscribeOn(getSchedulerProvider().io())
+                .subscribe(audioResponse -> videoLoadedListener.onVideoLoaded(audioResponse.getVideo()), throwable -> {
+                            Log.e("VideoREST", audio.getTitle() + " | " + throwable.getMessage());
+                            videoLoadedListener.onVideoLoaded(audio.getVideo());
+                        }
+                ));
+    }
+
+    @Override
+    public void saveAudioInPref(LudoAudio audio) {
+        getDataManager().salvaPreferito(audio);
     }
 
     private boolean audioExists(List<LudoAudio> audioList, LudoAudio audio) {
