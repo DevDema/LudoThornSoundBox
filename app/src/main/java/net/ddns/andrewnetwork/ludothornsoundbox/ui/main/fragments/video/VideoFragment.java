@@ -11,7 +11,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ContentVideoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.ParentFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
@@ -32,7 +32,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class VideoFragment extends ParentFragment implements IVideoView {
+public class VideoFragment extends BaseFragment implements IVideoView {
 
     private ContentVideoBinding mBinding;
     private boolean loadingMoreVideos;
@@ -82,7 +82,7 @@ public class VideoFragment extends ParentFragment implements IVideoView {
                 } else {
                     Channel channel = ((Channel) parent.getSelectedItem());
                     adapter.getFilter().filter(channel.getId());
-                    if (getView() != null && getContext() != null) {
+                    if (getView() != null) {
                         getView().setBackgroundColor(ContextCompat.getColor(getContext(), channel.getBackGroundColor()));
                     }
                 }
@@ -137,7 +137,7 @@ public class VideoFragment extends ParentFragment implements IVideoView {
                 )
         );
 
-        adapter = new VideoRecyclerAdapter(this);
+        adapter = new VideoRecyclerAdapter(mContext);
 
         mBinding.videoRecycler.setAdapter(adapter);
 

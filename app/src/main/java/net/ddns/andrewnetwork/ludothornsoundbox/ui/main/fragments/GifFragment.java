@@ -12,17 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import pl.droidsonroids.gif.GifTextView;
 
-public abstract class GifFragment extends ParentFragment {
+public abstract class GifFragment extends BaseFragment {
 
     GifTextView gif;
-
-
 
     @Nullable
     @Override
@@ -34,11 +33,7 @@ public abstract class GifFragment extends ParentFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         gif = view.findViewById(R.id.gif);
 
-        gif.setOnClickListener(view2 -> {
-            Uri uri = Uri.parse("https://www.youtube.com/user/LudoThornDoppiaggio");
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
-        });
+
     }
 
 }

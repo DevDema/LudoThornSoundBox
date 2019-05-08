@@ -76,12 +76,16 @@ public final class AppUtils {
         }
     }
 
-    public static boolean isTablet(Activity activity) {
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        return width > 1500;
+    public static boolean isTablet(Context context) {
+        if(context instanceof Activity) {
+            Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+            return width > 1500;
+        }
+
+        return false;
     }
 
     public static void changeIcon(Context context, int position) {

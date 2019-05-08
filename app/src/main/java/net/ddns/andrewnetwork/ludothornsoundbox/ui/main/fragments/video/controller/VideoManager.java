@@ -17,7 +17,7 @@ public class VideoManager {
      * @param id        video id
      * @return video
      */
-    public static LudoVideo findVideoById(List<LudoVideo> videoList, String id) {
+    static LudoVideo findVideoById(List<LudoVideo> videoList, String id) {
         for (LudoVideo video : videoList) if (video.getId().equals(id)) return video;
         return null;
     }
@@ -27,14 +27,13 @@ public class VideoManager {
      * @param url       URL
      * @return video found
      */
-    public static LudoVideo findVideoByUrl(List<LudoVideo> videoList, String url, boolean next) {
+    static LudoVideo findVideoByUrl(List<LudoVideo> videoList, String url, boolean next) {
         for (LudoVideo video : videoList)
             if (video.getThumbnail()!= null && video.getThumbnail().getUrl().equals(url))
                 if(!next)
                     return video;
                 else {
                     next = false;
-                    continue;
                 }
         return null;
     }
@@ -82,7 +81,7 @@ public class VideoManager {
     /**
      * @param videoList lista dei video
      */
-    public static ArrayList<LudoVideo> orderByDate(ArrayList<LudoVideo> videoList) {
+    static ArrayList<LudoVideo> orderByDate(ArrayList<LudoVideo> videoList) {
         LudoVideo video;
         if (videoList.size() > 1)
             for (int i = 0; i < videoList.size() - 1; i++) {
@@ -98,7 +97,7 @@ public class VideoManager {
             return videoList;
     }
 
-    public static ArrayList<LudoVideo> removeDuplicates (ArrayList<LudoVideo> videoList) {
+    static ArrayList<LudoVideo> removeDuplicates (ArrayList<LudoVideo> videoList) {
         if (videoList.size() > 1)
             for (int i = 0; i < videoList.size(); i++)
                 for(int j = 0; j < videoList.size(); j++)
@@ -106,7 +105,7 @@ public class VideoManager {
         return videoList;
     }
 
-    public static boolean areThereDuplicates(ArrayList<LudoVideo> videoList) {
+    static boolean areThereDuplicates(ArrayList<LudoVideo> videoList) {
         if (videoList.size() > 1)
             for (int i = 0; i < videoList.size() - 1; i++)
                 for(int j = 0; j < videoList.size() -1; j++)
@@ -119,7 +118,7 @@ public class VideoManager {
      * @param videoList list of videos
      * @return list of videos
      */
-    public static ArrayList<LudoVideo> removeDuplicatesifThereAreAny(ArrayList<LudoVideo> videoList) {
+    static ArrayList<LudoVideo> removeDuplicatesifThereAreAny(ArrayList<LudoVideo> videoList) {
         while (true) {
             if (areThereDuplicates(videoList)) {
             removeDuplicates(videoList);
@@ -147,7 +146,7 @@ public class VideoManager {
         return filteredVideoList;
     }
 
-    public static ArrayList<LudoVideo> removeVideosWithNoThumbanails(ArrayList<LudoVideo> videoList){
+    static ArrayList<LudoVideo> removeVideosWithNoThumbanails(ArrayList<LudoVideo> videoList){
         ArrayList<LudoVideo> videos = new ArrayList<>(videoList);
         try {
             for(LudoVideo video : videoList) if (!video.hasThumbnail()) videos.remove(video);
@@ -158,13 +157,13 @@ public class VideoManager {
         return videos;
     }
 
-    public static ArrayList<LudoVideo> removeVideosWithNoInformation(List<LudoVideo> videoList){
+    static ArrayList<LudoVideo> removeVideosWithNoInformation(List<LudoVideo> videoList){
         ArrayList<LudoVideo> videos = new ArrayList<>(videoList);
         for(LudoVideo video : videoList) if (!video.hasInformation()) videos.remove(video);
         return videos;
     }
 
-    public static ArrayList<LudoVideo> removeAllThumbnails(List<LudoVideo> videoList) {
+    static ArrayList<LudoVideo> removeAllThumbnails(List<LudoVideo> videoList) {
         ArrayList<LudoVideo> videos = new ArrayList<>(videoList);
         for(LudoVideo video : videoList) if(video.hasThumbnail()) video.setThumbnail(null);
         return videos;
@@ -210,8 +209,7 @@ public class VideoManager {
     public static boolean noVideohasThumbnail(List<LudoVideo> videoList) {
         int counter = 1;
         for(LudoVideo video : videoList) if(!video.hasThumbnail()) counter++;
-        if(counter>=videoList.size()) return true;
-        return false;
+        return counter >= videoList.size();
     }
 
     public static ArrayList<LudoVideo> createCompleteList(List<Channel> channels) {

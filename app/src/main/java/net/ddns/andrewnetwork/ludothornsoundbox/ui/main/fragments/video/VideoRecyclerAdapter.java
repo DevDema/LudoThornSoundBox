@@ -1,10 +1,8 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.util.Log;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +14,13 @@ import android.widget.TextView;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.ParentFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoInformationManager;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.DateHourUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,7 +29,6 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.c
 
 public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filterable {
 
-    private ParentFragment fragment;
     private Context context;
     private List<LudoVideo> videoList;
     private List<LudoVideo> itemsAll;
@@ -46,9 +36,8 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
     private static final int PROGRESS = 1;
     private static final int VIDEO = 0;
 
-    public VideoRecyclerAdapter(ParentFragment fragment) {
-        this.fragment = fragment;
-        this.context = fragment.getContext();
+    public VideoRecyclerAdapter(Context context) {
+        this.context = context;
         this.videoList = new ArrayList<>();
 
         this.itemsAll = new ArrayList<>(videoList);
@@ -67,7 +56,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        LayoutInflater inflater = (LayoutInflater) Objects.requireNonNull(fragment.getContext()).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v;
         if(i == VIDEO) {
             v = inflater.inflate(R.layout.object_video, parent, false);
@@ -95,7 +84,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
                 ImageView tt3 = viewHolder.itemView.findViewById(R.id.icon);
 
                 if (tt1 != null) {
-                    tt1.setText(p.getTitle());
+                    tt1.setText(Html.fromHtml(p.getTitle()));
                 }
 
                 if (tt2 != null) {
@@ -105,7 +94,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
                 if (channel != null) {
                     channel.setText(p.getChannel().getChannelName());
                 }
-                VideoInformationManager videoInformationManager = new VideoInformationManager(fragment, p);
+                VideoInformationManager videoInformationManager = new VideoInformationManager(context, p);
                 if (likes != null) {
                     likes.setText(videoInformationManager.getCompactedLikes());
                 }

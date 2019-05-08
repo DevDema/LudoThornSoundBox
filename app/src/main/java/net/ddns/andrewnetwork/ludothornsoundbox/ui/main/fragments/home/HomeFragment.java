@@ -21,8 +21,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.FragmentHomeBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.GifFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomeView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationFragment;
@@ -53,7 +53,7 @@ import androidx.viewpager.widget.ViewPager;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
 @SuppressWarnings("unchecked")
-public class HomeFragment extends GifFragment implements OnButtonSelectedListener<LudoAudio>, IHomeView {
+public class HomeFragment extends BaseFragment implements OnButtonSelectedListener<LudoAudio>, IHomeView {
 
     public static final String KEY_LOAD_AT_ONCE = "KEY_LOAD_AT_ONCE";
     private FragmentHomeBinding mBinding;

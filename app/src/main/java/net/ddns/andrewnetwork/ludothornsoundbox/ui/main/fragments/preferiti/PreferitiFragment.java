@@ -1,5 +1,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,14 +13,13 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.FragmentFavoriteBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.ParentFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder.IPreferitiPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder.IPreferitiView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -28,7 +29,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 
-public class PreferitiFragment extends ParentFragment implements IPreferitiView {
+public class PreferitiFragment extends BaseFragment implements IPreferitiView {
 
     private FragmentFavoriteBinding mBinding;
     @Inject
@@ -62,6 +63,12 @@ public class PreferitiFragment extends ParentFragment implements IPreferitiView 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        view.findViewById(R.id.gif).setOnClickListener(view2 -> {
+            Uri uri = Uri.parse("https://www.youtube.com/user/LudoThornDoppiaggio");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
+        
         createList();
     }
 
