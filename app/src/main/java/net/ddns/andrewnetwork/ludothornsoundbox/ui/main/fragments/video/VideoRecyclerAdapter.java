@@ -46,11 +46,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
 
     @Override
     public int getItemViewType(int position) {
-        // Just as an example, return 0 or 2 depending on position
-        // Note that unlike in ListView adapters, types don't have to be contiguous
-        /*if(position==getItemCount()-1)
-            return PROGRESS;
-        else*/ return VIDEO;
+        return VIDEO;
     }
 
     @NonNull

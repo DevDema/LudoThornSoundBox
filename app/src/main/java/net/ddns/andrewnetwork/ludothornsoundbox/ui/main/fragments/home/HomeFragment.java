@@ -171,7 +171,7 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
                         checkAndChangeRingtone(audio, RingtoneManager.TYPE_RINGTONE, R.string.suoneria_cambiata_label);
                         break;
                     case R.id.suoneria_notifica_audio:
-                        checkAndChangeRingtone(audio, RingtoneManager.TYPE_NOTIFICATION, R.string.suoneria_notifiche_cambiata_label);
+                        checkAndChangeRingtone(audio, RingtoneManager.TYPE_ALARM, R.string.suoneria_notifiche_cambiata_label);
                         break;
 
                 }
@@ -194,7 +194,7 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
     private void checkAndChangeRingtone(LudoAudio audio, int typeNotification, @StringRes int stringResource) {
         PermissionListener permissionListener = () -> changeRingtone(audio, typeNotification, stringResource);
 
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             CommonUtils.showDialog(getContext(), getResources().getString(R.string.ask_permission_label), (dialog, which) -> {
                         CommonUtils.askForStoragePermission(HomeFragment.this,
                                 permissionListener

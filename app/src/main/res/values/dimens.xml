@@ -8,6 +8,7 @@
 
     <dimen name="input_size_xxxxs">30dp</dimen>
     <dimen name="input_size_xxxs">40dp</dimen>
+    <dimen name="input_size_xxxs2">30dp</dimen>
     <dimen name="input_size_xxs">60dp</dimen>
     <dimen name="input_size_xxs2">80dp</dimen>
     <dimen name="input_size_xs">100dp</dimen>

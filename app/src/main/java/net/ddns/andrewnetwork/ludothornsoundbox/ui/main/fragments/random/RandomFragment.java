@@ -15,6 +15,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomView;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 
 import java.util.List;
@@ -75,7 +76,7 @@ public class RandomFragment extends BaseFragment implements IRandomView {
         });
 
         mBinding.gifLayout.gif.setOnClickListener(view2 -> {
-            Uri uri = Uri.parse("https://www.youtube.com/user/LudoThornDoppiaggio");
+            Uri uri = Uri.parse(AppUtils.LUDO_THORN_DOPPIAGGIO);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
         });

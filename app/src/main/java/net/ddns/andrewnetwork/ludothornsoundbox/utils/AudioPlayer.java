@@ -3,9 +3,9 @@ package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 import android.content.Context;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.provider.ContactsContract;
 import android.text.method.ScrollingMovementMethod;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -20,7 +20,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 
 public class AudioPlayer extends ConstraintLayout {
 
@@ -40,7 +39,7 @@ public class AudioPlayer extends ConstraintLayout {
         playButton.setOnClickListener(v -> play());
 
 
-        if(onCompletionListener != null) {
+        if (onCompletionListener != null) {
             onCompletionListener.onCompletion(mp);
         }
     };
@@ -78,16 +77,20 @@ public class AudioPlayer extends ConstraintLayout {
     }
 
     public void play() {
-        if(audio != null) {
+        if (audio != null) {
             isPlaying = true;
             playButton.setImageResource(R.drawable.ic_pause_white);
             AudioUtils.playTrack(mContext, audio, defaultcompletionListener);
 
             playButton.setOnClickListener(v -> {
-                if(isPlaying) {
-                    pause();
-                } else {
-                    resume();
+                try {
+                    if (isPlaying) {
+                        pause();
+                    } else {
+                        resume();
+                    }
+                } catch (IllegalStateException e) {
+                    Log.v("MediaPlayer", "MediaPlayer detached, skipping...");
                 }
             });
 
@@ -97,31 +100,35 @@ public class AudioPlayer extends ConstraintLayout {
         }
     }
 
-    private void pause() {
+    public void pause() {
         DataSingleTon.getInstance().getMediaPlayer().pause();
         playButton.setImageResource(R.drawable.ic_play_white);
+
+
         isPlaying = false;
     }
 
-    private void resume() {
+    public void resume() {
         DataSingleTon.getInstance().getMediaPlayer().start();
         playButton.setImageResource(R.drawable.ic_pause_white);
+
+
         isPlaying = true;
     }
 
     public void stop() {
-        if(audio != null) {
+        if (audio != null) {
             AudioUtils.stopTrack();
             setAudio(null);
+
+            isPlaying = false;
         }
-
-
     }
 
     public void setAudio(LudoAudio audio) {
         this.audio = audio;
 
-        if(audio != null) {
+        if (audio != null) {
             audioText.setText(audio.getTitle());
         } else {
             audioText.setText(mContext.getResources().getString(R.string.nessun_audio_in_riproduzione_label));

@@ -1,22 +1,20 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.FragmentFavoriteBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter.ThumbnailLoadedListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder.IPreferitiPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder.IPreferitiView;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 
 import java.util.List;
@@ -25,11 +23,11 @@ import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
-public class PreferitiFragment extends BaseFragment implements IPreferitiView {
+public class PreferitiFragment extends BaseFragment implements IPreferitiView, IFragmentAdapterBinder {
 
     private FragmentFavoriteBinding mBinding;
     @Inject
@@ -63,51 +61,15 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        createList();
+        mPresenter.getPreferitiList();
     }
-
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
         if (!hidden) {
-            createList();
-        }
-    }
-
-    private void createList() {
-        mBinding.linear.removeAllViews();
-
-        List<LudoAudio> preferitiList = mPresenter.getPreferitiList();
-        if (!preferitiList.isEmpty()) {
-            mBinding.nofavorite.setVisibility(View.GONE);
-            for (LudoAudio audio : preferitiList) {
-                Button button = new Button(getActivity());
-                button.setText(audio.getTitle());
-                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
-                ViewGroup.MarginLayoutParams params2 = new ViewGroup.MarginLayoutParams(params);
-                params2.setMargins(50, 10, 50, 10);
-                button.setLayoutParams(params2);
-                button.setOnClickListener(v -> AudioUtils.playTrack(getContext(), audio, null));
-                button.setOnLongClickListener(view2 -> {
-                    mPresenter.rimuoviPreferito(audio);
-                    return true;
-                });
-
-                button.setTypeface(ResourcesCompat.getFont(getContext(), R.font.knewave));
-                button.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_white));
-                button.setMaxLines(2);
-                button.setHeight((int) getResources().getDimension(R.dimen.input_size_xxs));
-                button.setVisibility(View.VISIBLE);
-                button.setGravity(Gravity.CENTER_VERTICAL);
-                mBinding.linear.addView(button);
-            }
-        } else {
-            mBinding.deletefavorite.setVisibility(View.GONE);
-            mBinding.nofavorite.setVisibility(View.VISIBLE);
+            mPresenter.getPreferitiList();
         }
     }
 
@@ -120,12 +82,64 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView {
     @Override
     public void onPreferitoRimossoSuccess() {
         CommonUtils.showDialog(getContext(), getString(R.string.audio_rimosso_preferiti_label));
-        createList();
+
     }
 
     @Override
     public void onPreferitoRimossoFailed(String message) {
         CommonUtils.showDialog(getContext(), getString(R.string.audio_non_rimosso_preferiti_label));
 
+    }
+
+    @Override
+    public void onPreferitiListLoaded(List<LudoAudio> audioList) {
+
+        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
+        if(mBinding.recyclerView.getItemAnimator() != null) {
+            ((SimpleItemAnimator) mBinding.recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        }
+
+
+        mBinding.recyclerView.setAdapter(new PreferitiListAdapter(this, mContext, audioList));
+    }
+
+    @Override
+    public void onPreferitiListError(List<LudoAudio> audioListWithoutThumbnail) {
+
+        CommonUtils.showDialog(mContext, "Impossibile caricare le informazioni dei video.");
+        onPreferitiListLoaded(audioListWithoutThumbnail);
+    }
+
+    @Override
+    public void onPreferitiListEmpty() {
+        mBinding.globalLinear.setVisibility(View.VISIBLE);
+        mBinding.recyclerView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void playAudio(LudoAudio audio) {
+        mBinding.audioPlayer.setAudio(audio);
+        mBinding.audioPlayer.play();
+    }
+
+    @Override
+    public void stopAudio(LudoAudio audio) {
+        mBinding.audioPlayer.stop();
+    }
+
+    @Override
+    public void loadThumbnail(LudoAudio audio, ThumbnailLoadedListener thumbnailLoadedListener) {
+        LudoVideo video = audio.getVideo();
+        if(video != null) {
+            mPresenter.loadThumbnail(video, thumbnailLoadedListener);
+        } else {
+            thumbnailLoadedListener.onThumbnailLoaded(null);
+        }
+    }
+
+    @Override
+    public void setOnCompletionListener(MediaPlayer.OnCompletionListener onCompletionListener) {
+        mBinding.audioPlayer.setOnCompletionListener(onCompletionListener);
     }
 }
