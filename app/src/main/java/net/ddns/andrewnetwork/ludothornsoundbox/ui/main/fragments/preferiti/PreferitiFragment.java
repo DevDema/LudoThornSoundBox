@@ -63,12 +63,6 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        view.findViewById(R.id.gif).setOnClickListener(view2 -> {
-            Uri uri = Uri.parse("https://www.youtube.com/user/LudoThornDoppiaggio");
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
-        });
-        
         createList();
     }
 

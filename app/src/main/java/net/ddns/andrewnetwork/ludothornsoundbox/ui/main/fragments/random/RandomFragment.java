@@ -1,6 +1,8 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.FragmentRandomBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.GifFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
@@ -24,7 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
-public class RandomFragment extends GifFragment implements IRandomView {
+public class RandomFragment extends BaseFragment implements IRandomView {
 
     private final Random randomGenerator = new Random();
     private FragmentRandomBinding mBinding;
@@ -70,6 +72,12 @@ public class RandomFragment extends GifFragment implements IRandomView {
 
             mBinding.audioPlayer.setAudio(audio);
             mBinding.audioPlayer.play();
+        });
+
+        mBinding.gifLayout.gif.setOnClickListener(view2 -> {
+            Uri uri = Uri.parse("https://www.youtube.com/user/LudoThornDoppiaggio");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         });
     }
 }
