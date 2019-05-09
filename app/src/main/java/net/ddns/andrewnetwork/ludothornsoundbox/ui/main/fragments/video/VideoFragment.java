@@ -40,6 +40,11 @@ public class VideoFragment extends BaseFragment implements IVideoView {
     IVideoPresenter<IVideoView> mPresenter;
     private VideoRecyclerAdapter adapter;
 
+    interface MoreVideosLoadedListener {
+
+        void onMoreVideosLoaded(List<LudoVideo> videoList);
+    }
+
     public static VideoFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -67,24 +72,25 @@ public class VideoFragment extends BaseFragment implements IVideoView {
 
     @Override
     public void onVideoListLoadFailed() {
-        CommonUtils.showDialog(getContext(), "Oops! Sembra che si sia verificato un errore nel caricamento. \nContatta Ludo, saprà sicuramente come risolvere il problema!");
+        mBinding.videoLayout.setRefreshing(false);
+        CommonUtils.showDialog(mContext, "Oops! Sembra che si sia verificato un errore nel caricamento. \nContatta Ludo, saprà sicuramente come risolvere il problema!");
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewCreated(@NonNull View viewCreated, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(viewCreated, savedInstanceState);
 
         mBinding.selectChannel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     adapter.getFilter().filter(null);
+                    viewCreated.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.colorAccent));
+
                 } else {
                     Channel channel = ((Channel) parent.getSelectedItem());
                     adapter.getFilter().filter(channel.getId());
-                    if (getView() != null) {
-                        getView().setBackgroundColor(ContextCompat.getColor(getContext(), channel.getBackGroundColor()));
-                    }
+                    viewCreated.setBackgroundColor(ContextCompat.getColor(mActivity, channel.getBackGroundColor()));
                 }
             }
 
@@ -96,15 +102,17 @@ public class VideoFragment extends BaseFragment implements IVideoView {
 
         mBinding.videoLayout.setOnRefreshListener(this::refreshChannels);
 
-
         mBinding.refreshButton.setOnClickListener(v -> refreshChannels());
     }
 
     @Override
     public void onVideoListLoadSuccess(List<Channel> channelList) {
 
+        mBinding.videoHeader.setVisibility(View.VISIBLE);
 
-        mBinding.videoRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        mBinding.videoLayout.setRefreshing(false);
+
+        mBinding.videoRecycler.setLayoutManager(new LinearLayoutManager(mContext));
 
         mBinding.videoRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -113,11 +121,19 @@ public class VideoFragment extends BaseFragment implements IVideoView {
 
                 if (!recyclerView.canScrollVertically(1)) {
                     if (!loadingMoreVideos) {
+                        MoreVideosLoadedListener moreVideosLoadedListener = null;
+                        VideoRecyclerAdapter adapter = (VideoRecyclerAdapter) mBinding.videoRecycler.getAdapter();
+                        if (adapter != null) {
+                            adapter.showLoading();
+                            moreVideosLoadedListener = videoList -> mActivity.runOnUiThread(adapter::hideLoading);
+                        }
+
+
                         if (mBinding.selectChannel.getSelectedItemPosition() == 0) {
-                            mPresenter.getMoreVideos(channelList, VideoUtils.getMostRecentDate(channelList));
+                            mPresenter.getMoreVideos(channelList, VideoUtils.getMostRecentDate(channelList), moreVideosLoadedListener);
                         } else {
                             Channel channel = (Channel) mBinding.selectChannel.getSelectedItem();
-                            mPresenter.getMoreVideos(channel, VideoUtils.getMostRecentDate(channel));
+                            mPresenter.getMoreVideos(channel, VideoUtils.getMostRecentDate(channel), moreVideosLoadedListener);
                         }
                         loadingMoreVideos = true;
                     }
@@ -130,7 +146,7 @@ public class VideoFragment extends BaseFragment implements IVideoView {
 
 
         mBinding.selectChannel.setAdapter(new StringParsingAdapter<>(
-                        Objects.requireNonNull(getContext()),
+                        Objects.requireNonNull(mContext),
                         R.layout.ludo_spinner_item,
                         selezionareChannel,
                         Channel::getChannelName
@@ -154,6 +170,7 @@ public class VideoFragment extends BaseFragment implements IVideoView {
     }
 
     private void refreshChannels() {
+        mBinding.videoLayout.setRefreshing(true);
         mPresenter.getChannels(VideoUtils.getChannels());
     }
 }

@@ -23,9 +23,9 @@ public interface VideoViewPresenterBinder {
 
         void getChannels(List<Channel> channelList);
 
-        void getMoreVideos(List<Channel> channel, Date date);
+        void getMoreVideos(List<Channel> channel, Date date, VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener);
 
-        void getMoreVideos(Channel channel, Date date);
+        void getMoreVideos(Channel channel, Date date, VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener);
         //void getVideoList(List<Channel> channelList);
     }
 }

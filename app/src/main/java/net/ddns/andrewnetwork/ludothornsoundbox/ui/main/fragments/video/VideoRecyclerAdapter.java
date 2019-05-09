@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
@@ -29,15 +30,17 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.c
 
 public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filterable {
 
-    private Context context;
+    private Context mContext;
     private List<LudoVideo> videoList;
     private List<LudoVideo> itemsAll;
 
+    private static final String DUMMY_LOADING_VIDEO_ID = "dummy";
     private static final int PROGRESS = 1;
     private static final int VIDEO = 0;
+    private boolean isLoadingMore= false;
 
-    public VideoRecyclerAdapter(Context context) {
-        this.context = context;
+    VideoRecyclerAdapter(Context context) {
+        this.mContext = context;
         this.videoList = new ArrayList<>();
 
         this.itemsAll = new ArrayList<>(videoList);
@@ -46,13 +49,16 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
 
     @Override
     public int getItemViewType(int position) {
+        if(isLoadingMore && position == videoList.size()-1) {
+            return PROGRESS;
+        }
         return VIDEO;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v;
         if(i == VIDEO) {
             v = inflater.inflate(R.layout.object_video, parent, false);
@@ -65,7 +71,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        if(viewHolder.getItemViewType() == 0) {
+        if(viewHolder.getItemViewType() == VIDEO) {
             LudoVideo p = videoList.get(position);
             if (p != null) {
                 TextView tt1 = viewHolder.itemView.findViewById(R.id.videotitle);
@@ -90,7 +96,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
                 if (channel != null) {
                     channel.setText(p.getChannel().getChannelName());
                 }
-                VideoInformationManager videoInformationManager = new VideoInformationManager(context, p);
+                VideoInformationManager videoInformationManager = new VideoInformationManager(mContext, p);
                 if (likes != null) {
                     likes.setText(videoInformationManager.getCompactedLikes());
                 }
@@ -116,11 +122,16 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
             }
             viewHolder.itemView.setOnClickListener(v -> {
                 if(p != null) {
-                    CommonUtils.openLink(context, buildVideoUrl(p.getId()));
+                    CommonUtils.openLink(mContext, buildVideoUrl(p.getId()));
                 } else {
-                    CommonUtils.showDialog(context, "Link non disponibile.");
+                    CommonUtils.showDialog(mContext, "Link non disponibile.");
                 }
             });
+        } else {
+            ProgressBar progressBar = viewHolder.itemView.findViewById(R.id.pb_loading);
+            progressBar.getIndeterminateDrawable().setColorFilter(
+                    mContext.getResources().getColor(R.color.white),
+                    android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
 
@@ -129,20 +140,34 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
         return videoList.size();
     }
 
-    public static class VideoViewHolder extends RecyclerView.ViewHolder {
+    public void showLoading() {
+
+        isLoadingMore = true;
+
+        videoList.add(new LudoVideo(DUMMY_LOADING_VIDEO_ID));
+
+        notifyItemInserted(videoList.size()-1);
+    }
+
+    public void hideLoading() {
+
+        isLoadingMore = false;
+
+        videoList.remove(videoList.size()-1);
+
+        notifyItemRemoved(videoList.size()-1);
+    }
+
+    private static class VideoViewHolder extends RecyclerView.ViewHolder {
         private VideoViewHolder(View v) {
             super(v);
         }
     }
 
-    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+    private static class ProgressViewHolder extends RecyclerView.ViewHolder {
         private ProgressViewHolder(View v) {
             super(v);
         }
-    }
-
-    public void setVideoList(List<LudoVideo> videoList) {
-        this.videoList = videoList;
     }
 
     @Override
