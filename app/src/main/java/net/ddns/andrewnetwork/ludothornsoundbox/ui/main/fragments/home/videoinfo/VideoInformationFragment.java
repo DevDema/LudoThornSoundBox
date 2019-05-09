@@ -127,7 +127,6 @@ public class VideoInformationFragment extends ReducedDialogFragment implements I
             for (LudoAudio audio : video.getConnectedAudioList()) {
                 Button button = new Button(context);
                 button.setText(audio.getTitle());
-                button.setTypeface(ResourcesCompat.getFont(context, R.font.knewave));
                 ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
                         (int) ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
