@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.function.Predicate;
 
 import javax.inject.Inject;
@@ -97,17 +98,20 @@ public class AppPreferencesHelper implements PreferencesHelper {
         try {
             List<LudoAudio> audioList = getPreferitiList() != null ? getPreferitiList() : new ArrayList<>();
 
+            int index = audioList.size()-1;
+
+            for(ListIterator<LudoAudio> iterator = audioList.listIterator(); iterator.hasNext();) {
+                if(audio.getAudio() == iterator.next().getAudio()) {
+                    iterator.remove();
+                    index = iterator.nextIndex();
+                }
+            }
+
             if (audioList.size() >= 5) {
                 throw new IllegalArgumentException();
             }
 
-            for(Iterator<LudoAudio> iterator = audioList.iterator(); iterator.hasNext();) {
-                if(audio.getAudio() == iterator.next().getAudio()) {
-                    iterator.remove();
-                }
-            }
-
-            audioList.add(audio);
+            audioList.add(index, audio);
 
             String audioListString = JsonUtil.getGson().toJson(audioList);
 

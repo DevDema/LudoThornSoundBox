@@ -29,12 +29,13 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.utils.ViewUtils.compareDr
 
 class PreferitiListAdapter extends RecyclerView.Adapter {
 
-    private final List<LudoAudio> audioList;
+    private List<LudoAudio> audioList;
     private final IFragmentAdapterBinder mBinder;
     private Context mContext;
     private static SparseArray<Bitmap> drawables = new SparseArray<>();
     private static SparseBooleanArray isPlaying = new SparseBooleanArray();
     private static boolean isSettingPreferito = false;
+    private boolean isResuming;
 
     interface ThumbnailLoadedListener {
 
@@ -51,10 +52,11 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
         void onPreferitoDeleted(LudoAudio audio);
     }
 
-    PreferitiListAdapter(IFragmentAdapterBinder binder, Context context, List<LudoAudio> audioList) {
+    PreferitiListAdapter(IFragmentAdapterBinder binder, Context context, List<LudoAudio> audioList, boolean isResuming) {
         this.mBinder = binder;
         this.mContext = context;
         this.audioList = audioList;
+        this.isResuming = isResuming;
     }
 
     @NonNull
@@ -80,6 +82,7 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
     public class AudioViewHolder extends RecyclerView.ViewHolder {
 
         ItemPreferitiBinding mBinding;
+
 
         private AudioViewHolder(View v) {
             super(v);
@@ -110,14 +113,19 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
             setPlayPauseListener(item, position);
 
             if (!isAnyPlaying()) {
-                if (video == null || video.getTitle() == null) {
+                if (!isResuming && !isAlreadyLoaded(video)) {
                     showLoading();
                     mBinder.loadVideo(item, videoResponse -> {
                         manageVideoResponse(item, videoResponse);
                         hideLoading();
                     });
-                } else {
+                } else if(isAlreadyLoaded(video)) {
                     onVideoAvailableAndLoadDrawable(item, video);
+
+                    hideLoading();
+                } else {
+                    onVideoUnavailable();
+
                     hideLoading();
                 }
             }
@@ -131,6 +139,10 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
 
             setPreferitoListener(item, position);
 
+        }
+
+        private boolean isAlreadyLoaded(LudoVideo video) {
+            return video != null && video.getTitle() != null;
         }
 
         private boolean isAnyPlaying() {
@@ -314,5 +326,13 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
 
             notifyOtherItemsChanged(position);
         }
+    }
+
+    void setResuming(boolean resuming) {
+        isResuming = resuming;
+    }
+
+    void setList(List<LudoAudio> audioList) {
+        this.audioList = audioList;
     }
 }

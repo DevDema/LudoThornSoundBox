@@ -54,7 +54,7 @@ public class PreferitiPresenter<V extends IPreferitiView> extends BasePresenter<
                             .toList()
                             .observeOn(getSchedulerProvider().ui())
                             .subscribeOn(getSchedulerProvider().io())
-                            .subscribe(preferitiWithVideoList -> getMvpView().onPreferitiListLoaded(preferitiWithVideoList), throwable -> {
+                            .subscribe(preferitiWithVideoList -> getMvpView().onPreferitiListLoaded(preferitiWithVideoList, false), throwable -> {
                                         Log.e("PreferitiListREST", throwable.getMessage());
                                         getMvpView().onPreferitiListError(preferitiList);
                                         getMvpView().hideLoading();
