@@ -69,7 +69,7 @@
 
             <ImageButton
                 android:id="@+id/video_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="@dimen/input_size_xxxs2"
                 android:background="@drawable/button_red"
                 android:layout_marginTop="10dp"
@@ -85,6 +85,7 @@
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
                 android:layout_marginBottom="10dp"
+                android:layout_marginEnd="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/video_button"
