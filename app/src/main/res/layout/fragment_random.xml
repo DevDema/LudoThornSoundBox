@@ -18,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioPlayer
+            <net.ddns.andrewnetwork.ludothornsoundbox.utils.view.AudioPlayer
                 android:id="@+id/audio_player"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"

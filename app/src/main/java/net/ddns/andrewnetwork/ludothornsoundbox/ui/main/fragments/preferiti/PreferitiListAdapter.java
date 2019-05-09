@@ -127,6 +127,8 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
                     }
                 } else {
                     onVideoUnavailable(item);
+
+                    hideLoading();
                 }
             }
 

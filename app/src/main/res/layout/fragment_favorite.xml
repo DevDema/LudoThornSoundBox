@@ -46,7 +46,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/audio_player"/>
 
-        <net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioPlayer
+        <net.ddns.andrewnetwork.ludothornsoundbox.utils.view.AudioPlayer
             android:id="@+id/audio_player"
             android:layout_width="0dp"
             android:layout_height="@dimen/input_size_xxs"

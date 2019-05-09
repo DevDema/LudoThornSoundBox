@@ -1,5 +1,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -7,6 +9,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class StringUtils {
@@ -64,4 +67,14 @@ public abstract class StringUtils {
     public static String buildPossibleFileName(LudoAudio audio) {
         return "n" + audio.getOrder() + "_" + audio.getTitle().replace(" ", "_");
     }
+
+    public static List<String> buildRandomStringList(Context context) {
+        final Resources resources = context.getResources();
+
+        String readFile = FileUtils.readTextFile(resources.openRawResource(R.raw.frasi_random));
+
+        return Arrays.asList(readFile.replaceAll("- ", "").split("[\\r?\\n]+"));
+    }
+
+
 }

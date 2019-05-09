@@ -51,7 +51,7 @@ public abstract class AudioUtils {
                 resourcename = field.getName();
                 if (resourcename.charAt(resourcename.length() - 1) != '_') {
                     int resourceInfoId = resources.getIdentifier(resourcename + "_", "raw", context.getPackageName());
-                    LudoVideo ludoVideo = resourceInfoId != 0 ? JsonUtil.getGson().fromJson(readTextFile(resources.openRawResource(resourceInfoId)), LudoVideo.class) : new LudoVideo();
+                    LudoVideo ludoVideo = resourceInfoId != 0 ? JsonUtil.getGson().fromJson(FileUtils.readTextFile(resources.openRawResource(resourceInfoId)), LudoVideo.class) : new LudoVideo();
                     resourceid = field.getInt(rawResources);
                     audioList.add(new LudoAudio(resourcename, resourceid, ludoVideo));
                 }
@@ -63,29 +63,12 @@ public abstract class AudioUtils {
         return audioList;
     }
 
-    public static String readTextFile(InputStream inputStream) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        byte buf[] = new byte[1024];
-        int len;
-        try {
-            while ((len = inputStream.read(buf)) != -1) {
-                outputStream.write(buf, 0, len);
-            }
-            outputStream.close();
-            inputStream.close();
-        } catch (IOException e) {
-
-        }
-        return outputStream.toString();
-    }
 
     public static void playTrack(Context context, LudoAudio audio, MediaPlayer.OnCompletionListener onCompletionListener) {
 
         stopTrack();
         int resourceId = audio.getAudio();
         MediaPlayer mediaPlayer;
-        //TODO BUG DRAWABLE RESOURCE ID
         try {
             mediaPlayer = MediaPlayer.create(context, resourceId);
         } catch (Resources.NotFoundException e) {

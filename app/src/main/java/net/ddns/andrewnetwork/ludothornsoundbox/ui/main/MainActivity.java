@@ -1,12 +1,9 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 
@@ -28,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
@@ -45,6 +43,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.web.WebActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.ListUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ViewUtils;
 
@@ -116,6 +115,19 @@ public class MainActivity extends ParentActivity
         return false;
     };
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        setRandomTextInNavigation();
+    }
+
+    private void setRandomTextInNavigation() {
+            TextView randomLabel = mBinding.navView.getHeaderView(0).findViewById(R.id.random_text_label);
+            List<String> stringList = StringUtils.buildRandomStringList(this);
+
+            randomLabel.setText(ListUtils.selectRandomItem(stringList));
+    }
 
     private void selectOnBottomNavigationOrInstantiate(@IdRes int actionId) {
         if (ViewUtils.hasItemId(mBinding.appBarMain.navigation, actionId)) {

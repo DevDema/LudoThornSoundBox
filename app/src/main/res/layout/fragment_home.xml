@@ -12,7 +12,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/colorAccent">
 
-                <net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioPlayer
+                <net.ddns.andrewnetwork.ludothornsoundbox.utils.view.AudioPlayer
                     android:id="@+id/audio_player"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/input_size_xxs"

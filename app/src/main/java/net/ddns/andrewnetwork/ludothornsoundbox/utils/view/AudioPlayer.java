@@ -1,4 +1,4 @@
-package net.ddns.andrewnetwork.ludothornsoundbox.utils;
+package net.ddns.andrewnetwork.ludothornsoundbox.utils.view;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -120,7 +121,8 @@ public class AudioPlayer extends ConstraintLayout {
         if (audio != null) {
             AudioUtils.stopTrack();
             setAudio(null);
-
+            audioProgress.setProgress(0);
+            audioProgress.setMax(Integer.MAX_VALUE);
             isPlaying = false;
         }
     }
