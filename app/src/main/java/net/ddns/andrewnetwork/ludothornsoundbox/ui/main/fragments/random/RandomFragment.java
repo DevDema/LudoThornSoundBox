@@ -4,6 +4,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomV
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.ListUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -57,6 +59,10 @@ public class RandomFragment extends BaseFragment implements IRandomView {
         }
 
         audioList = mPresenter.getAudioListFromPref();
+        if(ListUtils.isEmptyOrNull(audioList)) {
+            audioList = AudioUtils.createAudioList(mContext);
+            mPresenter.saveAudioListToPref(audioList);
+        }
 
         return mBinding.getRoot();
     }

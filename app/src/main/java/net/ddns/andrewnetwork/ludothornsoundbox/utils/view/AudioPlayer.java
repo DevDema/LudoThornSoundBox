@@ -119,7 +119,7 @@ public class AudioPlayer extends ConstraintLayout {
 
     public void stop() {
         if (audio != null) {
-            AudioUtils.stopTrack();
+            AudioUtils.stopTrack(onCompletionListener);
             setAudio(null);
             audioProgress.setProgress(0);
             audioProgress.setMax(Integer.MAX_VALUE);

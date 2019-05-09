@@ -14,5 +14,7 @@ public interface RandomViewPresenterBinder {
 
     interface IRandomPresenter<V extends IRandomView> extends MvpPresenter<V> {
         List<LudoAudio> getAudioListFromPref();
+
+        void saveAudioListToPref(List<LudoAudio> audioList);
     }
 }

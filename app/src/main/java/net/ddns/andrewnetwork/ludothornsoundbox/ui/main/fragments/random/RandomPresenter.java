@@ -25,4 +25,9 @@ public class RandomPresenter<V extends IRandomView> extends BasePresenter<V> imp
     public List<LudoAudio> getAudioListFromPref() {
         return getDataManager().getAudioSavedList();
     }
+
+    @Override
+    public void saveAudioListToPref(List<LudoAudio> audioList) {
+        getDataManager().saveAudioList(audioList);
+    }
 }

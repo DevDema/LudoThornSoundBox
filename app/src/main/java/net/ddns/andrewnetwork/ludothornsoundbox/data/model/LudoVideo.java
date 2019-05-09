@@ -1,6 +1,5 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.data.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,16 +7,17 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class LudoVideo implements Comparable<LudoVideo>, Serializable {
+public class LudoVideo implements Comparable<LudoVideo> {
     private String id, title, description;
     private Date dateTime;
     private Thumbnail thumbnail;
 
     public enum Source {YOUTUBE, PERSONAL}
+
     private VideoInformation videoInformation;
     private Channel channel;
     private Source source;
-    private List<LudoAudio> audioList;
+    private transient List<LudoAudio> audioList;
 
     public Source getSource() {
         return source;
@@ -142,7 +142,7 @@ public class LudoVideo implements Comparable<LudoVideo>, Serializable {
         if (obj.getClass() == this.getClass()) {
             LudoVideo video2 = (LudoVideo) obj;
 
-            if(this.getId() == null) {
+            if (this.getId() == null) {
                 return video2.getId() == null;
             }
 

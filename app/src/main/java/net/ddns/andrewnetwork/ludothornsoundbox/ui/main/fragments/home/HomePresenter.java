@@ -30,6 +30,10 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
+    @Override
+    public void saveAudioListToPref(List<LudoAudio> audioList) {
+        getDataManager().saveAudioList(audioList);
+    }
 
     @Override
     public void salvaPreferito(LudoAudio audio) {

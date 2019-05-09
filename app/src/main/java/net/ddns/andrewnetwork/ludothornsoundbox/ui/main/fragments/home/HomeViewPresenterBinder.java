@@ -25,6 +25,8 @@ public interface HomeViewPresenterBinder {
 
     interface IHomePresenter<V extends IHomeView> extends MvpPresenter<V> {
 
+        void saveAudioListToPref(List<LudoAudio> audioList);
+
         void salvaPreferito(LudoAudio audio);
 
         void getVideoInformationForAudios(List<LudoAudio> audioList);

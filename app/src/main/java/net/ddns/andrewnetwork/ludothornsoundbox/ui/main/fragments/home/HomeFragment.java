@@ -32,6 +32,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.model.ChiaveValore
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.ListUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.PermissionListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.SpinnerUtils;
 
@@ -92,6 +93,13 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
             mPresenter.saveAudioListInPref(audioList);
         }
 
+        audioList = mPresenter.getAudioListFromPreferences();
+
+        if (ListUtils.isEmptyOrNull(audioList)) {
+            audioList = AudioUtils.createAudioList(mContext);
+            mPresenter.saveAudioListToPref(audioList);
+        }
+
 
         return mBinding.getRoot();
     }
@@ -101,7 +109,6 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        audioList = AudioUtils.createAudioList(Objects.requireNonNull(mActivity));
         if (getArguments() != null) {
             loadAtOnce = getArguments().getBoolean(KEY_LOAD_AT_ONCE);
         }
