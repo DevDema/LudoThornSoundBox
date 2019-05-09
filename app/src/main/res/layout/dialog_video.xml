@@ -32,7 +32,6 @@
                         android:id="@+id/title_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/knewave"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"
                         android:text="@string/blank_edit_text"
@@ -207,6 +206,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/descrizione_label" />
 
+                <TextView
+                    android:id="@+id/audio_list_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:textAllCaps="true"
+                    android:textSize="17sp"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/altre_info_layout"
+                    android:text="@string/audio_collegati_label"/>
                 <LinearLayout
                     android:id="@+id/audio_list_layout"
                     android:layout_width="0dp"
@@ -216,7 +227,7 @@
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/altre_info_layout" />
+                    app:layout_constraintTop_toBottomOf="@id/audio_list_label" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View

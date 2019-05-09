@@ -112,6 +112,10 @@ public class LudoVideo implements Comparable<LudoVideo> {
         this.channel = channel;
     }
 
+    public void setAudioList(List<LudoAudio> audioList) {
+        this.audioList = audioList;
+    }
+
     @Override
     public String toString() {
         String string = "Video:" +

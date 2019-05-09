@@ -38,7 +38,6 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.SpinnerUtils;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -87,19 +86,13 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
             mPresenter.onAttach(this);
         }
 
+        audioList = AudioUtils.createAudioList(mActivity);
+
         if (loadAtOnce) {
             mPresenter.getVideoInformationForAudios(audioList);
         } else {
-            mPresenter.saveAudioListInPref(audioList);
+            AudioUtils.attachSameVideoToAudios(audioList);
         }
-
-        audioList = mPresenter.getAudioListFromPreferences();
-
-        if (ListUtils.isEmptyOrNull(audioList)) {
-            audioList = AudioUtils.createAudioList(mContext);
-            mPresenter.saveAudioListToPref(audioList);
-        }
-
 
         return mBinding.getRoot();
     }
@@ -154,7 +147,7 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
                         break;
                     case R.id.video_collegato:
                         if (mActivity != null && audio.getVideo() != null && nonEmptyNonNull(audio.getVideo().getId())) {
-                            mActivity.newDialogFragment(VideoInformationFragment.newInstance(loadAtOnce, audio));
+                            mActivity.newDialogFragment(VideoInformationFragment.newInstance(loadAtOnce, audio, audio.getVideo().getConnectedAudioList()));
                         } else {
                             CommonUtils.showDialog(getContext(), "Video non disponibile per questo audio!");
 

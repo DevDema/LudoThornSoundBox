@@ -207,7 +207,13 @@ public class AppApiHelper implements ApiHelper {
                 emitter.onNext(audio);
             } else {
                 LudoVideo video = castToLudoVideo(searchResultList.get(0));
+                LudoVideo oldVideo = audio.getVideo();
+                List<LudoAudio> oldAudioList = new ArrayList<>();
+                if(oldVideo != null) {
+                   oldAudioList  = oldVideo.getConnectedAudioList();
+                }
 
+                video.setAudioList(oldAudioList);
                 audio.setVideo(video);
 
                 emitter.onNext(audio);

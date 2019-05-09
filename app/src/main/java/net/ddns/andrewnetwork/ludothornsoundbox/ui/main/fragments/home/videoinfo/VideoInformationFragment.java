@@ -22,6 +22,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.ListUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.view.ReducedDialogFragment;
 
@@ -32,12 +33,17 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
+
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment.KEY_LOAD_AT_ONCE;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
 
 public class VideoInformationFragment extends ReducedDialogFragment implements IVideoInformationView {
 
     private static final String KEY_AUDIO = "KEY_AUDIO";
+    private static final String KEY_VIDEO_LIST = "KEY_VIDEO_LIST";
     private Bundle savedInstanceState;
     private DialogVideoBinding mBinding;
     private LudoAudio audio;
@@ -46,12 +52,13 @@ public class VideoInformationFragment extends ReducedDialogFragment implements I
     IVideoInformationPresenter<IVideoInformationView> mPresenter;
     private boolean loadAtOnce;
 
-    public static VideoInformationFragment newInstance(boolean audioAtonce, LudoAudio audio) {
+    public static VideoInformationFragment newInstance(boolean audioAtonce, LudoAudio audio, List<LudoAudio> audioList) {
 
         VideoInformationFragment videoInformationFragment = new VideoInformationFragment();
         Bundle bundle = new Bundle();
 
         bundle.putString(KEY_AUDIO, JsonUtil.getGson().toJson(audio));
+        bundle.putString(KEY_VIDEO_LIST, JsonUtil.getGson().toJson(audioList));
         bundle.putBoolean(KEY_LOAD_AT_ONCE, audioAtonce);
 
         videoInformationFragment.setArguments(bundle);
@@ -66,6 +73,7 @@ public class VideoInformationFragment extends ReducedDialogFragment implements I
         audio = getArguments() != null ? JsonUtil.getGson().fromJson(getArguments().getString(KEY_AUDIO), LudoAudio.class) : new LudoAudio();
 
         if (getArguments() != null) {
+            audio.getVideo().setAudioList(JsonUtil.getGson().fromJson((String) getArguments().get(KEY_VIDEO_LIST), new TypeToken<List<LudoAudio>>(){}.getType()));
             loadAtOnce = getArguments().getBoolean(KEY_LOAD_AT_ONCE);
         }
         else {
@@ -112,18 +120,22 @@ public class VideoInformationFragment extends ReducedDialogFragment implements I
         mBinding.dislikes.setText(StringUtils.valueOf(videoInformation.getDislikes()));
         mBinding.viewsLabel.setText(StringUtils.valueOf(videoInformation.getViews()));
         mBinding.descrizioneLabel.setText(video.getDescription());
+        if(!ListUtils.isEmptyOrNull(video.getConnectedAudioList())) {
 
-        for(LudoAudio audio : video.getConnectedAudioList()) {
-            Button button = new Button(context);
-            button.setText(audio.getTitle());
-            button.setTypeface(ResourcesCompat.getFont(context, R.font.knewave));
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                    (int) context.getResources().getDimension(R.dimen.input_size_s),
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            button.setLayoutParams(params);
-            button.setOnClickListener(v -> AudioUtils.playTrack(context, audio, null));
+            mBinding.audioListLabel.setVisibility(View.VISIBLE);
 
-            mBinding.audioListLayout.addView(button);
+            for (LudoAudio audio : video.getConnectedAudioList()) {
+                Button button = new Button(context);
+                button.setText(audio.getTitle());
+                button.setTypeface(ResourcesCompat.getFont(context, R.font.knewave));
+                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                        (int) ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                button.setLayoutParams(params);
+                button.setOnClickListener(v -> AudioUtils.playTrack(context, audio, null));
+
+                mBinding.audioListLayout.addView(button);
+            }
         }
 
         mBinding.thumbnailImage.setOnClickListener(v -> CommonUtils.openLink(getContext(), buildVideoUrl(video.getId())));

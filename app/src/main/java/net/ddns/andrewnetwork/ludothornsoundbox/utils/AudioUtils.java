@@ -108,6 +108,24 @@ public abstract class AudioUtils {
         }
     }
 
+    public static void attachSameVideoToAudios(List<LudoAudio> audioList) {
+        for(LudoAudio audio : audioList) {
+            LudoVideo ludoVideo = audio.getVideo();
+            //SKIP IF NULL
+            if(ludoVideo == null) {
+                continue;
+            }
+
+            for(LudoAudio audioCompare : audioList) {
+                LudoVideo ludoVideoCompare = audioCompare.getVideo();
+
+                if (ludoVideoCompare == null || ludoVideo.equals(ludoVideoCompare)) {
+                    audioCompare.setVideo(ludoVideo);
+                }
+            }
+        }
+    }
+
     public static void sortBy(List<LudoAudio> arrayList, int criterion) {
         switch (criterion) {
             case 1:

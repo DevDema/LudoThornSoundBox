@@ -8,6 +8,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomeView;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.SchedulerProvider;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.wrapper.GenericWrapper2;
 
@@ -123,31 +124,11 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
             }
         }
 
-        attachSameVideoToAudios(listFromPref);
+        AudioUtils.attachSameVideoToAudios(listFromPref);
 
         saveAudioListInPref(listFromPref);
 
         return listFromPref;
-    }
-
-    private void attachSameVideoToAudios(List<LudoAudio> audioList) {
-        for(LudoAudio audio : audioList) {
-            LudoVideo ludoVideo = audio.getVideo();
-            //SKIP IF NULL
-            if(ludoVideo == null) {
-                continue;
-            }
-
-            for(LudoAudio audioCompare : audioList) {
-                LudoVideo ludoVideoCompare = audioCompare.getVideo();
-
-                    //SKIP IF NULL
-
-                    if (ludoVideoCompare == null || ludoVideo.equals(ludoVideoCompare)) {
-                        audioCompare.setVideo(ludoVideo);
-                    }
-            }
-        }
     }
 
     @Override

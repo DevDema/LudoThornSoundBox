@@ -139,4 +139,5 @@
     <string name="countdown_delete_favorite_message">L\'audio verrà rimosso in %d secondi. Per annullare, cliccare di nuovo sull\'icona.</string>
     <string name="deleted_favorite_message">Preferito cancellato.</string>
     <string name="canceled_operation_message">Operazione annullata.</string>
+    <string name="audio_collegati_label">Audio collegati</string>
 </resources>
