@@ -98,7 +98,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
         try {
             List<LudoAudio> audioList = getPreferitiList() != null ? getPreferitiList() : new ArrayList<>();
 
-            int index = audioList.size()-1;
+            int index = !audioList.isEmpty() ? audioList.size()-1 : 0;
 
             for(ListIterator<LudoAudio> iterator = audioList.listIterator(); iterator.hasNext();) {
                 if(audio.getAudio() == iterator.next().getAudio()) {

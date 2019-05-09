@@ -83,8 +83,22 @@ public abstract class AudioUtils {
     public static void playTrack(Context context, LudoAudio audio, MediaPlayer.OnCompletionListener onCompletionListener) {
 
         stopTrack();
+        int resourceId = audio.getAudio();
+        MediaPlayer mediaPlayer;
         //TODO BUG DRAWABLE RESOURCE ID
-        DataSingleTon.getInstance().setMediaPlayer(MediaPlayer.create(context, audio.getAudio()));
+        try {
+            mediaPlayer = MediaPlayer.create(context, resourceId);
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+
+            resourceId = context.getResources().getIdentifier(StringUtils.buildPossibleFileName(audio), "raw", context.getPackageName());
+
+            mediaPlayer = MediaPlayer.create(context, resourceId);
+
+            audio.setId(resourceId);
+        }
+
+        DataSingleTon.getInstance().setMediaPlayer(mediaPlayer);
 
         DataSingleTon.getInstance().getMediaPlayer().setOnCompletionListener(onCompletionListener);
         DataSingleTon.getInstance().getMediaPlayer().start();

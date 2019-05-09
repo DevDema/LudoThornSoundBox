@@ -4,6 +4,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -31,7 +32,7 @@ public abstract class StringUtils {
     }
 
     public static String valueOf(BigInteger bigInteger) {
-        if(bigInteger == null) {
+        if (bigInteger == null) {
             return null;
         }
 
@@ -60,4 +61,7 @@ public abstract class StringUtils {
         return longString.substring(0, 3) + ".";
     }
 
+    public static String buildPossibleFileName(LudoAudio audio) {
+        return "n" + audio.getOrder() + "_" + audio.getTitle().replace(" ", "_");
+    }
 }

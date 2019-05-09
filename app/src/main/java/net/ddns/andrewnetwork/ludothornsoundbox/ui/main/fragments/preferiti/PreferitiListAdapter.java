@@ -34,8 +34,8 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private static SparseArray<Bitmap> drawables = new SparseArray<>();
     private static SparseBooleanArray isPlaying = new SparseBooleanArray();
+    private static SparseBooleanArray videoAvailable = new SparseBooleanArray();
     private static boolean isSettingPreferito = false;
-    private boolean isResuming;
 
     interface ThumbnailLoadedListener {
 
@@ -52,11 +52,10 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
         void onPreferitoDeleted(LudoAudio audio);
     }
 
-    PreferitiListAdapter(IFragmentAdapterBinder binder, Context context, List<LudoAudio> audioList, boolean isResuming) {
+    PreferitiListAdapter(IFragmentAdapterBinder binder, Context context, List<LudoAudio> audioList) {
         this.mBinder = binder;
         this.mContext = context;
         this.audioList = audioList;
-        this.isResuming = isResuming;
     }
 
     @NonNull
@@ -82,6 +81,7 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
     public class AudioViewHolder extends RecyclerView.ViewHolder {
 
         ItemPreferitiBinding mBinding;
+
 
 
         private AudioViewHolder(View v) {
@@ -113,20 +113,20 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
             setPlayPauseListener(item, position);
 
             if (!isAnyPlaying()) {
-                if (!isResuming && !isAlreadyLoaded(video)) {
-                    showLoading();
-                    mBinder.loadVideo(item, videoResponse -> {
-                        manageVideoResponse(item, videoResponse);
+                if(videoAvailable.get(item.getAudio(), true)) {
+                    if (!isAlreadyLoaded(video)) {
+                        showLoading();
+                        mBinder.loadVideo(item, videoResponse -> {
+                            manageVideoResponse(item, videoResponse);
+                            hideLoading();
+                        });
+                    } else {
+                        onVideoAvailableAndLoadDrawable(item, video);
+
                         hideLoading();
-                    });
-                } else if(isAlreadyLoaded(video)) {
-                    onVideoAvailableAndLoadDrawable(item, video);
-
-                    hideLoading();
+                    }
                 } else {
-                    onVideoUnavailable();
-
-                    hideLoading();
+                    onVideoUnavailable(item);
                 }
             }
 
@@ -159,19 +159,22 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
             if (video != null && video.getTitle() != null) {
                 onVideoAvailableAndLoadDrawable(item, video);
             } else {
-                onVideoUnavailable();
+                onVideoUnavailable(item);
             }
         }
 
         private void onVideoAvailableAndLoadDrawable(LudoAudio item, LudoVideo video) {
             item.setVideo(video);
 
-            onVideoAvailable(video);
+            onVideoAvailable(item, video);
             callFinalizeVideoLoaded(item);
             loadDrawable(item);
         }
 
-        private void onVideoAvailable(LudoVideo video) {
+        private void onVideoAvailable(LudoAudio item, LudoVideo video) {
+
+            videoAvailable.put(item.getAudio(), true);
+
             mBinding.videoTitleLabel.setText(video.getTitle());
             mBinding.videoButton.setOnClickListener(v ->
                     CommonUtils.showDialog(mContext, "Aprire il video corrispondente su youtube?",
@@ -187,7 +190,10 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
             mBinding.videoButton.setVisibility(View.VISIBLE);
         }
 
-        private void onVideoUnavailable() {
+        private void onVideoUnavailable(LudoAudio item) {
+
+            videoAvailable.put(item.getAudio(), false);
+
             mBinding.videoButton.setVisibility(View.GONE);
 
             mBinding.videoTitleLabel.setText(mContext.getString(R.string.video_non_disponibile_label));
@@ -326,10 +332,6 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
 
             notifyOtherItemsChanged(position);
         }
-    }
-
-    void setResuming(boolean resuming) {
-        isResuming = resuming;
     }
 
     void setList(List<LudoAudio> audioList) {

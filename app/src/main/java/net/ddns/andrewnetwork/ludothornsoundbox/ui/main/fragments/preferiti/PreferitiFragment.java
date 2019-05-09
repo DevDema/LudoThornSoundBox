@@ -68,15 +68,15 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        loadPreferiti(false);
+        loadPreferiti();
     }
 
-    private void loadPreferiti(boolean isResuming) {
+    private void loadPreferiti() {
         List<LudoAudio> audioList = mPresenter.getPreferitiListFromPref();
         if (audioList.isEmpty()) {
             onPreferitiListEmpty();
         } else {
-            onPreferitiListLoaded(audioList, isResuming);
+            onPreferitiListLoaded(audioList);
         }
     }
 
@@ -85,7 +85,7 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
         super.onHiddenChanged(hidden);
 
         if (!hidden) {
-            loadPreferiti(true);
+            loadPreferiti();
         }
     }
 
@@ -102,7 +102,7 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
             snackbar.show();
         }
 
-        loadPreferiti(true);
+        loadPreferiti();
     }
 
     @Override
@@ -116,7 +116,7 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
     }
 
     @Override
-    public void onPreferitiListLoaded(List<LudoAudio> audioList, boolean isResuming) {
+    public void onPreferitiListLoaded(List<LudoAudio> audioList) {
 
         mBinding.globalLinear.setVisibility(View.GONE);
         mBinding.recyclerView.setVisibility(View.VISIBLE);
@@ -129,9 +129,8 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
 
         PreferitiListAdapter currentAdapter = (PreferitiListAdapter) mBinding.recyclerView.getAdapter();
         if(currentAdapter == null) {
-            mBinding.recyclerView.setAdapter(new PreferitiListAdapter(this, mContext, audioList, isResuming));
+            mBinding.recyclerView.setAdapter(new PreferitiListAdapter(this, mContext, audioList));
         } else {
-            currentAdapter.setResuming(isResuming);
             currentAdapter.setList(audioList);
             currentAdapter.notifyDataSetChanged();
         }
@@ -144,7 +143,7 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
     public void onPreferitiListError(List<LudoAudio> audioListWithoutThumbnail) {
 
         CommonUtils.showDialog(mContext, "Impossibile caricare le informazioni dei video.");
-        onPreferitiListLoaded(audioListWithoutThumbnail, false);
+        onPreferitiListLoaded(audioListWithoutThumbnail);
     }
 
     @Override

@@ -88,6 +88,8 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
         if (loadAtOnce) {
             mPresenter.getVideoInformationForAudios(audioList);
+        } else {
+            mPresenter.saveAudioListInPref(audioList);
         }
 
 

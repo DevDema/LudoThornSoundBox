@@ -16,7 +16,7 @@ public interface PreferitiViewPresenterBinder {
 
         void onPreferitoRimossoFailed(String message);
 
-        void onPreferitiListLoaded(List<LudoAudio> audioList, boolean isResuming);
+        void onPreferitiListLoaded(List<LudoAudio> audioList);
 
         void onPreferitiListError(List<LudoAudio> audioList);
 

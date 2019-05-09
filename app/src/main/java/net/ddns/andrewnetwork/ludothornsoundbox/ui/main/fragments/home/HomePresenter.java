@@ -121,7 +121,7 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
 
         attachSameVideoToAudios(listFromPref);
 
-        getDataManager().saveAudioList(listFromPref);
+        saveAudioListInPref(listFromPref);
 
         return listFromPref;
     }
@@ -149,5 +149,10 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
     @Override
     public List<LudoAudio> getAudioListFromPreferences() {
         return getDataManager().getAudioSavedList();
+    }
+
+    @Override
+    public void saveAudioListInPref(List<LudoAudio> audioList) {
+        getDataManager().saveAudioList(audioList);
     }
 }
