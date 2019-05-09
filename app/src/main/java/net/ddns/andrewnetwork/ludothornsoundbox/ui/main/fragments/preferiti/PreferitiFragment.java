@@ -103,6 +103,9 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
         }
 
         loadPreferiti();
+        
+        //TODO RIABILITA ALTRI PULSANTI RIMOZIONE PREFERITI
+
     }
 
     @Override
@@ -181,7 +184,7 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
     }
 
     @Override
-    public void onPreferitoIntentDelete(LudoAudio audio) {
+    public void onPreferitoIntentDelete(LudoAudio audio, PreferitiListAdapter.PreferitoDeletedListener preferitoDeletedListener) {
         if (getView() != null) {
             snackbar = Snackbar.make(getView(), mContext.getString(R.string.countdown_delete_favorite_message, 5), Snackbar.LENGTH_INDEFINITE);
 
@@ -197,7 +200,7 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
                 @Override
                 public void onFinish() {
                     snackbar.dismiss();
-                    mPresenter.rimuoviPreferito(audio);
+                    mPresenter.rimuoviPreferito(audio, preferitoDeletedListener);
                 }
 
             };

@@ -34,6 +34,7 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private static SparseArray<Bitmap> drawables = new SparseArray<>();
     private static SparseBooleanArray isPlaying = new SparseBooleanArray();
+    private static boolean isSettingPreferito = false;
 
     interface ThumbnailLoadedListener {
 
@@ -43,6 +44,11 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
     interface VideoLoadedListener {
 
         void onVideoLoaded(LudoVideo video);
+    }
+
+    interface PreferitoDeletedListener {
+
+        void onPreferitoDeleted(LudoAudio audio);
     }
 
     PreferitiListAdapter(IFragmentAdapterBinder binder, Context context, List<LudoAudio> audioList) {
@@ -95,8 +101,6 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
 
             LudoVideo video = item.getVideo();
 
-            setPreferitoListener(item);
-
             if (isPlaying.get(item.getAudio())) {
                 mBinding.playButton.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_stop_black_24dp));
             } else {
@@ -117,6 +121,15 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
                     hideLoading();
                 }
             }
+
+            if(isSettingPreferito) {
+                mBinding.progressBackground.setVisibility(View.VISIBLE);
+            }
+
+            mBinding.preferitoButton.setActivated(!isSettingPreferito);
+            mBinding.preferitoButton.setEnabled(!isSettingPreferito);
+
+            setPreferitoListener(item, position);
 
         }
 
@@ -272,23 +285,34 @@ class PreferitiListAdapter extends RecyclerView.Adapter {
             }
         }
 
-        private void setPreferitoListener(LudoAudio audio) {
-            Drawable isNotPreferito = ContextCompat.getDrawable(mContext, R.drawable.ic_star_border_yellow_24dp);
-            Drawable isPreferito = ContextCompat.getDrawable(mContext, R.drawable.ic_star_yellow_24dp);
-            if (compareDrawables(mBinding.preferitoButton.getDrawable(), isPreferito)) {
+        private void setPreferitoListener(LudoAudio audio, int position) {
+            if (mBinding.preferitoButton.isActivated()) {
                 mBinding.preferitoButton.setOnClickListener(v -> {
-                    mBinding.preferitoButton.setImageDrawable(isNotPreferito);
-                    mBinder.onPreferitoIntentDelete(audio);
+                    mBinding.preferitoButton.setActivated(false);
 
-                    setPreferitoListener(audio);
+                    setSettingPreferito(position, true);
+
+                    mBinder.onPreferitoIntentDelete(audio, preferitoDeleted -> setSettingPreferito(position, false));
+
+                    setPreferitoListener(audio, position);
                 });
             } else {
                 mBinding.preferitoButton.setOnClickListener(v -> {
-                    mBinding.preferitoButton.setImageDrawable(isPreferito);
+                    mBinding.preferitoButton.setActivated(true);
+
+                    setSettingPreferito(position, false);
+
                     mBinder.cancelPreferitoIntentDelete();
-                    setPreferitoListener(audio);
+                    setPreferitoListener(audio, position);
                 });
             }
+        }
+
+        private void setSettingPreferito(int position, boolean bool) {
+
+            isSettingPreferito = bool;
+
+            notifyOtherItemsChanged(position);
         }
     }
 }

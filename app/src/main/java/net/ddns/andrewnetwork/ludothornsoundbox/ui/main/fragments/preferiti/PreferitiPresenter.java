@@ -67,7 +67,7 @@ public class PreferitiPresenter<V extends IPreferitiView> extends BasePresenter<
     }
 
     @Override
-    public void rimuoviPreferito(LudoAudio audio) {
+    public void rimuoviPreferito(LudoAudio audio, PreferitiListAdapter.PreferitoDeletedListener preferitoDeletedListener) {
         List<LudoAudio> preferitiList = getDataManager().getPreferitiList() != null ? getDataManager().getPreferitiList() : new ArrayList<>();
         //CONTROLLA SE ESISTE GIA'
         if (!audioExists(preferitiList, audio)) {
@@ -79,6 +79,7 @@ public class PreferitiPresenter<V extends IPreferitiView> extends BasePresenter<
         try {
             if (getDataManager().rimuoviPreferito(audio)) {
                 getMvpView().onPreferitoRimossoSuccess();
+                preferitoDeletedListener.onPreferitoDeleted(audio);
             }
         } catch (Exception e) {
             e.printStackTrace();

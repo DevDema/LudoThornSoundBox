@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 public class Thumbnail implements Serializable {
-    SerialBitmap image;
-    String url;
+    private transient SerialBitmap image;
+    private String url;
 
     public Thumbnail(InputStream inputStream, String url) {
         this.image = new SerialBitmap(inputStream);

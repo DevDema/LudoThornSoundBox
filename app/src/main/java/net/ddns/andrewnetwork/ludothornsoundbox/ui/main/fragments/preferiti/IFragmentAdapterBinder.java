@@ -20,7 +20,7 @@ public interface IFragmentAdapterBinder {
 
     void saveAudioInPref(LudoAudio audio);
 
-    void onPreferitoIntentDelete(LudoAudio audio);
+    void onPreferitoIntentDelete(LudoAudio audio, PreferitiListAdapter.PreferitoDeletedListener preferitoDeletedListener);
 
     void cancelPreferitoIntentDelete();
 }

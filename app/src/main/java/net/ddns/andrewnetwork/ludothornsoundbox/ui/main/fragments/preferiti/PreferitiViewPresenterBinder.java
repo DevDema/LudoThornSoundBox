@@ -31,7 +31,7 @@ public interface PreferitiViewPresenterBinder {
 
         void getPreferitiList();
 
-        void rimuoviPreferito(LudoAudio audio);
+        void rimuoviPreferito(LudoAudio audio, PreferitiListAdapter.PreferitoDeletedListener preferitoDeletedListener);
 
         void loadThumbnail(LudoVideo video, PreferitiListAdapter.ThumbnailLoadedListener thumbnailLoadedListener);
 

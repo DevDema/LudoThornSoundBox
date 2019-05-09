@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 public class LudoVideo implements Comparable<LudoVideo>, Serializable {
     private String id, title, description;
     private Date dateTime;
-    private transient Thumbnail thumbnail;
+    private Thumbnail thumbnail;
 
     public enum Source {YOUTUBE, PERSONAL}
     private VideoInformation videoInformation;
