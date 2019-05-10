@@ -119,6 +119,7 @@ public class WebActivity extends BaseActivity {
             mWebView.loadUrl(url);
         } else {
             finish();
+            overridePendingTransition(R.anim.do_nothing, R.anim.slide_right);
         }
     }
 
