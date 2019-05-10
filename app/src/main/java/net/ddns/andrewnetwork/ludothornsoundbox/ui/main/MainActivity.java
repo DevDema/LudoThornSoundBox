@@ -101,14 +101,10 @@ public class MainActivity extends ParentActivity
                 startActivityForResult(settingsIntent, SettingsActivity.REQUEST_SETTINGS);
                 return true;
             case R.id.action_patreon:
-                Intent webPatreonIntent = new Intent(this, WebActivity.class);
-                webPatreonIntent.putExtra(KEY_WEB_LINK, AppUtils.PATREON_LINK);
-                startActivityForResult(webPatreonIntent, WebActivity.REQUEST_WEB);
+                WebActivity.newInstance(this, AppUtils.PATREON_LINK);
                 return true;
             case R.id.action_merchandise:
-                Intent webMerchandiseIntent = new Intent(this, WebActivity.class);
-                webMerchandiseIntent.putExtra(KEY_WEB_LINK, AppUtils.MERCHANDISE_LINK);
-                startActivityForResult(webMerchandiseIntent, WebActivity.REQUEST_WEB);
+                WebActivity.newInstance(this, AppUtils.MERCHANDISE_LINK);
                 return true;
         }
 

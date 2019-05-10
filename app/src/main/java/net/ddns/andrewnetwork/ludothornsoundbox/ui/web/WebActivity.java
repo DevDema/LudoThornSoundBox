@@ -1,5 +1,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.web;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.webkit.WebViewClient;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.PhoneUtils;
 
@@ -24,6 +27,13 @@ public class WebActivity extends BaseActivity {
     private WebView mWebView;
     private ArrayList<String> searchHistory = new ArrayList<>();
 
+    public static void newInstance(Activity activity, String link) {
+
+        Intent webPatreonIntent = new Intent(activity, WebActivity.class);
+        webPatreonIntent.putExtra(KEY_WEB_LINK, link);
+        activity.startActivityForResult(webPatreonIntent, WebActivity.REQUEST_WEB);
+        activity.overridePendingTransition( R.anim.slide_out_up, R.anim.do_nothing );
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,5 +148,12 @@ public class WebActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+
+        overridePendingTransition(R.anim.do_nothing, R.anim.slide_in_up);
     }
 }
