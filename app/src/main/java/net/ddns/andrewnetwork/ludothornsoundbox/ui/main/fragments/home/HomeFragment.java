@@ -121,6 +121,16 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
     }
 
     @Override
+    public void showLoading() {
+        mBinding.buttonsAudioProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        mBinding.buttonsAudioProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
@@ -298,8 +308,6 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
         mBinding.buttonsAudioPager.setAdapter(adapter);
 
-        mBinding.buttonsAudioProgressBar.setVisibility(View.INVISIBLE);
-
         adapter.getFilter().filter("");
 
         mBinding.buttonRight.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_RIGHT));
@@ -353,6 +361,9 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
         setCounter(adapter, 0);
 
+        hideLoading();
+
+        mBinding.buttonsAudioPager.setVisibility(View.VISIBLE);
     }
 
     private void setCounter(ButtonViewPagerAdapter adapter, int position) {
