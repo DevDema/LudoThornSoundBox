@@ -46,6 +46,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.ViewPager;
@@ -63,6 +64,8 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
     @Inject
     IHomePresenter<IHomeView> mPresenter;
     private boolean loadAtOnce;
+    private static int pageSelected;
+    private ViewPager.OnPageChangeListener onPageChangeListener;
 
     public static HomeFragment newInstance(boolean loadAtOnce) {
 
@@ -123,12 +126,14 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
     @Override
     public void showLoading() {
+        mBinding.buttonsAudioPager.setVisibility(View.INVISIBLE);
         mBinding.buttonsAudioProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
         mBinding.buttonsAudioProgressBar.setVisibility(View.INVISIBLE);
+        mBinding.buttonsAudioPager.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -270,24 +275,25 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
     }
 
     private void configAudioList(List<LudoAudio> audioList) {
-        mBinding.spinner.setAdapter(SpinnerUtils.createOrderAdapter(mContext));
 
-        mBinding.reverse.setOnClickListener(view2 -> {
-                    ButtonViewPagerAdapter<LudoAudio> adapter = (ButtonViewPagerAdapter<LudoAudio>) mBinding.buttonsAudioPager.getAdapter();
+        configureAdapter(audioList);
 
-                    if (adapter == null)
-                        return;
+        mBinding.buttonRight.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_RIGHT));
 
-                    adapter.changeItemList(AudioUtils::reverse);
-                    adapter.changeItemsAll(AudioUtils::reverse);
+        mBinding.buttonLeft.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_LEFT));
 
-                    adapter.notifyDataSetChanged();
-                }
-        );
+        mBinding.searchString.setDelay(3000L);
 
+        mBinding.searchString.setOnUserStoppedListener((editText, editable) -> editText.clearFocus());
+
+
+    }
+
+    private void configureAdapter(List<LudoAudio> audioList) {
         ButtonViewPagerAdapter<LudoAudio> adapter = new ButtonViewPagerAdapter<>(mContext, audioList, LudoAudio::getTitle, mBinding.buttonsAudioPager, ludoaudio -> !ludoaudio.isHidden());
 
-        ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
+        onPageChangeListener = new ViewPager.OnPageChangeListener() {
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -295,6 +301,8 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
             @Override
             public void onPageSelected(int position) {
+
+                pageSelected = position;
                 setCounter(adapter, position);
             }
 
@@ -303,41 +311,23 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
             }
         };
+
         mBinding.buttonsAudioPager.addOnPageChangeListener(onPageChangeListener);
 
         adapter.setOnButtonSelectedListener(this);
 
-        mBinding.buttonsAudioPager.setAdapter(adapter);
-
         adapter.getFilter().filter("");
 
-        mBinding.buttonRight.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_RIGHT));
+        mBinding.spinner.setAdapter(SpinnerUtils.createOrderAdapter(mContext));
 
-        mBinding.buttonLeft.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_LEFT));
+        mBinding.reverse.setOnClickListener(view2 -> {
 
-        mBinding.searchString.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    adapter.changeItemList(AudioUtils::reverse);
+                    adapter.changeItemsAll(AudioUtils::reverse);
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                adapter.getFilter().filter(s);
-
-
-            }
-        });
-
-        mBinding.searchString.setDelay(3000L);
-
-        mBinding.searchString.setOnUserStoppedListener((editText, editable) -> editText.clearFocus());
-
+                    adapter.notifyDataSetChanged();
+                }
+        );
         mBinding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -360,11 +350,32 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
             }
         });
 
+        mBinding.buttonsAudioPager.setAdapter(adapter);
+
         setCounter(adapter, 0);
 
-        hideLoading();
+        mBinding.searchString.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        mBinding.buttonsAudioPager.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                adapter.getFilter().filter(s);
+
+
+            }
+        });
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.buttonsAudioLayout.getLayoutParams();
+        layoutParams.matchConstraintMinHeight = mBinding.buttonsAudioLayout.getHeight();
+
+        hideLoading();
     }
 
     private void setCounter(ButtonViewPagerAdapter adapter, int position) {
@@ -408,14 +419,14 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        mBinding.buttonsAudioPager.setVisibility(View.INVISIBLE);
+        mBinding.buttonsAudioPager.removeOnPageChangeListener(onPageChangeListener);
         showLoading();
 
         new Handler().postDelayed(() -> {
-            ButtonViewPagerAdapter<LudoAudio> adapter = new ButtonViewPagerAdapter<>(mContext, audioList, LudoAudio::getTitle, mBinding.buttonsAudioPager, ludoaudio -> !ludoaudio.isHidden());
-            mBinding.buttonsAudioPager.setAdapter(adapter);
-            mBinding.buttonsAudioPager.setVisibility(View.VISIBLE);
-            hideLoading();
+
+            configureAdapter(audioList);
+
+            mBinding.buttonsAudioPager.setCurrentItem(pageSelected);
         }, 1000);
     }
 

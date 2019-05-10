@@ -79,7 +79,9 @@ public class ButtonsView<T> extends LinearLayout {
                             } else if (button instanceof OptionsMenuButton) {
                                 ((OptionsMenuButton) button).setText(parser.parseToString(object));
                             }
-                            button.setVisibility(View.VISIBLE);
+                            if(button != null) {
+                                button.setVisibility(View.VISIBLE);
+                            }
                         }
                     } else if (lastIndex == 0) {
                         lastIndex = index;
@@ -165,7 +167,7 @@ public class ButtonsView<T> extends LinearLayout {
                 button.setLayoutParams(layoutParams);
 
                 button.setBackground(ContextCompat.getDrawable(mContext, R.drawable.button_white));
-                button.setVisibility(View.VISIBLE);
+                button.setVisibility(View.INVISIBLE);
                 linearLayout.addView(button);
             }
             masterLayout.addView(linearLayout);

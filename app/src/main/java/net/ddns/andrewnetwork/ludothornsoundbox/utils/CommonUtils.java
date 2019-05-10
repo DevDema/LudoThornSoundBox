@@ -149,6 +149,17 @@ public final class CommonUtils {
         alert.show();
     }
 
+    public static void showDialog(Context context, String message, DialogInterface.OnClickListener positiveListener, String negativeText, boolean showCancel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(context.getString(R.string.positive_label), positiveListener);
+        if (showCancel)
+            builder.setNegativeButton(negativeText, (dialog, id) -> dialog.dismiss());
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     public static void showDialog(Context context, String message, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message)
@@ -179,6 +190,18 @@ public final class CommonUtils {
                 .setPositiveButton("OK", positiveListener);
         if (showCancel)
             builder.setNegativeButton("Annulla", (dialog, id) -> dialog.dismiss());
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public static void showDialog(Context context, @StyleRes int themeId, String title, String message, DialogInterface.OnClickListener positiveListener, String negativeText, boolean showCancel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, themeId);
+        builder.setTitle(title);
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("OK", positiveListener);
+        if (showCancel)
+            builder.setNegativeButton(negativeText, (dialog, id) -> dialog.dismiss());
         AlertDialog alert = builder.create();
         alert.show();
     }

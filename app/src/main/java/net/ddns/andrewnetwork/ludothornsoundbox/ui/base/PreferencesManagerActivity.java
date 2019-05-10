@@ -93,6 +93,8 @@ public abstract class PreferencesManagerActivity extends BaseActivity {
 
     public void restartApp() {
 
+        closeOtherActivities();
+
         Intent mStartActivity = new Intent(this, MainActivity.class);
         int mPendingIntentId = 123456;
         PendingIntent mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId, mStartActivity,

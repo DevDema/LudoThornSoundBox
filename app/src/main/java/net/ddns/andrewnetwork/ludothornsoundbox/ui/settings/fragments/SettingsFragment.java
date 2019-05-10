@@ -123,7 +123,8 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
                 R.style.PreferenceActivityTheme_DialogTheme,
                 getString(R.string.mandatory_setting_label),
                 getString(R.string.mandatory_setting_summary_label), (dialog, which) -> ((SettingsActivity) mActivity).restartApp(),
-                false);
+                getString(R.string.no_label),
+                true);
     }
 
     private boolean isMandatory(String key) {
@@ -247,7 +248,7 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(mActivity.getString(R.string.pag_iniziale_key))) {
+        if(mActivity != null && key.equals(mActivity.getString(R.string.pag_iniziale_key))) {
             firstNavigationItemPosition = getFirstNavigationItemPosition();
         }
     }
