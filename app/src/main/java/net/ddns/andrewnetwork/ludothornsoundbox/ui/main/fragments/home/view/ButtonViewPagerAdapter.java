@@ -38,6 +38,12 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
     private FilterByListener<T> otherFilters;
     private ViewGroup collection;
     private ButtonsView[] viewList;
+    private FilteredResultsListener<T> filteredResultsListener;
+
+   public interface FilteredResultsListener<T> {
+
+       void onFilteredResults(List<T> list);
+   }
 
     public interface FilterByListener<T> {
         boolean filterBy(T object);
@@ -257,6 +263,10 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
                 list = groupByPage((List<T>) results.values);
 
                 notifyDataSetChanged();
+
+                if(filteredResultsListener != null) {
+                    filteredResultsListener.onFilteredResults(ungroupList(list));
+                }
             }
         };
     }
@@ -267,5 +277,9 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
 
     public List<T> getUngroupedItems() {
         return ungroupList(list);
+    }
+
+    public void setOnFilteredResults(FilteredResultsListener<T> filteredResultsListener) {
+       this.filteredResultsListener = filteredResultsListener;
     }
 }

@@ -27,6 +27,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewP
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomeView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.ButtonViewPagerAdapter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.ButtonsView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.OnButtonSelectedListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.model.ChiaveValore;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
@@ -289,7 +290,7 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
     }
 
-    private void configureAdapter(List<LudoAudio> audioList) {
+    private ButtonViewPagerAdapter<LudoAudio> configureAdapter(List<LudoAudio> audioList) {
         ButtonViewPagerAdapter<LudoAudio> adapter = new ButtonViewPagerAdapter<>(mContext, audioList, LudoAudio::getTitle, mBinding.buttonsAudioPager, ludoaudio -> !ludoaudio.isHidden());
 
         onPageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -315,6 +316,8 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
         mBinding.buttonsAudioPager.addOnPageChangeListener(onPageChangeListener);
 
         adapter.setOnButtonSelectedListener(this);
+
+        adapter.setOnFilteredResults(list -> setCounter(adapter, mBinding.buttonsAudioPager.getCurrentItem()));
 
         adapter.getFilter().filter("");
 
@@ -376,10 +379,19 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
         layoutParams.matchConstraintMinHeight = mBinding.buttonsAudioLayout.getHeight();
 
         hideLoading();
+
+        return adapter;
     }
 
     private void setCounter(ButtonViewPagerAdapter adapter, int position) {
-        mBinding.counter.setText(String.format(Locale.ITALIAN, "%d/%d", adapter.getMaxItemsPerPage() * position + 1, adapter.getUngroupedItems().size()));
+        int maxSize = adapter.getUngroupedItems().size();
+        int currentItem = adapter.getMaxItemsPerPage() * position + 1;
+
+        if(maxSize == 0) {
+            currentItem = 0;
+        }
+
+        mBinding.counter.setText(String.format(Locale.ITALIAN, "%d/%d", currentItem, maxSize));
 
     }
 
