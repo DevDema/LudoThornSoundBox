@@ -1,12 +1,14 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -24,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+@SuppressWarnings("unchecked")
 public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterable {
 
     private final Context mContext;
@@ -34,7 +37,7 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
     private int maxItemsPerPage;
     private FilterByListener<T> otherFilters;
     private ViewGroup collection;
-    private List<ButtonsView<T>> viewList;
+    private ButtonsView[] viewList;
 
     public interface FilterByListener<T> {
         boolean filterBy(T object);
@@ -52,13 +55,13 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
         this.collection = viewPager;
         this.list = groupByPage(list);
         this.itemsAll = new ArrayList<>(this.list);
-        this.viewList = new ArrayList<>();
+        this.viewList = new ButtonsView[this.list.size()];
         this.parser = parser;
         this.otherFilters = audio -> true;
 
     }
 
-    public ButtonViewPagerAdapter(Context context, List<T> list, StringParse<T> parser,  ViewPager viewPager, FilterByListener<T> filterBy) {
+    public ButtonViewPagerAdapter(Context context, List<T> list, StringParse<T> parser, ViewPager viewPager, FilterByListener<T> filterBy) {
         this(context, list, parser, viewPager);
 
         this.otherFilters = filterBy;
@@ -81,7 +84,7 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
     private List<T> ungroupList(List<List<T>> list) {
         List<T> ungroupedList = new ArrayList<>();
 
-        for(List<T> subList : list) {
+        for (List<T> subList : list) {
             ungroupedList.addAll(subList);
         }
 
@@ -96,8 +99,6 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
         final int MAX_ROWS = (int) Math.floor(collection.getHeight() * 1.0 / buttonHeight);
         maxItemsPerPage = MAX_COLUMNS * MAX_ROWS;
     }
-
-
 
 
     @Override
@@ -137,13 +138,12 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
 
         ButtonsView<T> buttonsView = getViewSingleton(position);
 
-        configureButtonsView(buttonsView, position);
 
         return buttonsView;
     }
 
     private void configureButtonsView(ButtonsView<T> buttonsView, int position) {
-        buttonsView.inflateButtons(mContext);
+
 
         buttonsView.setAdapter(
                 list.get(position)
@@ -154,6 +154,10 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
         }
 
 
+        addViewToCollection(buttonsView);
+    }
+
+    private void addViewToCollection(ButtonsView<T> buttonsView) {
         if (buttonsView.getParent() == null) {
             collection.addView(buttonsView);
         }
@@ -161,12 +165,28 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
 
     private ButtonsView<T> getViewSingleton(int position) {
         ButtonsView<T> buttonsView;
-        if(position >= viewList.size() || viewList.get(position) == null) {
+        if (viewList[position] == null) {
             buttonsView = new ButtonsView<>(mContext);
-            viewList.add(position, buttonsView);
+            buttonsView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int width  = buttonsView.getMeasuredWidth();
+                    int height = buttonsView.getMeasuredHeight();
+                    if(width != 0 || height != 0) {
+                        buttonsView.inflateButtons(mContext);
+
+                        configureButtonsView(buttonsView, position);
+
+                        buttonsView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+            });
+            viewList[position] = buttonsView;
 
         } else {
-            buttonsView = viewList.get(position);
+            buttonsView = viewList[position];
+
+            configureButtonsView(buttonsView, position);
         }
 
         return buttonsView;
@@ -203,7 +223,7 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
 
     private void clearButtonsViewList() {
 
-        for(ButtonsView buttonsView : viewList) {
+        for (ButtonsView buttonsView : viewList) {
             buttonsView.removeAllViews();
         }
     }

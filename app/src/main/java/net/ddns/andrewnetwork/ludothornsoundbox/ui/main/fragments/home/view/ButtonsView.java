@@ -42,6 +42,11 @@ public class ButtonsView<T> extends LinearLayout {
         this.mContext = context;
         this.infoVisible = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(mContext.getString(R.string.mostra_info_in_audio_key), false);
         inflate();
+        bindViews();
+    }
+
+    private void bindViews() {
+        masterLayout = findViewById(R.id.master_layout);
     }
 
     private void inflate() {
@@ -62,24 +67,26 @@ public class ButtonsView<T> extends LinearLayout {
         int lastIndex = 0;
         for (int i = 0; i < MAX_ROWS; i++) {
             LinearLayout linearLayout = (LinearLayout) masterLayout.getChildAt(i);
-            for (int j = 0; j < MAX_COLUMNS; j++) {
-                View button = linearLayout.getChildAt(j);
-                int index = i * MAX_COLUMNS + j;
-                if (index < list.size()) {
-                    T object = list.get(index);
-                    if (object != null) {
-                        if (button instanceof Button) {
-                            ((Button) button).setText(parser.parseToString(object));
-                        } else if (button instanceof OptionsMenuButton) {
-                            ((OptionsMenuButton) button).setText(parser.parseToString(object));
+            if (linearLayout != null) {
+                for (int j = 0; j < MAX_COLUMNS; j++) {
+                    View button = linearLayout.getChildAt(j);
+                    int index = i * MAX_COLUMNS + j;
+                    if (index < list.size()) {
+                        T object = list.get(index);
+                        if (object != null) {
+                            if (button instanceof Button) {
+                                ((Button) button).setText(parser.parseToString(object));
+                            } else if (button instanceof OptionsMenuButton) {
+                                ((OptionsMenuButton) button).setText(parser.parseToString(object));
+                            }
+                            button.setVisibility(View.VISIBLE);
                         }
-                        button.setVisibility(View.VISIBLE);
+                    } else if (lastIndex == 0) {
+                        lastIndex = index;
+                        break;
+                    } else {
+                        button.setVisibility(View.GONE);
                     }
-                } else if (lastIndex == 0) {
-                    lastIndex = index;
-                    break;
-                } else {
-                    button.setVisibility(View.GONE);
                 }
             }
         }
@@ -88,10 +95,11 @@ public class ButtonsView<T> extends LinearLayout {
     private void setAllInvisible() {
         for (int i = 0; i < MAX_ROWS; i++) {
             LinearLayout linearLayout = (LinearLayout) masterLayout.getChildAt(i);
-
-            for (int j = 0; j < MAX_COLUMNS; j++) {
-                if (linearLayout.getChildAt(j) != null) {
-                    linearLayout.getChildAt(j).setVisibility(View.INVISIBLE);
+            if(linearLayout != null) {
+                for (int j = 0; j < MAX_COLUMNS; j++) {
+                    if (linearLayout.getChildAt(j) != null) {
+                        linearLayout.getChildAt(j).setVisibility(View.INVISIBLE);
+                    }
                 }
             }
         }
@@ -105,17 +113,19 @@ public class ButtonsView<T> extends LinearLayout {
 
         for (int i = 0; i < MAX_ROWS; i++) {
             LinearLayout linearLayout = (LinearLayout) masterLayout.getChildAt(i);
-            for (int j = 0; j < MAX_COLUMNS; j++) {
-                View button = linearLayout.getChildAt(j);
-                int position = i * MAX_COLUMNS + j;
-                if (position < list.size()) {
-                    T object = list.get(position);
-                    if (object != null) {
-                        button.setOnClickListener(view -> listener.onButtonSelected(object, position, view));
-                        if (infoVisible) {
-                            ((OptionsMenuButton) button).setOnMoreButtonClickListener(v -> listener.onButtonLongSelected(object, position, v));
-                        } else {
-                            button.setOnLongClickListener(v -> listener.onButtonLongSelected(object, position, v));
+            if (linearLayout != null) {
+                for (int j = 0; j < MAX_COLUMNS; j++) {
+                    View button = linearLayout.getChildAt(j);
+                    int position = i * MAX_COLUMNS + j;
+                    if (position < list.size()) {
+                        T object = list.get(position);
+                        if (object != null) {
+                            button.setOnClickListener(view -> listener.onButtonSelected(object, position, view));
+                            if (infoVisible) {
+                                ((OptionsMenuButton) button).setOnMoreButtonClickListener(v -> listener.onButtonLongSelected(object, position, v));
+                            } else {
+                                button.setOnLongClickListener(v -> listener.onButtonLongSelected(object, position, v));
+                            }
                         }
                     }
                 }
@@ -128,7 +138,6 @@ public class ButtonsView<T> extends LinearLayout {
         int buttonHeight = (int) context.getResources().getDimension(R.dimen.input_size_xxxs);
         MAX_COLUMNS = (int) Math.floor(getWidth() * 1.0 / (buttonWidth + 2 * MARGIN));
         MAX_ROWS = (int) Math.floor(getHeight() * 1.0 / (buttonHeight + 2 * MARGIN));
-        masterLayout = (LinearLayout) getChildAt(0);
         for (int i = 0; i < MAX_ROWS; i++) {
             LinearLayout linearLayout = new LinearLayout(context);
             linearLayout.setGravity(Gravity.CENTER);
