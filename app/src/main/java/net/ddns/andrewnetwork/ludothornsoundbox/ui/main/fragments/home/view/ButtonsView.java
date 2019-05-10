@@ -165,7 +165,7 @@ public class ButtonsView<T> extends LinearLayout {
                 button.setLayoutParams(layoutParams);
 
                 button.setBackground(ContextCompat.getDrawable(mContext, R.drawable.button_white));
-                button.setVisibility(View.INVISIBLE);
+                button.setVisibility(View.VISIBLE);
                 linearLayout.addView(button);
             }
             masterLayout.addView(linearLayout);

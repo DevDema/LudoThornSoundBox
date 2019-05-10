@@ -20,7 +20,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
-                <LinearLayout
+                <FrameLayout
                     android:id="@+id/buttons_audio_layout"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -33,8 +33,15 @@
                     <androidx.viewpager.widget.ViewPager
                         android:id="@+id/buttons_audio_pager"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-                </LinearLayout>
+                        android:layout_height="match_parent" />
+
+                    <ProgressBar
+                        android:id="@+id/buttons_audio_progress_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"/>
+
+                </FrameLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/buttons_switcher_layout"

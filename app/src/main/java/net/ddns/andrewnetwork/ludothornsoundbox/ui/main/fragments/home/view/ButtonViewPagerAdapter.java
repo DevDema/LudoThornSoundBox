@@ -136,7 +136,7 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
     public ButtonsView<T> instantiateItem(@NonNull ViewGroup collection, int position) {
         this.collection = collection;
 
-        ButtonsView<T> buttonsView = getViewSingleton(position);
+        ButtonsView<T> buttonsView = getViewSingleton(collection, position);
 
 
         return buttonsView;
@@ -153,17 +153,16 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
             buttonsView.setOnButtonSelectedListener(listener);
         }
 
-
-        addViewToCollection(buttonsView);
     }
 
-    private void addViewToCollection(ButtonsView<T> buttonsView) {
+    private static void  addViewToCollection(ViewGroup collection, ButtonsView buttonsView) {
         if (buttonsView.getParent() == null) {
+            collection.removeView(buttonsView);
             collection.addView(buttonsView);
         }
     }
 
-    private ButtonsView<T> getViewSingleton(int position) {
+    private ButtonsView<T> getViewSingleton( ViewGroup collection, int position) {
         ButtonsView<T> buttonsView;
         if (viewList[position] == null) {
             buttonsView = new ButtonsView<>(mContext);
@@ -178,15 +177,21 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
                         configureButtonsView(buttonsView, position);
 
                         buttonsView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+
                     }
                 }
             });
             viewList[position] = buttonsView;
 
+            addViewToCollection(collection, buttonsView);
+
         } else {
             buttonsView = viewList[position];
 
             configureButtonsView(buttonsView, position);
+
+            addViewToCollection(collection, buttonsView);
         }
 
         return buttonsView;

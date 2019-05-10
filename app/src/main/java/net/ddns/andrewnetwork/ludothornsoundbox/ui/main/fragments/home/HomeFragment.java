@@ -114,6 +114,10 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
         if (!loadAtOnce) {
             new Handler().postDelayed(() -> onAudioListReceived(audioList), 1000);
         }
+
+        mBinding.buttonsAudioProgressBar.getIndeterminateDrawable().setColorFilter(
+                mContext.getResources().getColor(R.color.white),
+                android.graphics.PorterDuff.Mode.SRC_IN);
     }
 
     @Override
@@ -293,6 +297,8 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
         adapter.setOnButtonSelectedListener(this);
 
         mBinding.buttonsAudioPager.setAdapter(adapter);
+
+        mBinding.buttonsAudioProgressBar.setVisibility(View.INVISIBLE);
 
         adapter.getFilter().filter("");
 
