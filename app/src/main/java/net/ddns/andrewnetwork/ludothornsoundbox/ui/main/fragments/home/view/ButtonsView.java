@@ -86,7 +86,7 @@ public class ButtonsView<T> extends LinearLayout {
                     } else if (lastIndex == 0) {
                         lastIndex = index;
                         break;
-                    } else {
+                    } else if(button != null) {
                         button.setVisibility(View.GONE);
                     }
                 }

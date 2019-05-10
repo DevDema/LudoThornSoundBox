@@ -43,15 +43,6 @@
 
             </LinearLayout>
 
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                style="@style/Base.Widget.AppCompat.ProgressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:indeterminate="true"
-                android:visibility="gone" />
-
             <LinearLayout
                 android:id="@+id/connectivityblock"
                 android:layout_width="match_parent"
@@ -131,6 +122,29 @@
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            custom:layout_constraintStart_toStartOf="parent"
+            custom:layout_constraintTop_toTopOf="parent"
+            custom:layout_constraintBottom_toBottomOf="parent"
+            custom:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/progress_video_loading_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="350dp"
+            android:ellipsize="marquee"
+            android:text="@string/progress_video_loading_label"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            custom:layout_constraintTop_toBottomOf="@id/progress_bar"
+            custom:layout_constraintStart_toStartOf="parent"
+            custom:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

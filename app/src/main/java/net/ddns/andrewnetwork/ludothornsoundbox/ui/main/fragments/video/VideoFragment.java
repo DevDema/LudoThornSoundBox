@@ -65,7 +65,7 @@ public class VideoFragment extends BaseFragment implements IVideoView {
             mPresenter.onAttach(this);
         }
 
-        refreshChannels();
+        refreshChannels(true);
 
         return mBinding.getRoot();
     }
@@ -100,9 +100,13 @@ public class VideoFragment extends BaseFragment implements IVideoView {
             }
         });
 
-        mBinding.videoLayout.setOnRefreshListener(this::refreshChannels);
+        mBinding.progressBar.getIndeterminateDrawable().setColorFilter(
+                mContext.getResources().getColor(R.color.white),
+                android.graphics.PorterDuff.Mode.SRC_IN);
 
-        mBinding.refreshButton.setOnClickListener(v -> refreshChannels());
+        mBinding.videoLayout.setOnRefreshListener(() -> refreshChannels(false));
+
+        mBinding.refreshButton.setOnClickListener(v -> refreshChannels(false));
     }
 
     @Override
@@ -157,6 +161,9 @@ public class VideoFragment extends BaseFragment implements IVideoView {
 
         mBinding.videoRecycler.setAdapter(adapter);
 
+        mBinding.progressBar.setVisibility(View.INVISIBLE);
+        mBinding.progressVideoLoadingLabel.setVisibility(View.INVISIBLE);
+
         onMoreVideoListLoadSuccess(VideoUtils.concatVideosInChannel(channelList));
     }
 
@@ -169,8 +176,13 @@ public class VideoFragment extends BaseFragment implements IVideoView {
         });
     }
 
-    private void refreshChannels() {
-        mBinding.videoLayout.setRefreshing(true);
+    private void refreshChannels(boolean usesGlobalLoading) {
+        if(!usesGlobalLoading) {
+            mBinding.videoLayout.setRefreshing(true);
+        } else {
+            mBinding.progressVideoLoadingLabel.setVisibility(View.VISIBLE);
+            mBinding.progressBar.setVisibility(View.VISIBLE);
+        }
         mPresenter.getChannels(VideoUtils.getChannels());
     }
 }
