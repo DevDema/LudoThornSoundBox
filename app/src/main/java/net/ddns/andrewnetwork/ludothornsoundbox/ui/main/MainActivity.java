@@ -119,10 +119,10 @@ public class MainActivity extends ParentActivity
     }
 
     private void setRandomTextInNavigation() {
-            TextView randomLabel = mBinding.navView.getHeaderView(0).findViewById(R.id.random_text_label);
-            List<String> stringList = StringUtils.buildRandomStringList(this);
+        TextView randomLabel = mBinding.navView.getHeaderView(0).findViewById(R.id.random_text_label);
+        List<String> stringList = StringUtils.buildRandomStringList(this);
 
-            randomLabel.setText(ListUtils.selectRandomItem(stringList));
+        randomLabel.setText(ListUtils.selectRandomItem(stringList));
     }
 
     private void selectOnBottomNavigationOrInstantiate(@IdRes int actionId) {
@@ -171,7 +171,6 @@ public class MainActivity extends ParentActivity
         mBinding.appBarMain.navigation.setSelectedItemId(fragmentFirstSelection);
 
         PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).registerOnSharedPreferenceChangeListener(this);
-
     }
 
     private @IdRes
@@ -330,13 +329,13 @@ public class MainActivity extends ParentActivity
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag("dialog");
+        /*Fragment fragment = getSupportFragmentManager().findFragmentByTag("dialog");
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .detach(fragment)
                     .commit();
-        }
+        }*/
     }
 
     public void onHomeFragmentReady() {
@@ -390,4 +389,6 @@ public class MainActivity extends ParentActivity
 
         ViewUtils.selectByItemId(mBinding.navView, getIdByCurrentFragment());
     }
+
+
 }

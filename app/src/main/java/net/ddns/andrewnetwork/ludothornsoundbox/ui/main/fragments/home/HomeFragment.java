@@ -112,6 +112,7 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
         super.onViewCreated(view, savedInstanceState);
 
         if (!loadAtOnce) {
+            showLoading();
             new Handler().postDelayed(() -> onAudioListReceived(audioList), 1000);
         }
 
@@ -407,16 +408,17 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        if (mBinding.buttonsAudioPager.getAdapter() != null) {
-            mBinding.buttonsAudioPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    ((ButtonViewPagerAdapter) mBinding.buttonsAudioPager.getAdapter()).notifyLayoutChanged();
-                    mBinding.buttonsAudioPager.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-            });
-        }
+        mBinding.buttonsAudioPager.setVisibility(View.INVISIBLE);
+        showLoading();
+
+        new Handler().postDelayed(() -> {
+            ButtonViewPagerAdapter<LudoAudio> adapter = new ButtonViewPagerAdapter<>(mContext, audioList, LudoAudio::getTitle, mBinding.buttonsAudioPager, ludoaudio -> !ludoaudio.isHidden());
+            mBinding.buttonsAudioPager.setAdapter(adapter);
+            mBinding.buttonsAudioPager.setVisibility(View.VISIBLE);
+            hideLoading();
+        }, 1000);
     }
+
 
     public void onAudioListChanged() {
         this.audioList = mPresenter.getAudioListFromPreferences();

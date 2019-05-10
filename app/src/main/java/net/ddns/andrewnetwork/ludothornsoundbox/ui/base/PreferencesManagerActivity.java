@@ -27,6 +27,7 @@ public abstract class PreferencesManagerActivity extends BaseActivity {
         SharedPreferences settings = getSharedPreferences("net.ddns.andrewnetwork.ludothornsoundbox_preferences", MODE_PRIVATE);
 
         managePreferences(settings);
+
     }
 
     protected void managePreferences(SharedPreferences settings) {
@@ -107,8 +108,8 @@ public abstract class PreferencesManagerActivity extends BaseActivity {
     }
 
     private void closeOtherActivities() {
-        for(Activity activity : ActivitiesManager.getInstance().getActivityStack()) {
-            if(this != activity) {
+        for (Activity activity : ActivitiesManager.getInstance().getActivityStack()) {
+            if (this != activity) {
                 activity.finish();
             }
         }

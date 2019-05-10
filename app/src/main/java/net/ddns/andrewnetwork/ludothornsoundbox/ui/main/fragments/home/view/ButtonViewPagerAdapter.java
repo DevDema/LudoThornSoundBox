@@ -219,20 +219,6 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
         this.listener = listener;
     }
 
-    public void notifyLayoutChanged() {
-        this.list = groupByPage(ungroupList(list));
-        this.itemsAll = new ArrayList<>(this.list);
-        clearButtonsViewList();
-        notifyDataSetChanged();
-    }
-
-    private void clearButtonsViewList() {
-
-        for (ButtonsView buttonsView : viewList) {
-            buttonsView.removeAllViews();
-        }
-    }
-
     @Override
     public Filter getFilter() {
         return new Filter() {
