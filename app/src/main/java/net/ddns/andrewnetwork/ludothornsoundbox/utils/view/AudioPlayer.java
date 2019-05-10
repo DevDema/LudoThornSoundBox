@@ -31,7 +31,7 @@ public class AudioPlayer extends ConstraintLayout {
     private ImageButton playButton;
     private ImageButton stopButton;
     private boolean isPlaying;
-    private MediaPlayer.OnCompletionListener onCompletionListener;
+    private MediaPlayer.OnCompletionListener onCustomCompletionListener;
     private ProgressBar audioProgress;
     private MediaPlayer.OnCompletionListener defaultcompletionListener = mp -> {
         playButton.setImageResource(R.drawable.ic_play_white);
@@ -39,9 +39,10 @@ public class AudioPlayer extends ConstraintLayout {
 
         playButton.setOnClickListener(v -> play());
 
+        setAudioProgressToZero();
 
-        if (onCompletionListener != null) {
-            onCompletionListener.onCompletion(mp);
+        if (onCustomCompletionListener != null) {
+            onCustomCompletionListener.onCompletion(mp);
         }
     };
 
@@ -119,12 +120,16 @@ public class AudioPlayer extends ConstraintLayout {
 
     public void stop() {
         if (audio != null) {
-            AudioUtils.stopTrack(onCompletionListener);
+            AudioUtils.stopTrack(onCustomCompletionListener);
             setAudio(null);
-            audioProgress.setProgress(0);
-            audioProgress.setMax(Integer.MAX_VALUE);
+            setAudioProgressToZero();
             isPlaying = false;
         }
+    }
+
+    private void setAudioProgressToZero() {
+        audioProgress.setProgress(0);
+        audioProgress.setMax(Integer.MAX_VALUE);
     }
 
     public void setAudio(LudoAudio audio) {
@@ -140,6 +145,6 @@ public class AudioPlayer extends ConstraintLayout {
     }
 
     public void setOnCompletionListener(MediaPlayer.OnCompletionListener onCompletionListener) {
-        this.onCompletionListener = onCompletionListener;
+        this.onCustomCompletionListener = onCompletionListener;
     }
 }

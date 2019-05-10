@@ -26,4 +26,5 @@
     <dimen name="input_size_xxl">480dp</dimen>
     <dimen name="input_size_xxxl">720dp</dimen>
     <dimen name="header_audio_dim">50dp</dimen>
+    <dimen name="default_height_buttons_adapter">300dp</dimen>
 </resources>

@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="10dp"
-                app:layout_constraintHeight_min="300dp"
+                app:layout_constraintHeight_min="@dimen/default_height_buttons_adapter"
                 app:layout_constraintBottom_toTopOf="@id/buttons_switcher_layout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/audio_player"
