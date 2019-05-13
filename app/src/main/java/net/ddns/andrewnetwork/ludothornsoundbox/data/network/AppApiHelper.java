@@ -26,6 +26,7 @@ import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
@@ -48,7 +49,6 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.LOOKUP_TYPE_VIDEO;
-import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.LUDO_THORN_NAME;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.ORDER_TYPE_VIDEO;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils.castToLudoVideo;
@@ -227,7 +227,7 @@ public class AppApiHelper implements ApiHelper {
 
     private YouTube createTubeService() {
         return new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), request -> {
-        }).setApplicationName(LUDO_THORN_NAME).build();
+        }).setApplicationName(BuildConfig.LONG_NAME).build();
     }
 }
 

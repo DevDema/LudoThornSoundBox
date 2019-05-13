@@ -30,7 +30,6 @@ public final class AppConstants {
     public static final String DB_NAME = "mindorks_mvp.db";
     public static final String PREF_NAME = "mindorks_pref";
     public static final long NULL_INDEX = -1L;
-    public static final String LUDO_THORN_NAME="Ludo Thorn";
     public static final String LOOKUP_TYPE_VIDEO = "video";
     public static final String ORDER_TYPE_VIDEO = "date";
     public static final String FILE_FRASI_RANDOM="frasi_random";
