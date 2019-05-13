@@ -33,7 +33,6 @@ public final class AppConstants {
     public static final String LUDO_THORN_NAME="Ludo Thorn";
     public static final String LOOKUP_TYPE_VIDEO = "video";
     public static final String ORDER_TYPE_VIDEO = "date";
-    public static final String LUDO_THORN_KEY="AIzaSyAulVzUGq5Ef0A9bfqGHJ6OQw2bDQg2Hx0";
     public static final String FILE_FRASI_RANDOM="frasi_random";
 
     private AppConstants() {

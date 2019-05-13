@@ -31,6 +31,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.VideoInformation;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
@@ -47,7 +48,6 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.LOOKUP_TYPE_VIDEO;
-import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.LUDO_THORN_KEY;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.LUDO_THORN_NAME;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.ORDER_TYPE_VIDEO;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
@@ -76,7 +76,7 @@ public class AppApiHelper implements ApiHelper {
 
             YouTube.Search.List search;
             search = createTubeService().search().list("id,snippet");
-            search.setKey(LUDO_THORN_KEY);
+            search.setKey(AppUtils.getApiKey());
             search.setChannelId(channel.getId());
             search.setType(LOOKUP_TYPE_VIDEO);
             search.setOrder(ORDER_TYPE_VIDEO);
@@ -98,7 +98,7 @@ public class AppApiHelper implements ApiHelper {
 
             YouTube.Channels.List channels;
             channels = createTubeService().channels().list("statistics");
-            channels.setKey(LUDO_THORN_KEY);
+            channels.setKey(AppUtils.getApiKey());
             if (nonEmptyNonNull(channel.getChannelUsername()))
                 channels.setForUsername(channel.getChannelUsername());
             else if (nonEmptyNonNull(channel.getId()))
@@ -146,7 +146,7 @@ public class AppApiHelper implements ApiHelper {
             YouTube.Videos.List videoSearch;
 
             videoSearch = createTubeService().videos().list("id,snippet,statistics");
-            videoSearch.setKey(LUDO_THORN_KEY);
+            videoSearch.setKey(AppUtils.getApiKey());
             videoSearch.setId(video.getId());
             final VideoListResponse videoListResponse = videoSearch.execute();
             videos = videoListResponse.getItems();
@@ -169,7 +169,7 @@ public class AppApiHelper implements ApiHelper {
 
             YouTube.Search.List search;
             search = createTubeService().search().list("id,snippet");
-            search.setKey(LUDO_THORN_KEY);
+            search.setKey(AppUtils.getApiKey());
             if (channel != null) {
                 search.setChannelId(channel.getId());
             }
@@ -194,7 +194,7 @@ public class AppApiHelper implements ApiHelper {
 
             YouTube.Videos.List search;
             search = createTubeService().videos().list("id,snippet,statistics");
-            search.setKey(LUDO_THORN_KEY);
+            search.setKey(AppUtils.getApiKey());
             search.setId(audio.getVideo().getId());
             search.setMaxResults(1L);
             final VideoListResponse videoListResponse = search.execute();

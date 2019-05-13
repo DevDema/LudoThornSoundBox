@@ -24,10 +24,12 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.Base64;
 import android.view.Display;
 
 import androidx.appcompat.view.menu.MenuBuilder;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 
 import java.util.ArrayList;
@@ -157,5 +159,9 @@ public final class AppUtils {
             }
         }
         return settingsCanWrite;
+    }
+
+    public static String getApiKey() {
+        return new String(Base64.decode(BuildConfig.API_KEY, 0));
     }
 }
