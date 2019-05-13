@@ -7,15 +7,26 @@ def final LOLFUN_ENVIRONMENT = "lolfun"
 
 //LUDO PROPERTIES
 def API_KEY_LUDO = properties.getProperty('API_KEY_LUDO')
+def LONG_NAME_LUDO = properties.getProperty('LONG_NAME_LUDO')
+def SHORT_NAME_LUDO = properties.getProperty('SHORT_NAME_LUDO')
 
 //LOLFUN PROPERTIES
-
+def API_KEY_LOLFUN = properties.getProperty('API_KEY_LOLFUN')
+def LONG_NAME_LOLFUN = properties.getProperty('LONG_NAME_LOLFUN')
+def SHORT_NAME_LOLFUN = properties.getProperty('SHORT_NAME_LOLFUN')
 
 android.productFlavors.whenObjectAdded { flavor ->
     flavor.signingConfig = android.signingConfigs[flavor.name]
 
     if (flavor.name == LUDO_ENVIRONMENT) {
         flavor.buildConfigField("String", "API_KEY", "\"${API_KEY_LUDO}\"")
+        flavor.buildConfigField("String", "LONG_NAME", "\"${LONG_NAME_LUDO}\"")
+        flavor.buildConfigField("String", "SHORT_NAME", "\"${SHORT_NAME_LUDO}\"")
+    } else if(flavor.name == LOLFUN_ENVIRONMENT) {
+        flavor.buildConfigField("String", "API_KEY", "\"${API_KEY_LOLFUN}\"")
+        flavor.buildConfigField("String", "LONG_NAME", "\"${LONG_NAME_LOLFUN}\"")
+        flavor.buildConfigField("String", "SHORT_NAME", "\"${SHORT_NAME_LOLFUN}\"")
+
     }
 }
 
@@ -60,25 +71,26 @@ android {
     }
 
     productFlavors {
+
         ludo {
             dimension "version"
             versionNameSuffix LUDO_ENVIRONMENT
+            resValue "string", "app_name", LONG_NAME_LUDO + " App"
         }
 
         lolfun {
             dimension "version"
             versionNameSuffix LOLFUN_ENVIRONMENT
+            resValue "string", "app_name", LONG_NAME_LOLFUN + " App"
         }
     }
     buildTypes {
         release {
             minifyEnabled false
-            buildConfigField("String", "API_KEY", "\"${API_KEY_LUDO}\"")
         }
         debug {
             minifyEnabled false
 
-            buildConfigField("String", "API_KEY", "\"${API_KEY_LUDO}\"")
         }
     }
     compileOptions {

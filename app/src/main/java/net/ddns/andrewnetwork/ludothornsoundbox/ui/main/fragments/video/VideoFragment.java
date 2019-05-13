@@ -1,11 +1,13 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
@@ -39,6 +41,7 @@ public class VideoFragment extends BaseFragment implements IVideoView {
     @Inject
     IVideoPresenter<IVideoView> mPresenter;
     private VideoRecyclerAdapter adapter;
+    private boolean loadingFailed;
 
     interface MoreVideosLoadedListener {
 
@@ -73,13 +76,30 @@ public class VideoFragment extends BaseFragment implements IVideoView {
     @Override
     public void onVideoListLoadFailed() {
         mBinding.videoLayout.setRefreshing(false);
-        CommonUtils.showDialog(mContext, "Oops! Sembra che si sia verificato un errore nel caricamento. \nContatta Ludo, saprà sicuramente come risolvere il problema!");
+        CommonUtils.showDialog(mContext, "Oops! Sembra che si sia verificato un errore nel caricamento. \nContatta " + BuildConfig.SHORT_NAME + ", saprà sicuramente come risolvere il problema!");
+
+        mBinding.progressBar.setVisibility(View.INVISIBLE);
+        mBinding.progressVideoLoadingLabel.setVisibility(View.INVISIBLE);
+
+        loadingFailed = true;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        if(!hidden) {
+            if(loadingFailed) {
+                refreshChannels(true);
+            }
+        }
     }
 
     @Override
     public void onViewCreated(@NonNull View viewCreated, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(viewCreated, savedInstanceState);
 
+        loadingFailed = false;
         mBinding.selectChannel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -107,6 +127,8 @@ public class VideoFragment extends BaseFragment implements IVideoView {
         mBinding.videoLayout.setOnRefreshListener(() -> refreshChannels(false));
 
         mBinding.refreshButton.setOnClickListener(v -> refreshChannels(false));
+
+        mBinding.progressVideoLoadingLabel.setText(mContext.getString(R.string.progress_video_loading_label, BuildConfig.SHORT_NAME));
     }
 
     @Override

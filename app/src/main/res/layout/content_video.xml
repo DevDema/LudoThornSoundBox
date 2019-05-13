@@ -140,7 +140,6 @@
             android:layout_height="wrap_content"
             android:maxWidth="350dp"
             android:ellipsize="marquee"
-            android:text="@string/progress_video_loading_label"
             android:textAlignment="center"
             android:textSize="14sp"
             custom:layout_constraintTop_toBottomOf="@id/progress_bar"

@@ -23,30 +23,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.Settings;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.LudoNavigationItem;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import androidx.annotation.StyleRes;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -110,7 +103,7 @@ public final class CommonUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(context.getString(R.string.positive_label), (dialog, id) ->
+                .setPositiveButton(context.getString(R.string.positive_label, BuildConfig.SHORT_NAME), (dialog, id) ->
                         dialog.dismiss());
         AlertDialog alert = builder.create();
         alert.show();
@@ -121,7 +114,7 @@ public final class CommonUtils {
         builder.setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(context.getString(R.string.positive_label), (dialog, id) ->
+                .setPositiveButton(context.getString(R.string.positive_label, BuildConfig.SHORT_NAME), (dialog, id) ->
                         dialog.dismiss());
         AlertDialog alert = builder.create();
         alert.show();
@@ -132,7 +125,7 @@ public final class CommonUtils {
         builder.setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(context.getString(R.string.positive_label), (dialog, id) ->
+                .setPositiveButton(context.getString(R.string.positive_label, BuildConfig.SHORT_NAME), (dialog, id) ->
                         dialog.dismiss());
         AlertDialog alert = builder.create();
         alert.show();
@@ -142,7 +135,7 @@ public final class CommonUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(context.getString(R.string.positive_label), positiveListener);
+                .setPositiveButton(context.getString(R.string.positive_label, BuildConfig.SHORT_NAME), positiveListener);
         if (showCancel)
             builder.setNegativeButton("Annulla", (dialog, id) -> dialog.dismiss());
         AlertDialog alert = builder.create();
@@ -153,7 +146,7 @@ public final class CommonUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(context.getString(R.string.positive_label), positiveListener);
+                .setPositiveButton(context.getString(R.string.positive_label, BuildConfig.SHORT_NAME), positiveListener);
         if (showCancel)
             builder.setNegativeButton(negativeText, (dialog, id) -> dialog.dismiss());
         AlertDialog alert = builder.create();

@@ -1,7 +1,7 @@
 <resources>
     <string name="banner_ad_unit_id">ca-app-pub-3889032681139142/8666737012</string>
 
-    <string name="app_name">Ludo Thorn App</string>
+    <!--<string name="app_name">Ludo Thorn App</string>-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -31,7 +31,7 @@
     <string name="preferiti_add_label">Aggiungi ai preferiti</string>
     <string name="video_originale_label">Video originale</string>
     <string name="nascondi_audio_label">Nascondi audio</string>
-    <string name="positive_label">OK, grazie Ludo!</string>
+    <string name="positive_label">OK, grazie %s!</string>
     <string name="audio_esistente_label">Questo audio esiste già nei preferiti.</string>
     <string name="salvato_correttamente_audio_label">Audio salvato nei preferiti con successo!</string>
     <string name="salvato_fallito_audio_label">Salvataggio nei preferiti fallito!</string>
@@ -141,5 +141,5 @@
     <string name="canceled_operation_message">Operazione annullata.</string>
     <string name="audio_collegati_label">Audio collegati</string>
     <string name="no_label">No</string>
-    <string name="progress_video_loading_label">Carico gli ultimi video dai canali di Ludo, attendi…</string>
+    <string name="progress_video_loading_label">Carico gli ultimi video dai canali di %s, attendi…</string>
 </resources>
