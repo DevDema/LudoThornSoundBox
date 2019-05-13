@@ -46,7 +46,6 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icon
 
 public final class AppUtils {
 
-    public static final String LUDO_THORN_DOPPIAGGIO = "https://www.youtube.com/user/LudoThornDoppiaggio";
     public static final String MAIL_ANDREA = "andrea.de-matteis@outlook.com";
     public static final String MAIL_LUDO = "miticludus@gmail.com";
     public static final String MAIL_SEGNALAZIONI = "chemerdo@gmail.com";

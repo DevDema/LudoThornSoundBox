@@ -99,10 +99,11 @@ public class AppApiHelper implements ApiHelper {
             YouTube.Channels.List channels;
             channels = createTubeService().channels().list("statistics");
             channels.setKey(AppUtils.getApiKey());
-            if (nonEmptyNonNull(channel.getChannelUsername()))
+            if (nonEmptyNonNull(channel.getChannelUsername())) {
                 channels.setForUsername(channel.getChannelUsername());
-            else if (nonEmptyNonNull(channel.getId()))
+            } else if (nonEmptyNonNull(channel.getId())) {
                 channels.setId(channel.getId());
+            }
             final com.google.api.services.youtube.model.Channel channelListResponse = channels.execute().getItems().get(0);
             channel.setId(channelListResponse.getId());
             channel.setTotalNumberOfVideos(channelListResponse.getStatistics().getVideoCount().longValue());

@@ -41,9 +41,8 @@ public abstract class AudioUtils {
         List<LudoAudio> audioList = new ArrayList<>();
         final Resources resources = context.getResources();
         final Class<R.raw> c = R.raw.class;
-        final Field[] fields = c.getDeclaredFields();
+        final Field[] fields = c.getFields();
         final R.raw rawResources = new R.raw();
-
         for (Field field : fields) {
             String resourcename;
             int resourceid;

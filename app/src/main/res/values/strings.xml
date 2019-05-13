@@ -142,4 +142,5 @@
     <string name="audio_collegati_label">Audio collegati</string>
     <string name="no_label">No</string>
     <string name="progress_video_loading_label">Carico gli ultimi video dai canali di %s, attendi…</string>
+    <string name="audio_list_empty">Non c\'è ancora nessun audio!</string>
 </resources>

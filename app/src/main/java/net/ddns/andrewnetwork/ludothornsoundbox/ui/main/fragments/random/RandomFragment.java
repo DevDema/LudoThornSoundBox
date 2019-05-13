@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.FragmentRandomBinding;
@@ -17,6 +18,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomV
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ListUtils;
 
 import java.util.List;
@@ -52,7 +54,7 @@ public class RandomFragment extends BaseFragment implements IRandomView {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_random, container, false);
 
         ActivityComponent activityComponent = getActivityComponent();
-        if(activityComponent != null) {
+        if (activityComponent != null) {
             activityComponent.inject(this);
             mPresenter.onAttach(this);
         }
@@ -68,16 +70,20 @@ public class RandomFragment extends BaseFragment implements IRandomView {
         super.onViewCreated(view, savedInstanceState);
 
         mBinding.randomLayout.randombutton.setOnClickListener(view2 -> {
+            if (!audioList.isEmpty()) {
 
-            int index = randomGenerator.nextInt(audioList.size());
-            LudoAudio audio = audioList.get(index);
+                int index = randomGenerator.nextInt(audioList.size());
+                LudoAudio audio = audioList.get(index);
 
-            mBinding.audioPlayer.setAudio(audio);
-            mBinding.audioPlayer.play();
+                mBinding.audioPlayer.setAudio(audio);
+                mBinding.audioPlayer.play();
+            } else {
+                CommonUtils.showDialog(mContext, mContext.getString(R.string.audio_list_empty));
+            }
         });
 
         mBinding.gifLayout.gif.setOnClickListener(view2 -> {
-            Uri uri = Uri.parse(AppUtils.LUDO_THORN_DOPPIAGGIO);
+            Uri uri = Uri.parse(BuildConfig.MAIN_CHANNEL_LINK);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
         });

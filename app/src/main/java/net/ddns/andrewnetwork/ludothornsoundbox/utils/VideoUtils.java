@@ -6,8 +6,8 @@ import com.google.api.services.youtube.model.SearchResultSnippet;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatistics;
+import com.google.gson.reflect.TypeToken;
 
-import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+
+import static net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig.CHANNELS;
 
 public abstract class VideoUtils {
     /**
@@ -107,12 +109,7 @@ public abstract class VideoUtils {
     }
 
     public static List<Channel> getChannels() {
-        List<Channel> channelList = new ArrayList<>();
-
-        channelList.add(new Channel("Ludo Thorn", "LudoThornDoppiaggio", R.color.background));
-        channelList.add(new Channel("Ludo MasterRace", "", "UCAmxcLPY_gvUm_XzDIcB0wg", R.color.yellow_background));
-
-        return channelList;
+        return JsonUtil.getGson().fromJson(CHANNELS, new TypeToken<List<Channel>>() {}.getType());
     }
 
     public static Channel findChannelById(String id) {

@@ -1,15 +1,20 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.data.model;
 
+import android.util.Pair;
+
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.ColorUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 
 public class Channel implements Comparable, Serializable {
 
-    private final int backGroundColor;
+    private final String backGroundColor;
     private String ChannelName;
     private String id;
     private long totalNumberOfVideos;
@@ -29,18 +34,17 @@ public class Channel implements Comparable, Serializable {
 
     public Channel(String id) {
         this.id = id;
-
-        backGroundColor = R.color.background;
+        backGroundColor = ColorUtils.DEFAULT_COLOR;
     }
 
-    public Channel(String channelName, String username, int color) {
+    public Channel(String channelName, String username, String color) {
         ChannelName = channelName;
         this.channelUsername = username;
         videoList = new ArrayList<>();
         this.backGroundColor = color;
     }
 
-    public Channel(String channelName, String username, String id, int color) {
+    public Channel(String channelName, String username, String id, String color) {
         ChannelName = channelName;
         this.channelUsername = username;
         this.id=id;
@@ -114,7 +118,9 @@ public class Channel implements Comparable, Serializable {
         this.nextPageToken = nextPageToken;
     }
 
-    public int getBackGroundColor() {
+    public String getBackGroundColor() {
         return backGroundColor;
     }
+
+
 }

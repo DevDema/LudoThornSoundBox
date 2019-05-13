@@ -16,6 +16,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.ColorUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.view.StringParsingAdapter;
@@ -110,7 +111,7 @@ public class VideoFragment extends BaseFragment implements IVideoView {
                 } else {
                     Channel channel = ((Channel) parent.getSelectedItem());
                     adapter.getFilter().filter(channel.getId());
-                    viewCreated.setBackgroundColor(ContextCompat.getColor(mActivity, channel.getBackGroundColor()));
+                    viewCreated.setBackgroundColor(ContextCompat.getColor(mActivity, ColorUtils.getByName(mContext, channel.getBackGroundColor())));
                 }
             }
 
@@ -168,8 +169,7 @@ public class VideoFragment extends BaseFragment implements IVideoView {
         });
         List<Channel> selezionareChannel = new ArrayList<>(channelList);
 
-        selezionareChannel.add(0, new Channel("Tutti i canali", null, R.color.background));
-
+        selezionareChannel.add(0, new Channel("Tutti i canali", null, ColorUtils.getByColorResource(mContext, R.color.colorAccent)));
 
         mBinding.selectChannel.setAdapter(new StringParsingAdapter<>(
                         Objects.requireNonNull(mContext),
