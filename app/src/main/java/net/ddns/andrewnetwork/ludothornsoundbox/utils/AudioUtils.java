@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 
@@ -33,6 +34,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 public abstract class AudioUtils {
@@ -99,7 +101,7 @@ public abstract class AudioUtils {
                 DataSingleTon.getInstance().getMediaPlayer().release();
             }
 
-            if(onCompletionListener != null) {
+            if (onCompletionListener != null) {
                 onCompletionListener.onCompletion(DataSingleTon.getInstance().getMediaPlayer());
             }
         } catch (Exception e) {
@@ -108,14 +110,14 @@ public abstract class AudioUtils {
     }
 
     public static void attachSameVideoToAudios(List<LudoAudio> audioList) {
-        for(LudoAudio audio : audioList) {
+        for (LudoAudio audio : audioList) {
             LudoVideo ludoVideo = audio.getVideo();
             //SKIP IF NULL
-            if(ludoVideo == null) {
+            if (ludoVideo == null) {
                 continue;
             }
 
-            for(LudoAudio audioCompare : audioList) {
+            for (LudoAudio audioCompare : audioList) {
                 LudoVideo ludoVideoCompare = audioCompare.getVideo();
 
                 if (ludoVideoCompare == null || ludoVideo.equals(ludoVideoCompare)) {
@@ -154,7 +156,22 @@ public abstract class AudioUtils {
     }
 
     public static void shareAudio(@NonNull BaseFragment fragment, @NonNull LudoAudio audio) {
-        Uri fileUri = writeToExternalStorage(fragment, audio);
+        Uri fileUri;
+        if (Build.VERSION.SDK_INT >= 24) {
+            if (fragment.getContext() != null) {
+                writeToExternalStorage(fragment, audio);
+                fileUri = FileProvider.getUriForFile(
+                        fragment.getContext(),
+                        fragment.getContext().getApplicationContext().getPackageName() + ".utils.GenericFileProvider",
+                        createAudioFile(audio)
+                );
+            } else {
+                throw new IllegalArgumentException("fragment not attached to a context");
+            }
+        } else {
+            fileUri = writeToExternalStorage(fragment, audio);
+        }
+
 
         if (fileUri == null) {
             fragment.showMessage(fragment.getResources().getText(R.string.generic_error_label).toString());
@@ -165,6 +182,7 @@ public abstract class AudioUtils {
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+
             shareIntent.putExtra(Intent.EXTRA_TEXT, fragment.getString(R.string.extra_audio_info));
 
             shareIntent.setType(fragment.getContext().getString(R.string.MIME_AUDIO_ANY));
@@ -177,7 +195,7 @@ public abstract class AudioUtils {
         FileOutputStream fileOutputStream;
         try {
             inputStream = fragment.getResources().openRawResource(audio.getAudio());
-            File file = new File(Environment.getExternalStorageDirectory(), createAudioFileName(audio));
+            File file = createAudioFile(audio);
             fileOutputStream = new FileOutputStream(file);
 
             byte[] buffer = new byte[1024];
@@ -194,6 +212,10 @@ public abstract class AudioUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static File createAudioFile(LudoAudio audio) {
+        return new File(Environment.getExternalStorageDirectory(), createAudioFileName(audio));
     }
 
     private static String createAudioFileName(LudoAudio audio) {
@@ -218,7 +240,7 @@ public abstract class AudioUtils {
 
         String filename = audio.getTitle();
         String exStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String path=(exStoragePath +"/media/alarms/");
+        String path = (exStoragePath + "/media/alarms/");
 
         boolean exists = (new File(path)).exists();
         if (!exists) {
@@ -269,7 +291,7 @@ public abstract class AudioUtils {
         Uri newUri = context.getContentResolver()
                 .insert(uri, values);
 
-        if(newUri == null) {
+        if (newUri == null) {
             return false;
         }
 

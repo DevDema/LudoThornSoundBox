@@ -2,14 +2,17 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.PreferencesManagerActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants;
@@ -32,8 +35,8 @@ public abstract class ParentActivity extends PreferencesManagerActivity {
 
 
         MobileAds.initialize(this, AppConstants.ADS_CODE);
-
-        mAdView = findViewById(R.id.adView);
+        mAdView =  new AdView(this);
+        LinearLayout masterLayout = findViewById(R.id.navigation_layout);//findViewById(R.id.adView);
         Bundle extras = new Bundle();
 
         AdListener adListener = new AdListener() {
@@ -64,13 +67,25 @@ public abstract class ParentActivity extends PreferencesManagerActivity {
 
         };
         mAdView.setAdListener(adListener);
+        mAdView.setAdUnitId("ca-app-pub-3889032681139142/8666737012");
+        mAdView.setAdSize(AdSize.BANNER);
+
         mInterstitialAd = new InterstitialAd(this);
 
         mInterstitialAd.setAdUnitId("ca-app-pub-3889032681139142/3864341552");
         mInterstitialAd.setAdListener(adListener);
-        mAdView.loadAd(new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
-        mInterstitialAd.loadAd(new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+        AdRequest.Builder adRequestBuilder = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras);
 
+        //CONFIGURA TEST DEVICE.
+        if(BuildConfig.DEBUG) {
+            adRequestBuilder.addTestDevice("E471AADF1D21337710F1244766497DF9");
+        }
+
+        mAdView.loadAd(adRequestBuilder.build());
+        mInterstitialAd.loadAd(adRequestBuilder.build());
+
+        mAdView.setVisibility(View.GONE);
+        masterLayout.addView(mAdView);
     }
 
     @Override
