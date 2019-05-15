@@ -11,29 +11,23 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 
-import com.google.api.client.util.Charsets;
-
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -86,6 +80,8 @@ public abstract class AudioUtils {
 
         DataSingleTon.getInstance().getMediaPlayer().setOnCompletionListener(onCompletionListener);
         DataSingleTon.getInstance().getMediaPlayer().start();
+
+        DataSingleTon.getInstance().notifyAll(DataSingleTon.ACTION_PLAYING);
     }
 
     public static void stopTrack() {
@@ -93,12 +89,13 @@ public abstract class AudioUtils {
     }
 
     public static void stopTrack(MediaPlayer.OnCompletionListener onCompletionListener) {
-        //TODO BUG CON IL MEDIAPLAYER.
         try {
             if (DataSingleTon.getInstance().getMediaPlayer() != null) {
                 DataSingleTon.getInstance().getMediaPlayer().stop();
                 DataSingleTon.getInstance().getMediaPlayer().reset();
                 DataSingleTon.getInstance().getMediaPlayer().release();
+
+                DataSingleTon.getInstance().notifyAll(DataSingleTon.ACTION_STOPPED);
             }
 
             if (onCompletionListener != null) {
@@ -303,6 +300,16 @@ public abstract class AudioUtils {
             return false;
         }
         return true;
+    }
+
+    public static void resumeTrack() {
+        DataSingleTon.getInstance().getMediaPlayer().start();
+        DataSingleTon.getInstance().notifyAll(DataSingleTon.ACTION_RESUMED);
+    }
+
+    public static void pauseTrack() {
+        DataSingleTon.getInstance().getMediaPlayer().pause();
+        DataSingleTon.getInstance().notifyAll(DataSingleTon.ACTION_PAUSED);
     }
 }
 

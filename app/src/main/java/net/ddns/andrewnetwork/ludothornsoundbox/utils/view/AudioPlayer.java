@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-public class AudioPlayer extends ConstraintLayout {
+public class AudioPlayer extends ConstraintLayout implements MediaPlayerObserver {
 
     private LudoAudio audio;
     private LayoutInflater layoutInflater;
@@ -54,6 +54,8 @@ public class AudioPlayer extends ConstraintLayout {
 
         inflate();
         bindViews();
+
+        DataSingleTon.getInstance().registerObserver(this);
     }
 
     private void bindViews() {
@@ -80,40 +82,54 @@ public class AudioPlayer extends ConstraintLayout {
 
     public void play() {
         if (audio != null) {
-            isPlaying = true;
-            playButton.setImageResource(R.drawable.ic_pause_white);
+
             AudioUtils.playTrack(mContext, audio, defaultcompletionListener);
-
-            playButton.setOnClickListener(v -> {
-                try {
-                    if (isPlaying) {
-                        pause();
-                    } else {
-                        resume();
-                    }
-                } catch (IllegalStateException e) {
-                    Log.v("MediaPlayer", "MediaPlayer detached, skipping...");
-                }
-            });
-
-            ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-            audioProgress.setMax(DataSingleTon.getInstance().getMediaPlayer().getDuration());
-            service.scheduleWithFixedDelay(() -> audioProgress.setProgress(DataSingleTon.getInstance().getMediaPlayer().getCurrentPosition()), 1, 1, TimeUnit.MICROSECONDS);
         }
+    }
+
+    @Override
+    public void notifyPlaying() {
+        isPlaying = true;
+
+        playButton.setImageResource(R.drawable.ic_pause_white);
+
+        playButton.setOnClickListener(v -> {
+            try {
+                if (isPlaying) {
+                    pause();
+                } else {
+                    resume();
+                }
+            } catch (IllegalStateException e) {
+                Log.v("MediaPlayer", "MediaPlayer detached, skipping...");
+            }
+        });
+
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+        audioProgress.setMax(DataSingleTon.getInstance().getMediaPlayer().getDuration());
+        service.scheduleWithFixedDelay(() -> audioProgress.setProgress(DataSingleTon.getInstance().getMediaPlayer().getCurrentPosition()), 1, 1, TimeUnit.MICROSECONDS);
     }
 
     public void pause() {
         DataSingleTon.getInstance().getMediaPlayer().pause();
-        playButton.setImageResource(R.drawable.ic_play_white);
+    }
 
+    @Override
+    public void notifyPaused() {
+
+        playButton.setImageResource(R.drawable.ic_play_white);
 
         isPlaying = false;
     }
 
     public void resume() {
-        DataSingleTon.getInstance().getMediaPlayer().start();
-        playButton.setImageResource(R.drawable.ic_pause_white);
+        AudioUtils.resumeTrack();
+    }
 
+    @Override
+    public void notifyResumed() {
+
+        playButton.setImageResource(R.drawable.ic_pause_white);
 
         isPlaying = true;
     }
@@ -121,10 +137,14 @@ public class AudioPlayer extends ConstraintLayout {
     public void stop() {
         if (audio != null) {
             AudioUtils.stopTrack(onCustomCompletionListener);
-            setAudio(null);
-            setAudioProgressToZero();
-            isPlaying = false;
         }
+    }
+
+    @Override
+    public void notifyStopped() {
+        setAudio(null);
+        setAudioProgressToZero();
+        isPlaying = false;
     }
 
     private void setAudioProgressToZero() {
