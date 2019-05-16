@@ -160,7 +160,11 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public void saveAudio(LudoAudio audio) {
         List<LudoAudio> audioList = getAudioSavedList();
 
-        if(audioList.remove(AudioUtils.findAudioById(audioList, audio))) {
+        if(audioList.contains(audio)) {
+            if (audioList.remove(AudioUtils.findAudioById(audioList, audio))) {
+                audioList.add(audio);
+            }
+        } else {
             audioList.add(audio);
         }
 

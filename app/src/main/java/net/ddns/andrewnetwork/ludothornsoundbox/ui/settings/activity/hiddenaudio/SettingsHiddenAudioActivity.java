@@ -119,7 +119,9 @@ public class SettingsHiddenAudioActivity extends PreferencesManagerActivity impl
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_action_select_all, menu);
+        if(!hiddenAudioList.isEmpty()) {
+            getMenuInflater().inflate(R.menu.menu_action_select_all, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

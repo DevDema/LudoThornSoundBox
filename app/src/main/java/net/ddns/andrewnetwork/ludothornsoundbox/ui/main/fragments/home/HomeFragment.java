@@ -218,7 +218,7 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
         PermissionListener permissionListener = () -> changeRingtone(audio, typeNotification, stringResource);
 
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            CommonUtils.showDialog(getContext(), getResources().getString(R.string.ask_permission_label), (dialog, which) -> {
+            CommonUtils.showDialog(getContext(), getResources().getString(R.string.ask_permission_suoneria_label), (dialog, which) -> {
                         CommonUtils.askForStoragePermission(HomeFragment.this,
                                 permissionListener
                         );
