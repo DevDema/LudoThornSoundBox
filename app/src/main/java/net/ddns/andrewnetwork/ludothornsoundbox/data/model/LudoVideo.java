@@ -123,8 +123,8 @@ public class LudoVideo implements Comparable<LudoVideo> {
                 "   titolo=" + getTitle() + "\n" +
                 "   descrizione=" + getDescription() + "\n" +
                 "   canale=" + getChannel() + "\n" +
-                "   data-ora=" + getDateTime().toString() + "\n" +
-                "   thumbnail-url=" + getThumbnail().getUrl();
+                "   data-ora=" + (getDateTime() != null ? getDateTime().toString() : "NULL") + "\n" +
+                "   thumbnail-url=" + (getThumbnail() != null ? getThumbnail().getUrl() : "NULL") + "\n";
         if (getVideoInformation() != null)
             return string +
                     "   likes=" + getVideoInformation().getLikes() + "\n" +

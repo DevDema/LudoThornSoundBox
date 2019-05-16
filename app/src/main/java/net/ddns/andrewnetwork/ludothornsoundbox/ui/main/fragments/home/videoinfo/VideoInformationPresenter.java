@@ -57,6 +57,7 @@ public class VideoInformationPresenter<V extends IVideoInformationView> extends 
                             getMvpView().onVideoInformationLoadSuccess(audio);
                             getMvpView().hideLoading();
                         }, throwable -> {
+                            throwable.printStackTrace();
                             getMvpView().onVideoInformationLoadFailed();
                             getMvpView().hideLoading();
                         }

@@ -1,15 +1,11 @@
-package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils;
+package net.ddns.andrewnetwork.ludothornsoundbox.data.model;
 
 import android.media.MediaPlayer;
 
-import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.view.AudioPlayer;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.view.MediaPlayerObserver;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Singleton;
 
 public class DataSingleTon {
 
@@ -19,13 +15,18 @@ public class DataSingleTon {
     public static final int ACTION_RESUMED = 3;
     public static final int ACTION_FINISHED = 4;
     private static DataSingleTon instance;
-    private MediaPlayer mediaPlayer = new MediaPlayer();
-    private List<MediaPlayerObserver> observerList = new ArrayList<>();
+    private MediaPlayer mediaPlayer;
+    private List<MediaPlayerObserver> observerList;
 
     public static DataSingleTon getInstance() {
         if(instance == null)
             instance = new DataSingleTon();
         return instance;
+    }
+
+    private DataSingleTon() {
+        mediaPlayer = new MediaPlayer();
+        observerList = new ArrayList<>();
     }
 
     public MediaPlayer getMediaPlayer() {

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.DataSingleTon;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 
 import java.util.concurrent.Executors;

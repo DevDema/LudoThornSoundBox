@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -170,7 +171,7 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
                             mActivity.newDialogFragment(VideoInformationFragment.newInstance(loadAtOnce, audio, audio.getVideo().getConnectedAudioList()));
                         } else {
                             CommonUtils.showDialog(getContext(), "Video non disponibile per questo audio!");
-
+                            Log.e("AudioMissing", "Missing id for " + audio.getTitle() + ": Video:" + audio.getVideo());
                         }
                         break;
                     case R.id.condividi_audio:

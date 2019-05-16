@@ -191,15 +191,17 @@ public class AppApiHelper implements ApiHelper {
     @Override
     public Observable<LudoAudio> getVideoById(LudoAudio audio) {
         return Observable.create(emitter -> {
-            Log.v("VideoFromAudioREST", "getting Video for audio: " + audio.getTitle());
+            Log.d("VideoFromAudioREST", "getting Video for audio: " + audio.getTitle()+ " video:" + audio.getVideo());
+            Log.d("ApiKey", AppUtils.getApiKey());
 
             YouTube.Videos.List search;
             search = createTubeService().videos().list("id,snippet,statistics");
             search.setKey(AppUtils.getApiKey());
+
             search.setId(audio.getVideo().getId());
             search.setMaxResults(1L);
             final VideoListResponse videoListResponse = search.execute();
-
+            Log.d("VideoResponse", videoListResponse.toString());
 
             List<Video> searchResultList = new ArrayList<>(videoListResponse.getItems());
             if(searchResultList.isEmpty()) {

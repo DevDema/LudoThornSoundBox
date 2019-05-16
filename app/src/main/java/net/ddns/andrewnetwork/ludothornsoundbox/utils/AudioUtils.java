@@ -10,12 +10,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.DataSingleTon;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,8 +32,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon.ACTION_FINISHED;
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon.ACTION_PLAYING;
+import static net.ddns.andrewnetwork.ludothornsoundbox.data.model.DataSingleTon.ACTION_FINISHED;
+import static net.ddns.andrewnetwork.ludothornsoundbox.data.model.DataSingleTon.ACTION_PLAYING;
 
 public abstract class AudioUtils {
 
@@ -48,10 +49,17 @@ public abstract class AudioUtils {
             try {
                 resourcename = field.getName();
                 if (resourcename.charAt(resourcename.length() - 1) != '_') {
-                    int resourceInfoId = resources.getIdentifier(resourcename + "_", "raw", context.getPackageName());
-                    LudoVideo ludoVideo = resourceInfoId != 0 ? JsonUtil.getGson().fromJson(FileUtils.readTextFile(resources.openRawResource(resourceInfoId)), LudoVideo.class) : new LudoVideo();
                     resourceid = field.getInt(rawResources);
-                    audioList.add(new LudoAudio(resourcename, resourceid, ludoVideo));
+                    if(resourceid != R.raw.keep) {
+                        int resourceInfoId = resources.getIdentifier(resourcename + "_", "raw", context.getPackageName());
+                        if (resourceInfoId <= 0) {
+                            Log.e("AudioConstruct", "txt for " + resourcename + " not found.");
+                        }
+                        LudoVideo ludoVideo = resourceInfoId > 0 ? JsonUtil.getGson().fromJson(FileUtils.readTextFile(resources.openRawResource(resourceInfoId)), LudoVideo.class) : new LudoVideo();
+
+
+                        audioList.add(new LudoAudio(resourcename, resourceid, ludoVideo));
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -69,6 +77,9 @@ public abstract class AudioUtils {
         MediaPlayer mediaPlayer;
         try {
             mediaPlayer = MediaPlayer.create(context, resourceId);
+            if(mediaPlayer == null) {
+                throw new Resources.NotFoundException();
+            }
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
 
@@ -81,8 +92,10 @@ public abstract class AudioUtils {
 
         DataSingleTon.getInstance().setMediaPlayer(mediaPlayer);
 
-        DataSingleTon.getInstance().getMediaPlayer().setOnCompletionListener(mp -> DataSingleTon.getInstance().notifyAll(ACTION_FINISHED, audio));
-        DataSingleTon.getInstance().getMediaPlayer().start();
+        if(DataSingleTon.getInstance().getMediaPlayer() != null) {
+            DataSingleTon.getInstance().getMediaPlayer().setOnCompletionListener(mp -> DataSingleTon.getInstance().notifyAll(ACTION_FINISHED, audio));
+            DataSingleTon.getInstance().getMediaPlayer().start();
+        }
 
         DataSingleTon.getInstance().notifyAll(ACTION_PLAYING, audio);
     }

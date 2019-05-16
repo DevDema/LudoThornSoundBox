@@ -128,10 +128,10 @@ public class VideoInformationFragment extends ReducedDialogFragment implements I
                 Button button = new Button(context);
                 button.setText(audio.getTitle());
                 ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                        (int) ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
                 button.setLayoutParams(params);
-                button.setOnClickListener(v -> AudioUtils.playTrack(context, audio, null));
+                button.setOnClickListener(v -> AudioUtils.playTrack(context, audio));
 
                 mBinding.audioListLayout.addView(button);
             }
