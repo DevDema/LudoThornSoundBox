@@ -147,8 +147,7 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
     @Override
     public void onButtonSelected(LudoAudio audio, int position, View button) {
 
-        mBinding.audioPlayer.setAudio(audio);
-        mBinding.audioPlayer.play();
+        mBinding.audioPlayer.play(audio);
     }
 
 

@@ -154,8 +154,7 @@ public class PreferitiFragment extends BaseFragment implements IPreferitiView, I
 
     @Override
     public void playAudio(LudoAudio audio) {
-        mBinding.audioPlayer.setAudio(audio);
-        mBinding.audioPlayer.play();
+        mBinding.audioPlayer.play(audio);
     }
 
     @Override

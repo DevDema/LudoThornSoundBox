@@ -75,8 +75,7 @@ public class RandomFragment extends BaseFragment implements IRandomView {
                 int index = randomGenerator.nextInt(audioList.size());
                 LudoAudio audio = audioList.get(index);
 
-                mBinding.audioPlayer.setAudio(audio);
-                mBinding.audioPlayer.play();
+                mBinding.audioPlayer.play(audio);
             } else {
                 CommonUtils.showDialog(mContext, mContext.getString(R.string.audio_list_empty));
             }

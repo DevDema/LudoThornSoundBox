@@ -25,7 +25,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 public class AudioPlayer extends ConstraintLayout implements MediaPlayerObserver {
 
     private LudoAudio audio;
-    private LayoutInflater layoutInflater;
     private Context mContext;
     private TextView audioText;
     private ImageButton playButton;
@@ -33,18 +32,24 @@ public class AudioPlayer extends ConstraintLayout implements MediaPlayerObserver
     private boolean isPlaying;
     private MediaPlayer.OnCompletionListener onCustomCompletionListener;
     private ProgressBar audioProgress;
+    private boolean triggerCustomListener = true;
     private MediaPlayer.OnCompletionListener defaultcompletionListener = mp -> {
         playButton.setImageResource(R.drawable.ic_play_white);
         isPlaying = false;
 
-        playButton.setOnClickListener(v -> play());
+        playButton.setOnClickListener(v -> play(audio));
 
         setAudioProgressToZero();
 
-        if (onCustomCompletionListener != null) {
-            onCustomCompletionListener.onCompletion(mp);
+        if (triggerCustomListener) {
+            if (onCustomCompletionListener != null) {
+                onCustomCompletionListener.onCompletion(mp);
+            }
+        } else {
+            triggerCustomListener = true;
         }
     };
+
 
 
     public AudioPlayer(Context context, AttributeSet attrs) {
@@ -68,28 +73,30 @@ public class AudioPlayer extends ConstraintLayout implements MediaPlayerObserver
         audioProgress.getProgressDrawable().setColorFilter(
                 Color.BLUE, android.graphics.PorterDuff.Mode.SRC_IN);
 
-        playButton.setOnClickListener(v -> play());
+        playButton.setOnClickListener(v -> play(audio));
 
         stopButton.setOnClickListener(v -> stop());
     }
 
     private void inflate() {
 
-        layoutInflater = (LayoutInflater) mContext
+        LayoutInflater layoutInflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater.inflate(R.layout.audio_player, this, true);
     }
 
-    public void play() {
+    public void play(LudoAudio audio) {
         if (audio != null) {
-
-            AudioUtils.playTrack(mContext, audio, defaultcompletionListener);
+            this.audio = audio;
+            AudioUtils.playTrack(mContext, audio);
         }
     }
 
     @Override
-    public void notifyPlaying() {
+    public void notifyPlaying(LudoAudio audio) {
         isPlaying = true;
+
+        setAudio(audio);
 
         playButton.setImageResource(R.drawable.ic_pause_white);
 
@@ -132,6 +139,12 @@ public class AudioPlayer extends ConstraintLayout implements MediaPlayerObserver
         playButton.setImageResource(R.drawable.ic_pause_white);
 
         isPlaying = true;
+    }
+
+    @Override
+    public void notifyFinished() {
+        this.triggerCustomListener = false;
+        defaultcompletionListener.onCompletion(DataSingleTon.getInstance().getMediaPlayer());
     }
 
     public void stop() {

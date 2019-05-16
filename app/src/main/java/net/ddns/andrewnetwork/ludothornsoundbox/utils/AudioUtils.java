@@ -31,6 +31,9 @@ import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon.ACTION_FINISHED;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.DataSingleTon.ACTION_PLAYING;
+
 public abstract class AudioUtils {
 
     public static List<LudoAudio> createAudioList(Context context) {
@@ -59,7 +62,7 @@ public abstract class AudioUtils {
     }
 
 
-    public static void playTrack(Context context, LudoAudio audio, MediaPlayer.OnCompletionListener onCompletionListener) {
+    public static void playTrack(Context context, LudoAudio audio) {
 
         stopTrack();
         int resourceId = audio.getAudio();
@@ -78,10 +81,10 @@ public abstract class AudioUtils {
 
         DataSingleTon.getInstance().setMediaPlayer(mediaPlayer);
 
-        DataSingleTon.getInstance().getMediaPlayer().setOnCompletionListener(onCompletionListener);
+        DataSingleTon.getInstance().getMediaPlayer().setOnCompletionListener(mp -> DataSingleTon.getInstance().notifyAll(ACTION_FINISHED, audio));
         DataSingleTon.getInstance().getMediaPlayer().start();
 
-        DataSingleTon.getInstance().notifyAll(DataSingleTon.ACTION_PLAYING);
+        DataSingleTon.getInstance().notifyAll(ACTION_PLAYING, audio);
     }
 
     public static void stopTrack() {
@@ -95,7 +98,7 @@ public abstract class AudioUtils {
                 DataSingleTon.getInstance().getMediaPlayer().reset();
                 DataSingleTon.getInstance().getMediaPlayer().release();
 
-                DataSingleTon.getInstance().notifyAll(DataSingleTon.ACTION_STOPPED);
+                DataSingleTon.getInstance().notifyAll(DataSingleTon.ACTION_STOPPED, null);
             }
 
             if (onCompletionListener != null) {
@@ -304,12 +307,12 @@ public abstract class AudioUtils {
 
     public static void resumeTrack() {
         DataSingleTon.getInstance().getMediaPlayer().start();
-        DataSingleTon.getInstance().notifyAll(DataSingleTon.ACTION_RESUMED);
+        DataSingleTon.getInstance().notifyAll(DataSingleTon.ACTION_RESUMED, null);
     }
 
     public static void pauseTrack() {
         DataSingleTon.getInstance().getMediaPlayer().pause();
-        DataSingleTon.getInstance().notifyAll(DataSingleTon.ACTION_PAUSED);
+        DataSingleTon.getInstance().notifyAll(DataSingleTon.ACTION_PAUSED, null);
     }
 }
 
