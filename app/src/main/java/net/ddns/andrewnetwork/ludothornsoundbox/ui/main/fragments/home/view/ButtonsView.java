@@ -135,6 +135,12 @@ public class ButtonsView<T> extends LinearLayout {
         }
     }
 
+    public void inflateButtons(Context context, int margin) {
+        MARGIN = margin;
+
+        inflateButtons(context);
+    }
+
     public void inflateButtons(Context context) {
         int buttonWidth = getWidthFromPreferences(context);
         int buttonHeight = (int) context.getResources().getDimension(R.dimen.input_size_xxxs);

@@ -389,6 +389,4 @@ public class MainActivity extends ParentActivity
 
         ViewUtils.selectByItemId(mBinding.navView, getIdByCurrentFragment());
     }
-
-
 }

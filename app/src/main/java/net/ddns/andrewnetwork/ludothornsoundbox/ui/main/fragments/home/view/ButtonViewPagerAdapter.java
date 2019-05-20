@@ -178,7 +178,7 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
                     int width  = buttonsView.getMeasuredWidth();
                     int height = buttonsView.getMeasuredHeight();
                     if(width != 0 || height != 0) {
-                        buttonsView.inflateButtons(mContext);
+                        buttonsView.inflateButtons(mContext, 5);
 
                         configureButtonsView(buttonsView, position);
 

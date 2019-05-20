@@ -24,6 +24,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.databinding.FragmentHomeBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.ParentActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomeView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationFragment;
@@ -147,8 +148,11 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
     @Override
     public void onButtonSelected(LudoAudio audio, int position, View button) {
-
-        mBinding.audioPlayer.play(audio);
+        if(mActivity instanceof ParentActivity && ListUtils.getRandomBoolean()) {
+            ((ParentActivity) mActivity).showInterstitialAd();
+        } else {
+            mBinding.audioPlayer.play(audio);
+        }
     }
 
 
@@ -305,6 +309,14 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
                 pageSelected = position;
                 setCounter(adapter, position);
+
+                if (position == 0) {
+                    onFirstPageSelected();
+                } else if (position == adapter.getList().size() - 1) {
+                    onLastPageSelected();
+                } else {
+                    onRegularPageSelected();
+                }
             }
 
             @Override
@@ -355,7 +367,7 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
         mBinding.buttonsAudioPager.setAdapter(adapter);
 
-        setCounter(adapter, 0);
+        onPageChangeListener.onPageSelected(0);
 
         mBinding.searchString.addTextChangedListener(new TextWatcher() {
             @Override
@@ -383,11 +395,24 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
         return adapter;
     }
 
+    private void onRegularPageSelected() {
+        mBinding.buttonLeft.setVisibility(View.VISIBLE);
+        mBinding.buttonRight.setVisibility(View.VISIBLE);
+    }
+
+    private void onFirstPageSelected() {
+        mBinding.buttonLeft.setVisibility(View.INVISIBLE);
+    }
+
+    private void onLastPageSelected() {
+        mBinding.buttonRight.setVisibility(View.INVISIBLE);
+    }
+
     private void setCounter(ButtonViewPagerAdapter adapter, int position) {
         int maxSize = adapter.getUngroupedItems().size();
         int currentItem = adapter.getMaxItemsPerPage() * position + 1;
 
-        if(maxSize == 0) {
+        if (maxSize == 0) {
             currentItem = 0;
         }
 

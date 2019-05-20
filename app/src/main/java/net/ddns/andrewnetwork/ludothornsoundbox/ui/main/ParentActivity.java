@@ -93,4 +93,10 @@ public abstract class ParentActivity extends PreferencesManagerActivity {
         moveTaskToBack(true);
 
     }
+
+    public void showInterstitialAd() {
+        if(mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
+    }
 }
