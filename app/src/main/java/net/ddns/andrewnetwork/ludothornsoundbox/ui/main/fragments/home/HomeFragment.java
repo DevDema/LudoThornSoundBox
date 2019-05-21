@@ -2,6 +2,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.RingtoneManager;
@@ -32,6 +33,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ListUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.PermissionListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -300,13 +302,7 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
                 pageSelected = position;
                 setCounter(adapter, position);
 
-                if (position == 0) {
-                    onFirstPageSelected();
-                } else if (position == adapter.getList().size() - 1) {
-                    onLastPageSelected();
-                } else {
-                    onRegularPageSelected();
-                }
+                changePageSwitchers(position);
             }
 
             @Override
@@ -316,7 +312,10 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
         };
         mBinding.buttonsAudioPager.addOnPageChangeListener(onPageChangeListener);
         adapter.setOnButtonSelectedListener(this);
-        adapter.setOnFilteredResults(list -> setCounter(adapter, mBinding.buttonsAudioPager.getCurrentItem()));
+        adapter.setOnFilteredResults(list -> {
+            changePageSwitchers(mBinding.buttonsAudioPager.getCurrentItem());
+            setCounter(adapter, mBinding.buttonsAudioPager.getCurrentItem());
+        });
         adapter.getFilter().filter("");
         mBinding.buttonsAudioPager.setAdapter(adapter);
         onPageChangeListener.onPageSelected(0);
@@ -326,6 +325,30 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
         hideLoading();
 
         return adapter;
+    }
+
+    private void changePageSwitchers(int position) {
+        ButtonViewPagerAdapter<LudoAudio> adapter = (ButtonViewPagerAdapter<LudoAudio>) mBinding.buttonsAudioPager.getAdapter();
+
+        if (adapter != null) {
+            if (adapter.getList().isEmpty() || adapter.getList().size() == 1) {
+                onNoPageSelected();
+            } else {
+
+                onRegularPageSelected();
+
+                if (position == 0) {
+                    onFirstPageSelected();
+                } else if (position == adapter.getList().size() - 1) {
+                    onLastPageSelected();
+                }
+            }
+        }
+    }
+
+    private void onNoPageSelected() {
+        mBinding.buttonLeft.setVisibility(View.INVISIBLE);
+        mBinding.buttonRight.setVisibility(View.INVISIBLE);
     }
 
     private void onRegularPageSelected() {

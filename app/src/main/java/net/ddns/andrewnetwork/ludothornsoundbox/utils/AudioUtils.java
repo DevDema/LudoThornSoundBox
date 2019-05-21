@@ -327,5 +327,22 @@ public abstract class AudioUtils {
         DataSingleTon.getInstance().getMediaPlayer().pause();
         DataSingleTon.getInstance().notifyAll(DataSingleTon.ACTION_PAUSED, null);
     }
+
+    public static String[] getAudioNameArray(Context context) {
+        List<LudoAudio> audioList = createAudioList(context);
+
+        return getAudioNameArray(audioList);
+    }
+
+    public static String[] getAudioNameArray(List<LudoAudio> audioList) {
+        String[] strings = new String[audioList.size()];
+
+        for(int i=0; i<audioList.size();i++) {
+            LudoAudio audio = audioList.get(i);
+            strings[i] = audio.getTitle();
+        }
+
+        return strings;
+    }
 }
 
