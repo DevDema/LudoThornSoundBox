@@ -118,7 +118,7 @@ public class AudioPlayer extends ConstraintLayout implements MediaPlayerObserver
     }
 
     public void pause() {
-        DataSingleTon.getInstance().getMediaPlayer().pause();
+        AudioUtils.pauseTrack();
     }
 
     @Override
