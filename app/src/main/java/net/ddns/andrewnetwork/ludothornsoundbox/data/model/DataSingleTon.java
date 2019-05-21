@@ -17,9 +17,11 @@ public class DataSingleTon {
     private static DataSingleTon instance;
     private MediaPlayer mediaPlayer;
     private List<MediaPlayerObserver> observerList;
+    private int currentStatus = ACTION_FINISHED;
+    private LudoAudio currentAudio;
 
     public static DataSingleTon getInstance() {
-        if(instance == null)
+        if (instance == null)
             instance = new DataSingleTon();
         return instance;
     }
@@ -39,28 +41,42 @@ public class DataSingleTon {
 
     public void registerObserver(MediaPlayerObserver mediaPlayerObserver) {
         observerList.add(mediaPlayerObserver);
+
+        initPlayer(mediaPlayerObserver);
     }
 
     public void notifyAll(int status, LudoAudio audio) {
-        for(MediaPlayerObserver observer : observerList) {
-            switch (status) {
-                case ACTION_RESUMED:
-                    observer.notifyResumed();
-                    break;
-                case ACTION_STOPPED:
-                    observer.notifyStopped();
-                    break;
-                case ACTION_PLAYING:
-                    observer.notifyPlaying(audio);
-                    break;
-                case ACTION_PAUSED:
-                    observer.notifyPaused();
-                    break;
-                case ACTION_FINISHED:
-                    observer.notifyFinished();
-                    break;
 
-            }
+        this.currentStatus = status;
+        this.currentAudio = audio;
+
+        for (MediaPlayerObserver observer : observerList) {
+            notifyPlayer(observer, audio, status);
         }
+    }
+
+    private void notifyPlayer(MediaPlayerObserver observer, LudoAudio audio, int status) {
+        switch (status) {
+            case ACTION_RESUMED:
+                observer.notifyResumed();
+                break;
+            case ACTION_STOPPED:
+                observer.notifyStopped();
+                break;
+            case ACTION_PLAYING:
+                observer.notifyPlaying(audio);
+                break;
+            case ACTION_PAUSED:
+                observer.notifyPaused();
+                break;
+            case ACTION_FINISHED:
+                observer.notifyFinished();
+                break;
+
+        }
+    }
+
+    private void initPlayer(MediaPlayerObserver mediaPlayerObserver) {
+        notifyPlayer(mediaPlayerObserver, currentAudio, currentStatus);
     }
 }
