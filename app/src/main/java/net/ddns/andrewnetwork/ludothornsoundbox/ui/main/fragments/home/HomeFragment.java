@@ -7,37 +7,30 @@ import android.content.res.Configuration;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.FragmentHomeBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.ParentActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.MainFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomeView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.ButtonViewPagerAdapter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.ButtonsView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.OnButtonSelectedListener;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.utils.model.ChiaveValore;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ListUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.PermissionListener;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.SpinnerUtils;
 
 import java.util.List;
 import java.util.Locale;
@@ -57,7 +50,7 @@ import androidx.viewpager.widget.ViewPager;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
 @SuppressWarnings("unchecked")
-public class HomeFragment extends BaseFragment implements OnButtonSelectedListener<LudoAudio>, IHomeView {
+public class HomeFragment extends MainFragment implements OnButtonSelectedListener<LudoAudio>, IHomeView {
 
     public static final String KEY_LOAD_AT_ONCE = "KEY_LOAD_AT_ONCE";
     private FragmentHomeBinding mBinding;
@@ -148,7 +141,7 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
     @Override
     public void onButtonSelected(LudoAudio audio, int position, View button) {
-        if(mActivity instanceof ParentActivity && ListUtils.getRandomBoolean()) {
+        if (mActivity instanceof ParentActivity && ListUtils.getRandomBoolean()) {
             ((ParentActivity) mActivity).showInterstitialAd();
         } else {
             mBinding.audioPlayer.play(audio);
@@ -182,17 +175,19 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
                         shareAudio(audio);
                         break;
                     case R.id.nascondi_audio:
-                        ButtonViewPagerAdapter adapter = ((ButtonViewPagerAdapter) mBinding.buttonsAudioPager.getAdapter());
                         audio.setHidden(true);
                         mPresenter.salvaAudio(audio);
-                        if (adapter != null) {
-                            if (mBinding.searchString.getText() != null) {
-                                adapter.getFilter().filter(mBinding.searchString.getText().toString());
+                        if (mActivity instanceof MainActivity) {
+                            if (mBinding.buttonsAudioPager.getAdapter() != null
+                                    && ((MainActivity) mActivity).forceSearchViewListener()) {
+                                setCounter(
+                                        (ButtonViewPagerAdapter) mBinding.buttonsAudioPager.getAdapter(),
+                                        mBinding.buttonsAudioPager.getCurrentItem()
+                                );
                             }
 
-                            setCounter(adapter, mBinding.buttonsAudioPager.getCurrentItem());
-                        }
 
+                        }
                         break;
                     case R.id.suoneria_audio:
                         checkAndChangeRingtone(audio, RingtoneManager.TYPE_RINGTONE, R.string.suoneria_cambiata_label);
@@ -287,16 +282,11 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
         mBinding.buttonLeft.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_LEFT));
 
-        mBinding.searchString.setDelay(3000L);
-
-        mBinding.searchString.setOnUserStoppedListener((editText, editable) -> editText.clearFocus());
-
 
     }
 
     private ButtonViewPagerAdapter<LudoAudio> configureAdapter(List<LudoAudio> audioList) {
         ButtonViewPagerAdapter<LudoAudio> adapter = new ButtonViewPagerAdapter<>(mContext, audioList, LudoAudio::getTitle, mBinding.buttonsAudioPager, ludoaudio -> !ludoaudio.isHidden());
-
         onPageChangeListener = new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -324,69 +314,12 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
 
             }
         };
-
         mBinding.buttonsAudioPager.addOnPageChangeListener(onPageChangeListener);
-
         adapter.setOnButtonSelectedListener(this);
-
         adapter.setOnFilteredResults(list -> setCounter(adapter, mBinding.buttonsAudioPager.getCurrentItem()));
-
         adapter.getFilter().filter("");
-
-        mBinding.spinner.setAdapter(SpinnerUtils.createOrderAdapter(mContext));
-
-        mBinding.reverse.setOnClickListener(view2 -> {
-
-                    adapter.changeItemList(AudioUtils::reverse);
-                    adapter.changeItemsAll(AudioUtils::reverse);
-
-                    adapter.notifyDataSetChanged();
-                }
-        );
-        mBinding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ButtonViewPagerAdapter<LudoAudio> adapter = (ButtonViewPagerAdapter<LudoAudio>) mBinding.buttonsAudioPager.getAdapter();
-
-                if (adapter != null) {
-                    adapter.changeItemList(list -> AudioUtils.sortBy(list,
-                            ((ChiaveValore<String>) parent.getSelectedItem()).getChiave()));
-                    adapter.changeItemsAll(list -> AudioUtils.sortBy(list,
-                            ((ChiaveValore<String>) parent.getSelectedItem()).getChiave()));
-
-                    adapter.notifyDataSetChanged();
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
         mBinding.buttonsAudioPager.setAdapter(adapter);
-
         onPageChangeListener.onPageSelected(0);
-
-        mBinding.searchString.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                adapter.getFilter().filter(s);
-
-
-            }
-        });
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.buttonsAudioLayout.getLayoutParams();
         layoutParams.matchConstraintMinHeight = mBinding.buttonsAudioLayout.getHeight();
 
@@ -472,5 +405,46 @@ public class HomeFragment extends BaseFragment implements OnButtonSelectedListen
         this.audioList = mPresenter.getAudioListFromPreferences();
 
         onAudioListReceived(audioList);
+    }
+
+    public void searchAudioByTitle(String title) {
+        ButtonViewPagerAdapter<LudoAudio> adapter = (ButtonViewPagerAdapter<LudoAudio>) mBinding.buttonsAudioPager.getAdapter();
+
+        if (adapter != null) {
+            adapter.getFilter().filter(title);
+        }
+    }
+
+    public boolean invertOrder() {
+
+        ButtonViewPagerAdapter<LudoAudio> adapter = (ButtonViewPagerAdapter<LudoAudio>) mBinding.buttonsAudioPager.getAdapter();
+
+        if (adapter != null) {
+            adapter.changeItemList(AudioUtils::reverse);
+            adapter.changeItemsAll(AudioUtils::reverse);
+
+            adapter.notifyDataSetChanged();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean orderBy(int orderType) {
+        ButtonViewPagerAdapter<LudoAudio> adapter = (ButtonViewPagerAdapter<LudoAudio>) mBinding.buttonsAudioPager.getAdapter();
+
+        if (adapter != null) {
+            adapter.changeItemList(list -> AudioUtils.sortBy(list,
+                    orderType));
+            adapter.changeItemsAll(list -> AudioUtils.sortBy(list,
+                    orderType));
+
+            adapter.notifyDataSetChanged();
+
+            return true;
+        }
+
+        return false;
     }
 }

@@ -9,7 +9,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/colorAccent">
 
             <net.ddns.andrewnetwork.ludothornsoundbox.utils.view.AudioPlayer
@@ -52,10 +52,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/input_size_xxxs"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="20dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@id/search_layout">
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageButton
                     android:id="@+id/button_left"
@@ -67,10 +67,23 @@
                     android:background="@color/transparent"
                     android:contentDescription="@string/rightcursor"
                     android:scaleType="fitCenter"
-                    app:layout_constraintEnd_toStartOf="@id/button_right"
+                    app:layout_constraintEnd_toStartOf="@id/counter"
                     app:layout_constraintStart_toStartOf="parent"
                     app:srcCompat="@drawable/ic_arrow_left" />
-
+                <TextView
+                    android:id="@+id/counter"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/button_right"
+                    app:layout_constraintStart_toEndOf="@id/button_left"
+                    app:layout_constraintTop_toTopOf="parent" />
                 <ImageButton
                     android:id="@+id/button_right"
                     android:layout_width="0dp"
@@ -83,109 +96,10 @@
                     android:scaleType="fitCenter"
 
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/button_left"
+                    app:layout_constraintStart_toEndOf="@id/counter"
                     app:srcCompat="@drawable/ic_arrow_right" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/search_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@id/controls"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <TextView
-                    android:id="@+id/search_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="@string/search"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/white"
-                    android:textColorLink="@android:color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <net.ddns.andrewnetwork.ludothornsoundbox.utils.view.CustomEditText
-                    android:id="@+id/search_string"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/input_size_xxxs"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/blank_edit_text"
-                    android:ems="6"
-                    android:focusableInTouchMode="true"
-                    android:gravity="center"
-                    android:hint="@string/blank_edit_text"
-                    android:inputType="textPersonName"
-                    android:shadowColor="@android:color/white"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="@android:color/white"
-                    android:textColorHint="@android:color/white"
-                    android:textColorLink="@android:color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/search_label"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/controls"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/input_size_xxxs"
-                android:layout_marginBottom="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <TextView
-                    android:id="@+id/counter"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:paddingStart="30dp"
-                    android:paddingEnd="30dp"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/reverse"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/reverse"
-                    android:layout_width="@dimen/input_size_xxs"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:foregroundGravity="center"
-                    android:scaleType="fitCenter"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/spinner"
-                    app:layout_constraintStart_toEndOf="@id/counter"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_reverse_white" />
-
-                <Spinner
-                    android:id="@+id/spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/reverse"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

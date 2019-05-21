@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/search_bar"
+        android:title="@string/search"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:showAsAction="collapseActionView|always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        android:orderInCategory="0"/>
+    <item android:id="@+id/action_shuffle"
+        android:title="@string/inverti_label"
+        android:icon="@drawable/ic_shuffle"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="1"/>
+    <item android:id="@+id/action_data"
+        android:title="@string/ordina_data_label"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="2"/>
+
+    <item android:id="@+id/action_nome"
+        android:title="@string/ordina_nome_label"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="2"/>
+</menu>

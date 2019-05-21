@@ -1,6 +1,8 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -13,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -23,8 +26,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.preference.PreferenceManager;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
@@ -32,6 +35,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.MainFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
@@ -53,15 +57,16 @@ import javax.inject.Inject;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.BlankFragmentActivity.KEY_EXTRA_FRAGMENT_ACTION;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.BlankFragmentActivity.REQUEST_BLANK_ACTIVITY;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment.AUDIO_DATA;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment.AUDIO_NOME;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity.KEY_CURRENT_POSITION_BOT_NAV_MENU;
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.web.WebActivity.KEY_WEB_LINK;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.DAYS_LATER_ASKING_FEEDBACK;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.LINK_ASKING_FEEDBACK;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
 
 public class MainActivity extends ParentActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener, IMainView, SharedPreferences.OnSharedPreferenceChangeListener {
+        implements BottomNavigationView.OnNavigationItemSelectedListener, IMainView, SharedPreferences.OnSharedPreferenceChangeListener, SearchView.OnQueryTextListener {
 
 
     private ActivityMainBinding mBinding;
@@ -110,6 +115,7 @@ public class MainActivity extends ParentActivity
 
         return false;
     };
+    private String searchText;
 
     @Override
     public void onResume() {
@@ -275,7 +281,7 @@ public class MainActivity extends ParentActivity
         int id = item.getItemId();
 
         mBinding.drawerLayout.closeDrawer(GravityCompat.START);
-        Fragment fragment = null;
+        Fragment fragment;
 
         switch (id) {
             //BOTTOM NAVIGATION MENU
@@ -383,10 +389,73 @@ public class MainActivity extends ParentActivity
         return null;
     }
 
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         ViewUtils.selectByItemId(mBinding.navView, getIdByCurrentFragment());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+
+        if(currentFragment.getClass().equals(HomeFragment.class)) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.options_home_menu, menu);
+
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView = (SearchView) menu.findItem(R.id.search_bar).getActionView();
+
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setIconifiedByDefault(false);
+            searchView.setOnQueryTextListener(this);
+            return true;
+        } else {
+            menu.clear();
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return getFragmentByClass(HomeFragment.class) == null;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        this.searchText = newText;
+
+        HomeFragment homeFragment = getFragmentByClass(HomeFragment.class);
+        if(homeFragment != null) {
+            homeFragment.searchAudioByTitle(newText);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean forceSearchViewListener() {
+        return onQueryTextChange(searchText);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        HomeFragment homeFragment = getFragmentByClass(HomeFragment.class);
+
+        if(homeFragment != null) {
+            switch (item.getItemId()) {
+                case R.id.action_shuffle:
+                    return homeFragment.invertOrder();
+                case R.id.action_nome:
+                    return homeFragment.orderBy(AUDIO_NOME);
+                case R.id.action_data:
+                    return homeFragment.orderBy(AUDIO_DATA);
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
