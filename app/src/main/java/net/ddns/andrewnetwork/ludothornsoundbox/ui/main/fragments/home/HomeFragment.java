@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
@@ -49,6 +51,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.ViewPager;
 
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
 @SuppressWarnings("unchecked")
@@ -120,6 +123,10 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
         mBinding.buttonsAudioProgressBar.getIndeterminateDrawable().setColorFilter(
                 mContext.getResources().getColor(R.color.white),
                 android.graphics.PorterDuff.Mode.SRC_IN);
+
+        if(mActivity.getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT) {
+            configurePagerInitialHeight();
+        }
     }
 
     @Override
@@ -318,6 +325,7 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
         });
         adapter.getFilter().filter("");
         mBinding.buttonsAudioPager.setAdapter(adapter);
+
         onPageChangeListener.onPageSelected(0);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.buttonsAudioLayout.getLayoutParams();
         layoutParams.matchConstraintMinHeight = mBinding.buttonsAudioLayout.getHeight();
@@ -325,6 +333,27 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
         hideLoading();
 
         return adapter;
+    }
+
+    private void configurePagerInitialHeight() {
+        if(mBinding.buttonsAudioLayout.getHeight() <= 0) {
+            mBinding.buttonsAudioLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (mBinding.buttonsAudioLayout.getHeight() > 0) {
+                        setPagerInitialHeight();
+                        mBinding.buttonsAudioLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+            });
+        } else {
+            setPagerInitialHeight();
+        }
+    }
+
+    private void setPagerInitialHeight() {
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.buttonsAudioLayout.getLayoutParams();
+        layoutParams.matchConstraintMaxHeight = mBinding.buttonsAudioLayout.getHeight();
     }
 
     private void changePageSwitchers(int position) {

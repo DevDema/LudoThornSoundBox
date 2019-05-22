@@ -17,8 +17,6 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GravityCompat;
-import androidx.cursoradapter.widget.CursorAdapter;
-import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -30,6 +28,8 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
@@ -37,7 +37,6 @@ import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainView;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.MainFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
@@ -47,7 +46,6 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.credits.Cre
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.LudoNavigationItem;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.web.WebActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ListUtils;
@@ -335,8 +333,26 @@ public class MainActivity extends ParentActivity
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+
+        int orientation = newConfig.orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mAdView.setVisibility(View.VISIBLE);
+        } else if( orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            getView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if(getFragmentContainer().getHeight()<600) {
+                        mAdView.setVisibility(View.GONE);
+                        getView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+            });
+        }
+
+        invalidateOptionsMenu();
+
 
         /*Fragment fragment = getSupportFragmentManager().findFragmentByTag("dialog");
         if (fragment != null) {
@@ -393,7 +409,6 @@ public class MainActivity extends ParentActivity
     }
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -405,7 +420,7 @@ public class MainActivity extends ParentActivity
     public boolean onCreateOptionsMenu(Menu menu) {
 
 
-        if(currentFragment.getClass().equals(HomeFragment.class)) {
+        if (currentFragment.getClass().equals(HomeFragment.class)) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.options_home_menu, menu);
 
@@ -432,7 +447,7 @@ public class MainActivity extends ParentActivity
         this.searchText = newText;
 
         HomeFragment homeFragment = getFragmentByClass(HomeFragment.class);
-        if(homeFragment != null) {
+        if (homeFragment != null) {
             homeFragment.searchAudioByTitle(newText);
             return true;
         }
@@ -447,7 +462,7 @@ public class MainActivity extends ParentActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         HomeFragment homeFragment = getFragmentByClass(HomeFragment.class);
 
-        if(homeFragment != null) {
+        if (homeFragment != null) {
             switch (item.getItemId()) {
                 case R.id.action_shuffle:
                     return homeFragment.invertOrder();
