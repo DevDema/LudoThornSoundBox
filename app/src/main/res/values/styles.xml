@@ -59,5 +59,9 @@
     <style name="SpinnerItemTheme">
         <item name="android:textColor">@color/black</item>
     </style>
+    <style name="TabLayoutStyle" parent="Base.Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabSelectedTextColor">@color/white</item>
 
+    </style>
 </resources>

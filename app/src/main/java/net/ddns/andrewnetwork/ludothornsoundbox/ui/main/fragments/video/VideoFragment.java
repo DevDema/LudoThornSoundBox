@@ -1,10 +1,10 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
@@ -18,12 +18,11 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoVie
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ColorUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.view.StringParsingAdapter;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.view.TabItem;
 
 import java.util.ArrayList;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -33,6 +32,8 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.tabs.TabLayout;
 
 public class VideoFragment extends MainFragment implements IVideoView {
 
@@ -88,8 +89,8 @@ public class VideoFragment extends MainFragment implements IVideoView {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
-        if(!hidden) {
-            if(loadingFailed) {
+        if (!hidden) {
+            if (loadingFailed) {
                 refreshChannels(true);
             }
         }
@@ -100,22 +101,29 @@ public class VideoFragment extends MainFragment implements IVideoView {
         super.onViewCreated(viewCreated, savedInstanceState);
 
         loadingFailed = false;
-        mBinding.selectChannel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mBinding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    adapter.getFilter().filter(null);
-                    viewCreated.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.colorAccent));
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (adapter != null) {
+                    if (tab.getPosition() == 0) {
+                        adapter.getFilter().filter(null);
+                        viewCreated.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.colorAccent));
 
-                } else {
-                    Channel channel = ((Channel) parent.getSelectedItem());
-                    adapter.getFilter().filter(channel.getId());
-                    viewCreated.setBackgroundColor(ContextCompat.getColor(mActivity, ColorUtils.getByName(mContext, channel.getBackGroundColor())));
+                    } else if (tab instanceof TabItem) {
+                        Channel channel = (Channel) ((TabItem) tab).getItem();
+                        adapter.getFilter().filter(channel.getId());
+                        viewCreated.setBackgroundColor(ContextCompat.getColor(mActivity, ColorUtils.getByName(mContext, channel.getBackGroundColor())));
+                    }
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
             }
         });
@@ -126,7 +134,8 @@ public class VideoFragment extends MainFragment implements IVideoView {
 
         mBinding.videoLayout.setOnRefreshListener(() -> refreshChannels(false));
 
-        mBinding.refreshButton.setOnClickListener(v -> refreshChannels(false));
+
+        //mBinding.refreshButton.setOnClickListener(v -> refreshChannels(false));
 
         mBinding.progressVideoLoadingLabel.setText(mContext.getString(R.string.progress_video_loading_label, BuildConfig.SHORT_NAME));
     }
@@ -134,7 +143,7 @@ public class VideoFragment extends MainFragment implements IVideoView {
     @Override
     public void onVideoListLoadSuccess(List<Channel> channelList) {
 
-        mBinding.videoHeader.setVisibility(View.VISIBLE);
+        //mBinding.videoHeader.setVisibility(View.VISIBLE);
 
         mBinding.videoLayout.setRefreshing(false);
 
@@ -155,28 +164,19 @@ public class VideoFragment extends MainFragment implements IVideoView {
                         }
 
 
-                        if (mBinding.selectChannel.getSelectedItemPosition() == 0) {
+                        /*if (mBinding.selectChannel.getSelectedItemPosition() == 0) {
                             mPresenter.getMoreVideos(channelList, VideoUtils.getMostRecentDate(channelList), moreVideosLoadedListener);
                         } else {
                             Channel channel = (Channel) mBinding.selectChannel.getSelectedItem();
                             mPresenter.getMoreVideos(channel, VideoUtils.getMostRecentDate(channel), moreVideosLoadedListener);
-                        }
+                        }*/
                         loadingMoreVideos = true;
                     }
                 }
             }
         });
-        List<Channel> selezionareChannel = new ArrayList<>(channelList);
 
-        selezionareChannel.add(0, new Channel("Tutti i canali", null, ColorUtils.getByColorResource(mContext, R.color.colorAccent)));
-
-        mBinding.selectChannel.setAdapter(new StringParsingAdapter<>(
-                        Objects.requireNonNull(mContext),
-                        R.layout.ludo_spinner_item,
-                        selezionareChannel,
-                        Channel::getChannelName
-                )
-        );
+        setUpTabLayout(mContext, mBinding.tabLayout, channelList);
 
         adapter = new VideoRecyclerAdapter(mContext);
 
@@ -184,8 +184,21 @@ public class VideoFragment extends MainFragment implements IVideoView {
 
         mBinding.progressBar.setVisibility(View.INVISIBLE);
         mBinding.progressVideoLoadingLabel.setVisibility(View.INVISIBLE);
-
         onMoreVideoListLoadSuccess(VideoUtils.concatVideosInChannel(channelList));
+
+    }
+
+    private static void setUpTabLayout(Context context, TabLayout tabLayout, List<Channel> channelList) {
+        List<Channel> selezionareChannel = new ArrayList<>(channelList);
+
+        selezionareChannel.add(0, new Channel("Tutti", null, ColorUtils.getByColorResource(context, R.color.colorAccent)));
+
+        for (Channel channel : selezionareChannel) {
+            TabLayout.Tab tab = tabLayout.newTab();
+            if (tab instanceof TabItem) {
+                tabLayout.addTab(((TabItem<Channel>) tab).setItem(channel, Channel::getChannelName));
+            }
+        }
     }
 
     @Override
@@ -198,7 +211,7 @@ public class VideoFragment extends MainFragment implements IVideoView {
     }
 
     private void refreshChannels(boolean usesGlobalLoading) {
-        if(!usesGlobalLoading) {
+        if (!usesGlobalLoading) {
             mBinding.videoLayout.setRefreshing(true);
         } else {
             mBinding.progressVideoLoadingLabel.setVisibility(View.VISIBLE);

@@ -14,36 +14,6 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/video_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                android:textAlignment="center">
-
-                <Spinner
-                    android:id="@+id/selectChannel"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".1"
-                    android:textAlignment="center" />
-
-                <ImageButton
-                    android:id="@+id/refreshButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:background="?android:selectableItemBackground"
-                    android:paddingStart="30dp"
-                    android:paddingTop="10dp"
-                    android:paddingEnd="30dp"
-                    android:paddingBottom="10dp"
-                    android:scaleType="fitCenter"
-                    custom:srcCompat="@drawable/ic_refresh_black" />
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/connectivityblock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,6 +41,12 @@
                     android:text="@string/retryConnection"
                     android:visibility="visible" />
             </LinearLayout>
+
+            <net.ddns.andrewnetwork.ludothornsoundbox.utils.view.TabLayoutItem
+                android:id="@+id/tab_layout"
+                style="@style/TabLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
 
             <!--<net.ddns.andrewnetwork.ludothornsoundbox.view.InteractiveScrollView
