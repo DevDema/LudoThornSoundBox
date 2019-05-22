@@ -7,8 +7,11 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
@@ -31,7 +34,7 @@ public class AudioPlayer extends ConstraintLayout implements MediaPlayerObserver
     private ImageButton stopButton;
     private boolean isPlaying;
     private MediaPlayer.OnCompletionListener onCustomCompletionListener;
-    private ProgressBar audioProgress;
+    private SeekBar audioProgress;
     private boolean triggerCustomListener = true;
     private MediaPlayer.OnCompletionListener defaultcompletionListener = mp -> {
         playButton.setImageResource(R.drawable.ic_play_white);
@@ -72,6 +75,40 @@ public class AudioPlayer extends ConstraintLayout implements MediaPlayerObserver
 
         audioProgress.getProgressDrawable().setColorFilter(
                 Color.BLUE, android.graphics.PorterDuff.Mode.SRC_IN);
+
+        //TENTATIVO FALLITO DI SETTARE LA SEEKBAR
+
+        /*audioProgress.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                float x = event.getX();
+
+                float progress = audioProgress.getWidth()*x/DataSingleTon.getInstance().getMediaPlayer().getDuration();
+                DataSingleTon.getInstance().getMediaPlayer().seekTo((int) progress);
+                audioProgress.setProgress((int) progress);
+                return true;
+            }
+        });*/
+
+        audioProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser) {
+                    DataSingleTon.getInstance().getMediaPlayer().seekTo(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
 
         playButton.setOnClickListener(v -> play(audio));
 

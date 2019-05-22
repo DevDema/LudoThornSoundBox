@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <androidx.core.widget.ContentLoadingProgressBar
+        <SeekBar
             android:id="@+id/audio_progress"
             android:layout_width="0dp"
             android:layout_height="7dp"
