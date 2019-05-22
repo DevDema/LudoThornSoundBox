@@ -11,11 +11,11 @@ public class LudoVideo implements Comparable<LudoVideo> {
     private String id, title, description;
     private Date dateTime;
     private Thumbnail thumbnail;
-
+    private boolean preferito = false;
     public enum Source {YOUTUBE, PERSONAL}
 
     private VideoInformation videoInformation;
-    private Channel channel;
+    private transient Channel channel;
     private Source source;
     private transient List<LudoAudio> audioList;
 
@@ -172,5 +172,13 @@ public class LudoVideo implements Comparable<LudoVideo> {
 
     public List<LudoAudio> getConnectedAudioList() {
         return audioList;
+    }
+
+    public void setPreferito(boolean preferito) {
+        this.preferito = preferito;
+    }
+
+    public boolean getPreferito() {
+        return preferito;
     }
 }

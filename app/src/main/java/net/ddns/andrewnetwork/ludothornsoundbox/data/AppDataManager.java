@@ -163,4 +163,24 @@ public class AppDataManager implements DataManager {
     public void clearSharedPreferences() {
         mPreferencesHelper.clearSharedPreferences();
     }
+
+    @Override
+    public List<LudoVideo> getVideoPreferitiList() {
+        return mPreferencesHelper.getVideoPreferitiList() != null ? mPreferencesHelper.getVideoPreferitiList() : new ArrayList<>();
+    }
+
+    @Override
+    public void salvaVideoPreferito(LudoVideo video) {
+        mPreferencesHelper.salvaVideoPreferito(video);
+    }
+
+    @Override
+    public void saveVideoList(List<LudoVideo> videoList) {
+        mPreferencesHelper.saveVideoList(videoList);
+    }
+
+    @Override
+    public boolean rimuoviVideoPreferito(LudoVideo video) {
+        return mPreferencesHelper.rimuoviVideoPreferito(video);
+    }
 }

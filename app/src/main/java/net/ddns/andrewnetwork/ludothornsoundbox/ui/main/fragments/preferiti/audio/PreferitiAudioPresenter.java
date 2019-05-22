@@ -1,4 +1,4 @@
-package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti;
+package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio;
 
 import android.util.Log;
 
@@ -6,7 +6,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.DataManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder.IPreferitiView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioViewPresenterBinder.IPreferitiView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.SchedulerProvider;
 
 import java.util.ArrayList;
@@ -19,10 +19,10 @@ import io.reactivex.disposables.CompositeDisposable;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
-public class PreferitiPresenter<V extends IPreferitiView> extends BasePresenter<V> implements PreferitiViewPresenterBinder.IPreferitiPresenter<V> {
+public class PreferitiAudioPresenter<V extends IPreferitiView> extends BasePresenter<V> implements PreferitiAudioViewPresenterBinder.IPreferitiPresenter<V> {
 
     @Inject
-    public PreferitiPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
+    public PreferitiAudioPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
@@ -33,41 +33,7 @@ public class PreferitiPresenter<V extends IPreferitiView> extends BasePresenter<
     }
 
     @Override
-    public void salvaAudio(LudoAudio audio) {
-        getDataManager().saveAudio(audio);
-    }
-
-    @Override
-    public void getPreferitiList() {
-        List<LudoAudio> preferitiList = getDataManager().getPreferitiList();
-        if (preferitiList != null && !preferitiList.isEmpty()) {
-            getCompositeDisposable().add(Observable.fromIterable(preferitiList).flatMap(audio -> {
-                        Observable<LudoAudio> doNothing = Observable.create(emitter -> emitter.onNext(audio));
-                        if (audio.getVideo() != null) {
-                            if (nonEmptyNonNull(audio.getVideo().getTitle())) {
-                                return doNothing;
-                            }
-                            return getDataManager().getVideoById(audio);
-                        }
-                        return doNothing;
-                    })
-                            .toList()
-                            .observeOn(getSchedulerProvider().ui())
-                            .subscribeOn(getSchedulerProvider().io())
-                            .subscribe(preferitiWithVideoList -> getMvpView().onPreferitiListLoaded(preferitiWithVideoList), throwable -> {
-                                        Log.e("PreferitiListREST", throwable.getMessage());
-                                        getMvpView().onPreferitiListError(preferitiList);
-                                        getMvpView().hideLoading();
-                                    }
-                            )
-            );
-        } else {
-            getMvpView().onPreferitiListEmpty();
-        }
-    }
-
-    @Override
-    public void rimuoviPreferito(LudoAudio audio, PreferitiListAdapter.PreferitoDeletedListener preferitoDeletedListener) {
+    public void rimuoviPreferito(LudoAudio audio, PreferitiAudioListAdapter.PreferitoDeletedListener preferitoDeletedListener) {
         List<LudoAudio> preferitiList = getDataManager().getPreferitiList() != null ? getDataManager().getPreferitiList() : new ArrayList<>();
         //CONTROLLA SE ESISTE GIA'
         if (!audioExists(preferitiList, audio)) {
@@ -88,7 +54,7 @@ public class PreferitiPresenter<V extends IPreferitiView> extends BasePresenter<
     }
 
     @Override
-    public void loadThumbnail(LudoVideo video, PreferitiListAdapter.ThumbnailLoadedListener thumbnailLoadedListener) {
+    public void loadThumbnail(LudoVideo video, PreferitiAudioListAdapter.ThumbnailLoadedListener thumbnailLoadedListener) {
         getCompositeDisposable().add(getDataManager().getThumbnail(video)
                 .observeOn(getSchedulerProvider().ui())
                 .subscribeOn(getSchedulerProvider().io())
@@ -100,7 +66,7 @@ public class PreferitiPresenter<V extends IPreferitiView> extends BasePresenter<
     }
 
     @Override
-    public void loadVideo(LudoAudio audio, PreferitiListAdapter.VideoLoadedListener videoLoadedListener) {
+    public void loadVideo(LudoAudio audio, PreferitiAudioListAdapter.VideoLoadedListener videoLoadedListener) {
         getCompositeDisposable().add(getDataManager().getVideoById(audio)
                 .observeOn(getSchedulerProvider().ui())
                 .subscribeOn(getSchedulerProvider().io())
@@ -112,7 +78,7 @@ public class PreferitiPresenter<V extends IPreferitiView> extends BasePresenter<
     }
 
     @Override
-    public void saveAudioInPref(LudoAudio audio) {
+    public void saveInPref(LudoAudio audio) {
         getDataManager().salvaPreferito(audio);
     }
 

@@ -17,6 +17,8 @@ public interface VideoViewPresenterBinder {
         void onVideoListLoadSuccess(List<Channel> channelList);
 
         void onMoreVideoListLoadSuccess(List<LudoVideo> channelList);
+
+        void onPreferitoSavedSuccess(LudoVideo video);
     }
 
     interface IVideoPresenter<V extends IVideoView> extends MvpPresenter<V> {
@@ -26,6 +28,10 @@ public interface VideoViewPresenterBinder {
         void getMoreVideos(List<Channel> channel, Date date, VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener);
 
         void getMoreVideos(Channel channel, Date date, VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener);
+
+        void aggiungiPreferito(LudoVideo video);
+
+        List<LudoVideo> getPreferitiList();
         //void getVideoList(List<Channel> channelList);
     }
 }

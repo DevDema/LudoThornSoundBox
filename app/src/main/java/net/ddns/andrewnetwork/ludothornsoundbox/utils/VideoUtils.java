@@ -22,6 +22,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig.CHANNELS;
+import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
 public abstract class VideoUtils {
     /**
@@ -194,5 +195,16 @@ public abstract class VideoUtils {
         Collections.reverse(videoList);
 
         return videoList;
+    }
+
+    public static LudoVideo findById(List<LudoVideo> videoList, LudoVideo video) {
+        for(int i=0;i<videoList.size();i++) {
+            LudoVideo video1 = videoList.get(i);
+            if(nonEmptyNonNull(video1.getId()) && video1.getId().equals(video.getId())) {
+                return video1;
+            }
+        }
+
+        return null;
     }
 }

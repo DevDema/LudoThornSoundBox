@@ -33,9 +33,10 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-public class VideoFragment extends MainFragment implements IVideoView {
+public class VideoFragment extends MainFragment implements IVideoView, FragmentAdapterVideoBinder {
 
     private ContentVideoBinding mBinding;
     private boolean loadingMoreVideos;
@@ -176,11 +177,11 @@ public class VideoFragment extends MainFragment implements IVideoView {
             }
         });
 
-        setUpTabLayout(mContext, mBinding.tabLayout, channelList);
-
-        adapter = new VideoRecyclerAdapter(mContext);
+        adapter = new VideoRecyclerAdapter(mContext, this, mPresenter.getPreferitiList());
 
         mBinding.videoRecycler.setAdapter(adapter);
+
+        setUpTabLayout(mContext, mBinding.tabLayout, channelList);
 
         mBinding.progressBar.setVisibility(View.INVISIBLE);
         mBinding.progressVideoLoadingLabel.setVisibility(View.INVISIBLE);
@@ -192,6 +193,8 @@ public class VideoFragment extends MainFragment implements IVideoView {
         List<Channel> selezionareChannel = new ArrayList<>(channelList);
 
         selezionareChannel.add(0, new Channel("Tutti", null, ColorUtils.getByColorResource(context, R.color.colorAccent)));
+
+        tabLayout.removeAllTabs();
 
         for (Channel channel : selezionareChannel) {
             TabLayout.Tab tab = tabLayout.newTab();
@@ -210,6 +213,22 @@ public class VideoFragment extends MainFragment implements IVideoView {
         });
     }
 
+    @Override
+    public void onPreferitoSavedSuccess(LudoVideo video) {
+        if(getView() != null) {
+            Snackbar snackbar = Snackbar.make(getView(), mContext.getString(R.string.video_aggiunto_preferiti), Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
+
+        refreshPreferiti();
+    }
+
+    private void refreshPreferiti() {
+        if(mBinding.videoRecycler.getAdapter() instanceof VideoRecyclerAdapter) {
+            ((VideoRecyclerAdapter) mBinding.videoRecycler.getAdapter()).setNewPreferiti(mPresenter.getPreferitiList());
+        }
+    }
+
     private void refreshChannels(boolean usesGlobalLoading) {
         if (!usesGlobalLoading) {
             mBinding.videoLayout.setRefreshing(true);
@@ -218,5 +237,10 @@ public class VideoFragment extends MainFragment implements IVideoView {
             mBinding.progressBar.setVisibility(View.VISIBLE);
         }
         mPresenter.getChannels(VideoUtils.getChannels());
+    }
+
+    @Override
+    public void aggiungiPreferito(LudoVideo video) {
+        mPresenter.aggiungiPreferito(video);
     }
 }

@@ -20,7 +20,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.di.module.ActivityModule;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationFragment;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.video.PreferitiVideoFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity;
@@ -41,7 +42,7 @@ public interface ActivityComponent {
 
     void inject(HomeFragment fragment);
 
-    void inject(PreferitiFragment fragment);
+    void inject(PreferitiAudioFragment fragment);
 
     void inject(RandomFragment randomFragment);
 
@@ -52,4 +53,6 @@ public interface ActivityComponent {
     void inject(SettingsFragment settingsFragment);
 
     void inject(SettingsHiddenAudioActivity settingsHiddenAudioActivity);
+
+    void inject(PreferitiVideoFragment preferitiVideoFragment);
 }

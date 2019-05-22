@@ -16,6 +16,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.data.prefs;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 
 import java.util.List;
 
@@ -55,4 +56,12 @@ public interface PreferencesHelper {
     void setUsageThreshold(long threshold);
 
     void clearSharedPreferences();
+
+    List<LudoVideo> getVideoPreferitiList();
+
+    void salvaVideoPreferito(LudoVideo video);
+
+    void saveVideoList(List<LudoVideo> videoList);
+
+    boolean rimuoviVideoPreferito(LudoVideo video);
 }

@@ -28,9 +28,10 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewP
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationView;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiPresenter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder.IPreferitiPresenter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder.IPreferitiView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioViewPresenterBinder;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.video.PreferitiVideoPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.video.PreferitiVideoViewPresenterBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomView;
@@ -108,7 +109,7 @@ public class ActivityModule {
     }
 
     @Provides
-    IPreferitiPresenter<IPreferitiView> providePreferitiPresenter(PreferitiPresenter<IPreferitiView> presenter) {
+    PreferitiAudioViewPresenterBinder.IPreferitiPresenter<PreferitiAudioViewPresenterBinder.IPreferitiView> provideAudioPreferitiPresenter(PreferitiAudioPresenter<PreferitiAudioViewPresenterBinder.IPreferitiView> presenter) {
         return presenter;
     }
 
@@ -129,6 +130,11 @@ public class ActivityModule {
 
     @Provides
     ISettingsHiddenAudioPresenter<ISettingsHiddenAudioView> provideSettingsHiddenAudioPresenter(SettingsHiddenAudioPresenter<ISettingsHiddenAudioView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    PreferitiVideoViewPresenterBinder.IPreferitiPresenter<PreferitiVideoViewPresenterBinder.IPreferitiView> provideVideoPreferitiPresenter(PreferitiVideoPresenter<PreferitiVideoViewPresenterBinder.IPreferitiView> presenter) {
         return presenter;
     }
 }

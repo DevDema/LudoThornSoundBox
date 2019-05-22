@@ -39,6 +39,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
@@ -187,7 +188,7 @@ public class MainActivity extends ParentActivity
                 return R.id.action_home;
             } else if (currentFragment.getClass() == RandomFragment.class) {
                 return R.id.action_random;
-            } else if (currentFragment.getClass() == PreferitiFragment.class) {
+            } else if (currentFragment.getClass() == PreferitiAudioFragment.class) {
                 return R.id.action_favorites;
             } else if (currentFragment.getClass() == VideoFragment.class) {
                 return R.id.action_video;
@@ -395,7 +396,7 @@ public class MainActivity extends ParentActivity
 
         mBinding.appBarMain.navigation.setSelectedItemId(id);
 
-        mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
+        mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this);
     }
 
     private <T extends Fragment> T getFragmentByClass(Class<T> fragmentClass) {

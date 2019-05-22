@@ -18,24 +18,21 @@ package net.ddns.andrewnetwork.ludothornsoundbox.data.prefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.google.android.gms.common.util.JsonUtils;
 import com.google.gson.reflect.TypeToken;
 
-import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.ApplicationContext;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.PreferenceInfo;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.function.Predicate;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -48,10 +45,11 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String PREF_KEY_CURRENT_USER_ID = "PREF_KEY_CURRENT_USER_ID";
     private static final String PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN";
-    private static final String PREF_KEY_PREFERITI = "PREF_KEY_PREFERITI";
+    private static final String PREF_KEY_PREFERITI_AUDIO = "PREF_KEY_PREFERITI_AUDIO";
     private static final String PREF_KEY_AUDIO = "PREF_KEY_AUDIO";
     private static final String KEY_USAGE_COUNTER = "KEY_USAGE_COUNTER";
     private static final String KEY_USAGE_THRESOLD = "KEY_USAGE_THRESOLD";
+    private static final String PREF_KEY_PREFERITI_VIDEO = "PREF_KEY_PREFERITI_VIDEO";
 
     private final SharedPreferences mPrefs;
 
@@ -74,7 +72,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public List<LudoAudio> getPreferitiList() {
-        String serializedList = mPrefs.getString(PREF_KEY_PREFERITI, "");
+        String serializedList = mPrefs.getString(PREF_KEY_PREFERITI_AUDIO, "");
         return JsonUtil.getGson().fromJson(serializedList, new TypeToken<List<LudoAudio>>() {
         }.getType());
     }
@@ -115,7 +113,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
             String audioListString = JsonUtil.getGson().toJson(audioList);
 
-            mPrefs.edit().putString(PREF_KEY_PREFERITI, audioListString).apply();
+            mPrefs.edit().putString(PREF_KEY_PREFERITI_AUDIO, audioListString).apply();
 
             return true;
         } catch (Exception e) {
@@ -133,7 +131,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
             String audioListString = JsonUtil.getGson().toJson(audioList);
 
-            mPrefs.edit().putString(PREF_KEY_PREFERITI, audioListString).apply();
+            mPrefs.edit().putString(PREF_KEY_PREFERITI_AUDIO, audioListString).apply();
 
             return result;
         } catch (Exception e) {
@@ -195,6 +193,54 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public void clearSharedPreferences() {
         mPrefs.edit().clear().apply();
+    }
+
+    @Override
+    public List<LudoVideo> getVideoPreferitiList() {
+        String serializedList = mPrefs.getString(PREF_KEY_PREFERITI_VIDEO, "");
+        return JsonUtil.getGson().fromJson(serializedList, new TypeToken<List<LudoVideo>>() {
+        }.getType());
+    }
+
+    @Override
+    public void salvaVideoPreferito(LudoVideo video) {
+        List<LudoVideo> videoList = getVideoPreferitiList() != null ? getVideoPreferitiList() : new ArrayList<>();
+
+        if(videoList.contains(video)) {
+            if (videoList.remove(VideoUtils.findById(videoList, video))) {
+                videoList.add(video);
+            }
+        } else {
+            videoList.add(video);
+        }
+
+        saveVideoList(videoList);
+    }
+
+    @Override
+    public void saveVideoList(List<LudoVideo> videoList) {
+
+        String videoListString = JsonUtil.getGson().toJson(videoList);
+
+        mPrefs.edit().putString(PREF_KEY_PREFERITI_VIDEO, videoListString).apply();
+    }
+
+    @Override
+    public boolean rimuoviVideoPreferito(LudoVideo video) {
+        try {
+            List<LudoVideo> videoList = getVideoPreferitiList() != null ? getVideoPreferitiList() : new ArrayList<>();
+
+            boolean result = videoList.remove(VideoUtils.findById(videoList, video));
+
+            String videoListString = JsonUtil.getGson().toJson(videoList);
+
+            mPrefs.edit().putString(PREF_KEY_PREFERITI_VIDEO, videoListString).apply();
+
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

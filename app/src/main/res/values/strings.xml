@@ -148,4 +148,6 @@
     <string name="ordina_data_label">Ordina per data</string>
     <string name="ordina_nome_label">Ordina per nome</string>
     <string name="search_audio">Cerca audio</string>
+    <string name="audio_label">Audio</string>
+    <string name="video_aggiunto_preferiti">Video aggiunto nei preferiti con successo.</string>
 </resources>

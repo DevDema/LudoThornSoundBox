@@ -4,6 +4,7 @@ import android.util.Log;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.DataManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
@@ -114,5 +115,16 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
         channels.add(channel);
 
         getMoreVideos(channels, date, moreVideosLoadedListener);
+    }
+
+    @Override
+    public void aggiungiPreferito(LudoVideo video) {
+        getDataManager().salvaVideoPreferito(video);
+        getMvpView().onPreferitoSavedSuccess(video);
+    }
+
+    @Override
+    public List<LudoVideo> getPreferitiList() {
+        return getDataManager().getVideoPreferitiList();
     }
 }
