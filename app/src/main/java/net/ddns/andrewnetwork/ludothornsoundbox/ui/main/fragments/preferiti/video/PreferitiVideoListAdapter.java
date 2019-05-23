@@ -12,9 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
-import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
-import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemAudioPreferitiBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemVideoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.IAudioVideoAdaptersBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
@@ -36,7 +34,7 @@ public class PreferitiVideoListAdapter extends PreferitiListAdapter<LudoVideo> {
                 inflater.inflate(R.layout.item_video, parent, false), (IFragmentVideoPreferitiAdapterBinder) mBinder);
     }
 
-    private class VideoViewHolder extends VideoRecyclerAdapter.VideoViewHolder {
+    private class VideoViewHolder extends VideoRecyclerAdapter.VideoAbstractViewHolder {
 
         private final IFragmentVideoPreferitiAdapterBinder mAdapterBinder;
         private final ItemVideoBinding mBinding;

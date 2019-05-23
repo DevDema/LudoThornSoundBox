@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
@@ -167,7 +168,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
                         }
 
                         TabLayout.Tab tab = mBinding.tabLayout.getCurrentTab();
-                        if(tab instanceof TabItem) {
+                        if (tab instanceof TabItem) {
                             TabItem<Channel> tabItem = (TabItem<Channel>) tab;
                             if (tabItem.getItem().getChannelName().equals(ALL_CHANNELS)) {
                                 mPresenter.getMoreVideos(channelList, VideoUtils.getMostRecentDate(channelList), moreVideosLoadedListener);
@@ -224,8 +225,6 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
             Snackbar snackbar = Snackbar.make(getView(), mContext.getString(R.string.video_aggiunto_preferiti), Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
-
-        refreshPreferiti();
     }
 
     @Override
@@ -236,6 +235,19 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
     @Override
     public void onPreferitoEsistente(LudoVideo video) {
         CommonUtils.showDialog(mActivity, getString(R.string.video_esistente_label));
+    }
+
+    @Override
+    public void onPreferitoRimossoSuccess(LudoVideo item) {
+        if (getView() != null) {
+            Snackbar snackbar = Snackbar.make(getView(), mContext.getString(R.string.video_rimosso_preferiti_label), Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
+    }
+
+    @Override
+    public void onPreferitoRimossoFailed() {
+        Toast.makeText(mContext, R.string.generic_error_label, Toast.LENGTH_SHORT).show();
     }
 
     private void refreshPreferiti() {
@@ -255,12 +267,17 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
     }
 
     @Override
-    public void aggiungiPreferito(LudoVideo video) {
-        mPresenter.aggiungiPreferito(video);
+    public void aggiungiPreferito(LudoVideo video, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
+        mPresenter.aggiungiPreferito(video, preferitoDeletedListener);
     }
 
     @Override
     public void loadThumbnail(LudoVideo item, PreferitiListAdapter.ThumbnailLoadedListener thumbnailLoadedListener) {
         mPresenter.loadThumbnail(item, thumbnailLoadedListener);
+    }
+
+    @Override
+    public void rimuoviPreferito(LudoVideo item, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
+        mPresenter.rimuoviPreferito(item, preferitoDeletedListener);
     }
 }

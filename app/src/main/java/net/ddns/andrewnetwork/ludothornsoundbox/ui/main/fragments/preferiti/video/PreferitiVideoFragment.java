@@ -75,7 +75,7 @@ public class PreferitiVideoFragment extends ChildPreferitiFragment implements IP
     @Override
     public void onPreferitoRimossoSuccess() {
         if (getView() != null) {
-            snackbar = Snackbar.make(getView(), mContext.getString(R.string.audio_rimosso_preferiti_label), Snackbar.LENGTH_SHORT);
+            snackbar = Snackbar.make(getView(), mContext.getString(R.string.video_rimosso_preferiti_label), Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
 

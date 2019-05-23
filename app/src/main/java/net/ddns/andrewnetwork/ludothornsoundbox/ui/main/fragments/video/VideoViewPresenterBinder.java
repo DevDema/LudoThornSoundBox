@@ -5,6 +5,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter.ThumbnailLoadedListener;
 
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,10 @@ public interface VideoViewPresenterBinder {
         void onMaxVideoReached();
 
         void onPreferitoEsistente(LudoVideo video);
+
+        void onPreferitoRimossoSuccess(LudoVideo item);
+
+        void onPreferitoRimossoFailed();
     }
 
     interface IVideoPresenter<V extends IVideoView> extends MvpPresenter<V> {
@@ -34,11 +39,12 @@ public interface VideoViewPresenterBinder {
 
         void getMoreVideos(Channel channel, Date date, VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener);
 
-        void aggiungiPreferito(LudoVideo video);
+        void aggiungiPreferito(LudoVideo video, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener);
 
         List<LudoVideo> getPreferitiList();
 
-        void loadThumbnail(LudoVideo item, PreferitiListAdapter.ThumbnailLoadedListener thumbnailLoadedListener);
-        //void getVideoList(List<Channel> channelList);
+        void loadThumbnail(LudoVideo item, ThumbnailLoadedListener thumbnailLoadedListener);
+
+        void rimuoviPreferito(LudoVideo item, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener);
     }
 }

@@ -4,14 +4,12 @@ import android.util.Log;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.DataManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
-import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.SchedulerProvider;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.wrapper.GenericWrapper2;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,7 +86,7 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void aggiungiPreferito(LudoVideo video) {
+    public void aggiungiPreferito(LudoVideo video, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
         List<LudoVideo> preferitiList = getPreferitiList();
 
         //CONTROLLA SE HAI RAGGIUNTO IL NUMERO MASSIMO DI PREFERITI.
@@ -107,6 +105,11 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
 
         getDataManager().salvaVideoPreferito(video);
         getMvpView().onPreferitoSavedSuccess(video);
+
+        if(preferitoDeletedListener != null) {
+            preferitoDeletedListener.onPreferitoDeleted(video);
+        }
+
     }
 
     @Override
@@ -119,6 +122,18 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
                             thumbnailLoadedListener.onThumbnailLoaded(null);
                         }
                 ));
+    }
+
+    @Override
+    public void rimuoviPreferito(LudoVideo item, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
+        if(getDataManager().rimuoviVideoPreferito(item)) {
+            getMvpView().onPreferitoRimossoSuccess(item);
+            if(preferitoDeletedListener != null) {
+                preferitoDeletedListener.onPreferitoDeleted(item);
+            }
+        } else {
+            getMvpView().onPreferitoRimossoFailed();
+        }
     }
 
     @Override

@@ -12,8 +12,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
@@ -82,7 +80,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (viewHolder.getItemViewType() == VIDEO) {
-            if (viewHolder instanceof VideoViewHolder) {
+            if (viewHolder instanceof VideoAbstractViewHolder) {
                 LudoVideo video = videoList.get(position);
                 Boolean isPreferitoValue = isPreferito.get(video.getId());
 
@@ -90,7 +88,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
                     isPreferitoValue = false;
                 }
 
-                ((VideoViewHolder) viewHolder).set(video, position, isPreferitoValue, mBinder);
+                ((VideoViewHolder) viewHolder).set(video, position, isPreferitoValue);
             }
         } else {
             ProgressBar progressBar = viewHolder.itemView.findViewById(R.id.pb_loading);
@@ -100,40 +98,24 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
         }
     }
 
-    public static class VideoViewHolder extends PreferitiListAdapter.ViewHolder<LudoVideo> {
-
-        private Context mContext;
-
+    public class VideoViewHolder extends VideoAbstractViewHolder {
 
         public VideoViewHolder(Context context, @NonNull View itemView) {
-            super(itemView);
-
-            this.mContext = context;
+            super(context, itemView);
         }
 
-        private void set(LudoVideo item, int position, boolean isPreferito, FragmentAdapterVideoBinder binder) {
+        private void set(LudoVideo item, int position, boolean isPreferito) {
             set(item, position);
 
-            ImageButton imageButton = itemView.findViewById(R.id.preferito_button);
             ImageView thumbnailPlace = itemView.findViewById(R.id.icon);
 
-            if (isPreferito) {
-                imageButton.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_star_yellow_24dp));
-                //TODO RIMUOVI PREFERITO DIRETTAMENTE.
-                imageButton.setOnClickListener(v -> Toast.makeText(mContext, "Questo video è già nei preferiti!", Toast.LENGTH_SHORT).show());
-            } else {
-                imageButton.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_star_border_yellow_24dp));
-                imageButton.setOnClickListener(v -> {
-                    binder.aggiungiPreferito(item);
-
-                });
-            }
+            setPreferitoListener(item, isPreferito);
 
             thumbnailPlace.setImageDrawable(null);
 
             if (item.getThumbnail() == null || item.getThumbnail().getImage() == null) {
                 showVideoLoading();
-                binder.loadThumbnail(item, thumbnail -> {
+                mBinder.loadThumbnail(item, thumbnail -> {
                     if (thumbnail.getImage() != null) {
                         thumbnailPlace.setImageBitmap(thumbnail.getImage());
                     } else {
@@ -163,6 +145,41 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
             imageView.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
 
+        }
+
+        private void setPreferitoListener(LudoVideo item, boolean isPreferitoValue) {
+            ImageButton imageButton = itemView.findViewById(R.id.preferito_button);
+
+            if (isPreferitoValue) {
+                imageButton.setActivated(true);
+                imageButton.setOnClickListener(v -> mBinder.rimuoviPreferito(item, preferitoDeleted -> {
+
+                    isPreferito.put(item.getId(), false);
+
+                    imageButton.setActivated(false);
+
+                    setPreferitoListener(item, false);
+                }));
+            } else {
+                imageButton.setActivated(false);
+                imageButton.setOnClickListener(v -> mBinder.aggiungiPreferito(item, preferitoAdded -> {
+                    isPreferito.put(item.getId(), true);
+                    imageButton.setActivated(true);
+
+                    setPreferitoListener(item, true);
+                }));
+            }
+        }
+    }
+
+    public static class VideoAbstractViewHolder extends PreferitiListAdapter.ViewHolder<LudoVideo> {
+
+        private Context mContext;
+
+        public VideoAbstractViewHolder(Context context, @NonNull View itemView) {
+            super(itemView);
+
+            this.mContext = context;
         }
 
         @Override
