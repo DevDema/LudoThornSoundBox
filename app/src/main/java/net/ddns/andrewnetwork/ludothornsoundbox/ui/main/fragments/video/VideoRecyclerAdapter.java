@@ -100,7 +100,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
 
     public class VideoViewHolder extends VideoAbstractViewHolder {
 
-        public VideoViewHolder(Context context, @NonNull View itemView) {
+        VideoViewHolder(Context context, @NonNull View itemView) {
             super(context, itemView);
         }
 
@@ -163,7 +163,9 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
             } else {
                 imageButton.setActivated(false);
                 imageButton.setOnClickListener(v -> mBinder.aggiungiPreferito(item, preferitoAdded -> {
+
                     isPreferito.put(item.getId(), true);
+
                     imageButton.setActivated(true);
 
                     setPreferitoListener(item, true);
@@ -338,7 +340,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
         }
     }
 
-    public void setNewPreferiti(List<LudoVideo> videoList) {
+    void setNewPreferiti(List<LudoVideo> videoList) {
         setPreferiti(videoList);
         notifyDataSetChanged();
     }
