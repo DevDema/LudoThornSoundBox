@@ -4,6 +4,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 
 import java.util.Date;
 import java.util.List;
@@ -36,6 +37,8 @@ public interface VideoViewPresenterBinder {
         void aggiungiPreferito(LudoVideo video);
 
         List<LudoVideo> getPreferitiList();
+
+        void loadThumbnail(LudoVideo item, PreferitiListAdapter.ThumbnailLoadedListener thumbnailLoadedListener);
         //void getVideoList(List<Channel> channelList);
     }
 }

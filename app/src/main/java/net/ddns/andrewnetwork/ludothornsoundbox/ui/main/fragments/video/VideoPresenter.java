@@ -7,6 +7,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.SchedulerProvider;
@@ -55,9 +56,7 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
                 Observable.fromIterable(channelList)
                         .flatMap(channel -> getDataManager().getMoreVideos(channel, date)
                                 .flatMap(videoListResponse -> Observable.fromIterable(videoListResponse)
-                                        .flatMap(video ->, getDataManager().getVideoInformation(video),
-                                                GenericWrapper2::new
-                                                )
+                                        .flatMap(video -> getDataManager().getVideoInformation(video)
                                         ).doOnComplete(() -> {
                                             if (moreVideosLoadedListener != null) {
                                                 moreVideosLoadedListener.onMoreVideosLoaded(videoListResponse);
@@ -108,6 +107,18 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
 
         getDataManager().salvaVideoPreferito(video);
         getMvpView().onPreferitoSavedSuccess(video);
+    }
+
+    @Override
+    public void loadThumbnail(LudoVideo video, PreferitiListAdapter.ThumbnailLoadedListener thumbnailLoadedListener) {
+        getCompositeDisposable().add(getDataManager().getThumbnail(video)
+                .observeOn(getSchedulerProvider().ui())
+                .subscribeOn(getSchedulerProvider().io())
+                .subscribe(thumbnailLoadedListener::onThumbnailLoaded, throwable -> {
+                            Log.e("VideoThumbREST", video.getTitle() + " | " + throwable.getMessage());
+                            thumbnailLoadedListener.onThumbnailLoaded(null);
+                        }
+                ));
     }
 
     @Override

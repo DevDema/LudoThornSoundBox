@@ -153,4 +153,5 @@
     <string name="nofavorite_video">Non hai ancora aggiunto nessun video fra i preferiti.</string>
     <string name="max_video_reached_label">Hai raggiunto il numero massimo di video preferiti!</string>
     <string name="video_esistente_label">Il video esiste già nei preferiti!</string>
+    <string name="link_unavailable">Link non disponibile.</string>
 </resources>

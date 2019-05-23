@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
@@ -51,12 +52,16 @@ public class PreferitiVideoListAdapter extends PreferitiListAdapter<LudoVideo> {
 
             ImageView imageView = itemView.findViewById(R.id.icon);
 
-            if(item.getThumbnail() == null || item.getThumbnail().getImage() == null) {
+            imageView.setImageDrawable(null);
+
+            if (item.getThumbnail() == null || item.getThumbnail().getImage() == null) {
                 showLoading();
                 mBinder.loadThumbnail(item, thumbnail -> {
                     if (thumbnail.getImage() != null) {
 
                         imageView.setImageBitmap(thumbnail.getImage());
+                    } else {
+                        imageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_error_outline_white_24dp));
                     }
                     hideLoading();
                 });
@@ -65,7 +70,7 @@ public class PreferitiVideoListAdapter extends PreferitiListAdapter<LudoVideo> {
                 hideLoading();
             }
 
-            if(item.getChannel() == null) {
+            if (item.getChannel() == null) {
                 mBinder.loadChannel(item, channel -> {
                     if (channel != null) {
                         TextView textView = itemView.findViewById(R.id.videochannel);

@@ -47,7 +47,11 @@ public class TabLayoutItem extends TabLayout {
         return tab;
     }
 
-    public int getCurrentTab() {
+    public int getCurrentTabPosition() {
         return currentTab;
+    }
+
+    public Tab getCurrentTab() {
+        return getTabAt(getCurrentTabPosition());
     }
 }

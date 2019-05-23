@@ -39,7 +39,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.StringRes;
 import androidx.annotation.StyleRes;
+import androidx.core.content.ContextCompat;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -102,6 +104,16 @@ public final class CommonUtils {
     public static void showDialog(Context context, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(context.getString(R.string.positive_label, BuildConfig.SHORT_NAME), (dialog, id) ->
+                        dialog.dismiss());
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public static void showDialog(Context context, @StringRes int message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(context.getString(message))
                 .setCancelable(false)
                 .setPositiveButton(context.getString(R.string.positive_label, BuildConfig.SHORT_NAME), (dialog, id) ->
                         dialog.dismiss());

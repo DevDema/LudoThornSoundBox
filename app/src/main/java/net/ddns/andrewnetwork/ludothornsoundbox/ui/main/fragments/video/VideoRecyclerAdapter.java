@@ -43,7 +43,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
     private static final String DUMMY_LOADING_VIDEO_ID = "dummy";
     private static final int PROGRESS = 1;
     private static final int VIDEO = 0;
-    private boolean isLoadingMore = false;
+    private static boolean isLoadingMore = false;
     private HashMap<String, Boolean> isPreferito;
     private FragmentAdapterVideoBinder mBinder;
 
@@ -115,6 +115,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
             set(item, position);
 
             ImageButton imageButton = itemView.findViewById(R.id.preferito_button);
+            ImageView thumbnailPlace = itemView.findViewById(R.id.icon);
 
             if (isPreferito) {
                 imageButton.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_star_yellow_24dp));
@@ -126,10 +127,52 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
 
                 });
             }
+
+            thumbnailPlace.setImageDrawable(null);
+
+            if (item.getThumbnail() == null || item.getThumbnail().getImage() == null) {
+                showVideoLoading();
+                binder.loadThumbnail(item, thumbnail -> {
+                    if (thumbnail.getImage() != null) {
+                        thumbnailPlace.setImageBitmap(thumbnail.getImage());
+                    } else {
+                        thumbnailPlace.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_error_outline_white_24dp));
+                    }
+
+                    hideVideoLoading();
+                });
+            } else {
+                thumbnailPlace.setImageBitmap(item.getThumbnail().getImage());
+                hideVideoLoading();
+            }
+        }
+
+        private void hideVideoLoading() {
+            ProgressBar progressBar = itemView.findViewById(R.id.loading_icon);
+            ImageView imageView = itemView.findViewById(R.id.icon);
+
+            imageView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+
+        private void showVideoLoading() {
+            ProgressBar progressBar = itemView.findViewById(R.id.loading_icon);
+            ImageView imageView = itemView.findViewById(R.id.icon);
+
+            imageView.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+
         }
 
         @Override
         protected void set(LudoVideo item, int position) {
+
+            ProgressBar progressBar = itemView.findViewById(R.id.loading_icon);
+
+            progressBar.getIndeterminateDrawable().setColorFilter(
+                    mContext.getResources().getColor(R.color.white),
+                    android.graphics.PorterDuff.Mode.SRC_IN);
+
             if (item != null) {
                 TextView tt1 = itemView.findViewById(R.id.videotitle);
                 TextView tt2 = itemView.findViewById(R.id.videodesc);
@@ -181,7 +224,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
                 if (item != null) {
                     CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
                 } else {
-                    CommonUtils.showDialog(mContext, "Link non disponibile.");
+                    CommonUtils.showDialog(mContext, R.string.link_unavailable);
                 }
             });
         }

@@ -13,6 +13,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ContentVideoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.MainFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ColorUtils;
@@ -44,6 +45,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
     IVideoPresenter<IVideoView> mPresenter;
     private VideoRecyclerAdapter adapter;
     private boolean loadingFailed;
+    private static final String ALL_CHANNELS = "Tutti";
 
     interface MoreVideosLoadedListener {
 
@@ -164,14 +166,17 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
                             moreVideosLoadedListener = videoList -> mActivity.runOnUiThread(adapter::hideLoading);
                         }
 
-
-                        /*if (mBinding.selectChannel.getSelectedItemPosition() == 0) {
-                            mPresenter.getMoreVideos(channelList, VideoUtils.getMostRecentDate(channelList), moreVideosLoadedListener);
-                        } else {
-                            Channel channel = (Channel) mBinding.selectChannel.getSelectedItem();
-                            mPresenter.getMoreVideos(channel, VideoUtils.getMostRecentDate(channel), moreVideosLoadedListener);
-                        }*/
-                        loadingMoreVideos = true;
+                        TabLayout.Tab tab = mBinding.tabLayout.getCurrentTab();
+                        if(tab instanceof TabItem) {
+                            TabItem<Channel> tabItem = (TabItem<Channel>) tab;
+                            if (tabItem.getItem().getChannelName().equals(ALL_CHANNELS)) {
+                                mPresenter.getMoreVideos(channelList, VideoUtils.getMostRecentDate(channelList), moreVideosLoadedListener);
+                            } else {
+                                Channel channel = tabItem.getItem();
+                                mPresenter.getMoreVideos(channel, VideoUtils.getMostRecentDate(channel), moreVideosLoadedListener);
+                            }
+                            loadingMoreVideos = true;
+                        }
                     }
                 }
             }
@@ -192,7 +197,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
     private static void setUpTabLayout(Context context, TabLayout tabLayout, List<Channel> channelList) {
         List<Channel> selezionareChannel = new ArrayList<>(channelList);
 
-        selezionareChannel.add(0, new Channel("Tutti", null, ColorUtils.getByColorResource(context, R.color.colorAccent)));
+        selezionareChannel.add(0, new Channel(ALL_CHANNELS, null, ColorUtils.getByColorResource(context, R.color.colorAccent)));
 
         tabLayout.removeAllTabs();
 
@@ -252,5 +257,10 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
     @Override
     public void aggiungiPreferito(LudoVideo video) {
         mPresenter.aggiungiPreferito(video);
+    }
+
+    @Override
+    public void loadThumbnail(LudoVideo item, PreferitiListAdapter.ThumbnailLoadedListener thumbnailLoadedListener) {
+        mPresenter.loadThumbnail(item, thumbnailLoadedListener);
     }
 }
