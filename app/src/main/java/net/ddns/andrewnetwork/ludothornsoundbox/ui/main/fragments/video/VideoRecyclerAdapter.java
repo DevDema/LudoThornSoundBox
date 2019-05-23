@@ -119,6 +119,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
 
             if (isPreferito) {
                 imageButton.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_star_yellow_24dp));
+                //TODO RIMUOVI PREFERITO DIRETTAMENTE.
                 imageButton.setOnClickListener(v -> Toast.makeText(mContext, "Questo video è già nei preferiti!", Toast.LENGTH_SHORT).show());
             } else {
                 imageButton.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_star_border_yellow_24dp));

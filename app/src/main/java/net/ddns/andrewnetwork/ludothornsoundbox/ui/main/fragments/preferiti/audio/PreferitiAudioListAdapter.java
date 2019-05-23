@@ -16,6 +16,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemAudioPreferitiBinding;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.IAudioVideoAdaptersBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 
@@ -30,10 +31,9 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
     private static SparseArray<Bitmap> drawables = new SparseArray<>();
     private static SparseBooleanArray isPlaying = new SparseBooleanArray();
     private static SparseBooleanArray videoAvailable = new SparseBooleanArray();
-    private static boolean isSettingPreferito = false;
 
-    PreferitiAudioListAdapter(IFragmentAudioPreferitiAdapterBinder binder, Context context, List<LudoAudio> list) {
-        super(binder, context, list);
+    PreferitiAudioListAdapter(IFragmentAudioPreferitiAdapterBinder binder, IAudioVideoAdaptersBinder audioVideoBinder, Context context, List<LudoAudio> list) {
+        super(binder, audioVideoBinder, context, list);
     }
 
     interface VideoLoadedListener {
@@ -51,8 +51,8 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
 
     public class AudioViewHolder extends ViewHolder<LudoAudio> {
 
-        ItemAudioPreferitiBinding mBinding;
-        IFragmentAudioPreferitiAdapterBinder mBinder;
+        private final ItemAudioPreferitiBinding mBinding;
+        private final IFragmentAudioPreferitiAdapterBinder mBinder;
 
         private AudioViewHolder(View v, IFragmentAudioPreferitiAdapterBinder binder) {
             super(v);
@@ -300,12 +300,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
             }
         }
 
-        private void setSettingPreferito(int position, boolean bool) {
 
-            isSettingPreferito = bool;
-
-            notifyOtherItemsChanged(position);
-        }
     }
 
     void setList(List<LudoAudio> list) {

@@ -137,6 +137,7 @@
     <string name="dal_video_label">Dal video: %s</string>
     <string name="video_non_disponibile_label">Video non disponibile.</string>
     <string name="countdown_delete_favorite_message">L\'audio verrà rimosso in %d secondi. Per annullare, cliccare di nuovo sull\'icona.</string>
+    <string name="countdown_delete_favorite_video_message">Il video verrà rimosso in %d secondi. Per annullare, cliccare di nuovo sull\'icona.</string>
     <string name="deleted_favorite_message">Preferito cancellato.</string>
     <string name="canceled_operation_message">Operazione annullata.</string>
     <string name="audio_collegati_label">Audio collegati</string>

@@ -13,6 +13,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ContentAudioFavoriteBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.ChildPreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioViewPresenterBinder.IPreferitiPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioViewPresenterBinder.IPreferitiView;
@@ -30,7 +31,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.google.android.material.snackbar.Snackbar;
 
-public class PreferitiAudioFragment extends BaseFragment implements IPreferitiView, IFragmentAudioPreferitiAdapterBinder {
+public class PreferitiAudioFragment extends ChildPreferitiFragment implements IPreferitiView, IFragmentAudioPreferitiAdapterBinder {
 
     private final static int TIMER_DURATION = 5000;
 
@@ -81,12 +82,17 @@ public class PreferitiAudioFragment extends BaseFragment implements IPreferitiVi
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
+    public void onParentHiddenChanged(boolean hidden) {
+        super.onParentHiddenChanged(hidden);
 
         if (!hidden) {
             loadPreferiti();
         }
+    }
+
+    @Override
+    protected PreferitiListAdapter getListAdapter() {
+        return (PreferitiListAdapter) mBinding.recyclerView.getAdapter();
     }
 
     @Override
@@ -129,7 +135,7 @@ public class PreferitiAudioFragment extends BaseFragment implements IPreferitiVi
 
         PreferitiAudioListAdapter currentAdapter = (PreferitiAudioListAdapter) mBinding.recyclerView.getAdapter();
         if(currentAdapter == null) {
-            mBinding.recyclerView.setAdapter(new PreferitiAudioListAdapter(this, mContext, audioList));
+            mBinding.recyclerView.setAdapter(new PreferitiAudioListAdapter(this, getParent(), mContext, audioList));
         } else {
             currentAdapter.setList(audioList);
             currentAdapter.notifyDataSetChanged();

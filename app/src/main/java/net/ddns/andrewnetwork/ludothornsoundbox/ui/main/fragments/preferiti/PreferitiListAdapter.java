@@ -17,6 +17,8 @@ public abstract class PreferitiListAdapter<T> extends RecyclerView.Adapter {
     protected List<T> list;
     protected final IFragmentPreferitiAdapterBinder<T> mBinder;
     protected final Context mContext;
+    private final IAudioVideoAdaptersBinder audioVideoBinder;
+    protected static boolean isSettingPreferito = false;
 
     public interface PreferitoDeletedListener<T> {
 
@@ -28,10 +30,11 @@ public abstract class PreferitiListAdapter<T> extends RecyclerView.Adapter {
         void onThumbnailLoaded(Thumbnail thumbnail);
     }
 
-    public PreferitiListAdapter(IFragmentPreferitiAdapterBinder<T> binder, Context context, List<T> list) {
+    public PreferitiListAdapter(IFragmentPreferitiAdapterBinder<T> binder, IAudioVideoAdaptersBinder audioVideoBinder, Context context, List<T> list) {
         this.mBinder = binder;
         this.mContext = context;
         this.list = list;
+        this.audioVideoBinder = audioVideoBinder;
     }
 
     @NonNull
@@ -62,5 +65,20 @@ public abstract class PreferitiListAdapter<T> extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    void notifyOtherItemsChanged(int position) {
+        for (int i = 0; i < list.size(); i++) {
+            if (i != position) {
+                notifyItemChanged(i);
+            }
+        }
+    }
+
+    protected void setSettingPreferito(int position, boolean bool) {
+
+        isSettingPreferito = bool;
+
+        audioVideoBinder.notifySettingPreferito(getClass(), position, bool);
     }
 }

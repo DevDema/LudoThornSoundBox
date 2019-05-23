@@ -17,8 +17,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ContentVideoFavoriteBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.IFragmentPreferitiAdapterBinder;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.ChildPreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.video.PreferitiVideoViewPresenterBinder.IPreferitiPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.video.PreferitiVideoViewPresenterBinder.IPreferitiView;
@@ -28,7 +27,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class PreferitiVideoFragment extends BaseFragment implements IPreferitiView, IFragmentVideoPreferitiAdapterBinder {
+public class PreferitiVideoFragment extends ChildPreferitiFragment implements IPreferitiView, IFragmentVideoPreferitiAdapterBinder {
 
     private final static int TIMER_DURATION = 5000;
     private ContentVideoFavoriteBinding mBinding;
@@ -93,7 +92,7 @@ public class PreferitiVideoFragment extends BaseFragment implements IPreferitiVi
 
     @Override
     public void onPreferitiListLoaded(List<LudoVideo> videoList) {
-        PreferitiVideoListAdapter adapter = new PreferitiVideoListAdapter(this, mContext, videoList);
+        PreferitiVideoListAdapter adapter = new PreferitiVideoListAdapter(this, getParent(), mContext, videoList);
 
         mBinding.videoRecycler.setLayoutManager(new LinearLayoutManager(mContext));
         mBinding.videoRecycler.setAdapter(adapter);
@@ -124,7 +123,7 @@ public class PreferitiVideoFragment extends BaseFragment implements IPreferitiVi
     @Override
     public void onPreferitoIntentDelete(LudoVideo video, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
         if (getView() != null) {
-            snackbar = Snackbar.make(getView(), mContext.getString(R.string.countdown_delete_favorite_message, 5), Snackbar.LENGTH_INDEFINITE);
+            snackbar = Snackbar.make(getView(), mContext.getString(R.string.countdown_delete_favorite_video_message, 5), Snackbar.LENGTH_INDEFINITE);
 
             snackbar.show();
 
@@ -132,7 +131,7 @@ public class PreferitiVideoFragment extends BaseFragment implements IPreferitiVi
 
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    snackbar.setText(mContext.getString(R.string.countdown_delete_favorite_message, millisUntilFinished / 1000));
+                    snackbar.setText(mContext.getString(R.string.countdown_delete_favorite_video_message, millisUntilFinished / 1000));
                 }
 
                 @Override
@@ -171,13 +170,19 @@ public class PreferitiVideoFragment extends BaseFragment implements IPreferitiVi
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
+    public void onParentHiddenChanged(boolean hidden) {
+        super.onParentHiddenChanged(hidden);
 
         if (!hidden) {
             loadPreferiti();
         }
     }
+
+    @Override
+    protected PreferitiListAdapter getListAdapter() {
+        return (PreferitiListAdapter) mBinding.videoRecycler.getAdapter();
+    }
+
 
     @Override
     public void loadChannel(LudoVideo video, OnChannelLoadedListener onChannelLoadedListener) {

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -13,20 +12,21 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
-import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.IFragmentPreferitiAdapterBinder;
+import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemAudioPreferitiBinding;
+import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemVideoBinding;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.IAudioVideoAdaptersBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.IFragmentAudioPreferitiAdapterBinder;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoRecyclerAdapter;
 
 import java.util.List;
 
 public class PreferitiVideoListAdapter extends PreferitiListAdapter<LudoVideo> {
 
-    public PreferitiVideoListAdapter(IFragmentVideoPreferitiAdapterBinder binder, Context context, List<LudoVideo> list) {
-        super(binder, context, list);
+
+    PreferitiVideoListAdapter(IFragmentVideoPreferitiAdapterBinder adapterBinder, IAudioVideoAdaptersBinder audioVideoBinder, Context context, List<LudoVideo> list) {
+        super(adapterBinder, audioVideoBinder, context, list);
     }
 
     @Override
@@ -38,40 +38,40 @@ public class PreferitiVideoListAdapter extends PreferitiListAdapter<LudoVideo> {
 
     private class VideoViewHolder extends VideoRecyclerAdapter.VideoViewHolder {
 
-        private final IFragmentVideoPreferitiAdapterBinder mBinder;
+        private final IFragmentVideoPreferitiAdapterBinder mAdapterBinder;
+        private final ItemVideoBinding mBinding;
 
-        private VideoViewHolder(@NonNull View itemView, IFragmentVideoPreferitiAdapterBinder binder) {
+        private VideoViewHolder(@NonNull View itemView, IFragmentVideoPreferitiAdapterBinder adapterBinder) {
             super(mContext, itemView);
 
-            this.mBinder = binder;
+            this.mAdapterBinder = adapterBinder;
+            this.mBinding = ItemVideoBinding.bind(itemView);
         }
 
         @Override
         protected void set(LudoVideo item, int position) {
             super.set(item, position);
 
-            ImageView imageView = itemView.findViewById(R.id.icon);
-
-            imageView.setImageDrawable(null);
+            mBinding.icon.setImageDrawable(null);
 
             if (item.getThumbnail() == null || item.getThumbnail().getImage() == null) {
                 showLoading();
-                mBinder.loadThumbnail(item, thumbnail -> {
+                mAdapterBinder.loadThumbnail(item, thumbnail -> {
                     if (thumbnail.getImage() != null) {
 
-                        imageView.setImageBitmap(thumbnail.getImage());
+                        mBinding.icon.setImageBitmap(thumbnail.getImage());
                     } else {
-                        imageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_error_outline_white_24dp));
+                        mBinding.icon.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_error_outline_white_24dp));
                     }
                     hideLoading();
                 });
             } else {
-                imageView.setImageBitmap(item.getThumbnail().getImage());
+                mBinding.icon.setImageBitmap(item.getThumbnail().getImage());
                 hideLoading();
             }
 
             if (item.getChannel() == null) {
-                mBinder.loadChannel(item, channel -> {
+                mAdapterBinder.loadChannel(item, channel -> {
                     if (channel != null) {
                         TextView textView = itemView.findViewById(R.id.videochannel);
                         textView.setText(channel.getChannelName());
@@ -79,6 +79,26 @@ public class PreferitiVideoListAdapter extends PreferitiListAdapter<LudoVideo> {
                     hideLoading();
                 });
             }
+
+            mBinding.preferitoButton.setOnClickListener(v -> {
+
+                setSettingPreferito(position, true);
+
+                mAdapterBinder.onPreferitoIntentDelete(item, preferitoDeleted -> {
+                    setSettingPreferito(position, false);
+                });
+            });
+
+
+            if(isSettingPreferito) {
+                mBinding.progressBackground.setVisibility(View.VISIBLE);
+            }
+
+
+            mBinding.preferitoButton.setActivated(!isSettingPreferito);
+            mBinding.preferitoButton.setEnabled(!isSettingPreferito);
+
+            setPreferitoListener(item, position);
         }
 
         private void hideLoading() {
@@ -97,5 +117,30 @@ public class PreferitiVideoListAdapter extends PreferitiListAdapter<LudoVideo> {
             progressBar.setVisibility(View.VISIBLE);
 
         }
+
+        private void setPreferitoListener(LudoVideo video, int position) {
+            if (mBinding.preferitoButton.isActivated()) {
+                mBinding.preferitoButton.setOnClickListener(v -> {
+                    mBinding.preferitoButton.setActivated(false);
+
+                    setSettingPreferito(position, true);
+
+                    mBinder.onPreferitoIntentDelete(video, preferitoDeleted -> setSettingPreferito(position, false));
+
+                    setPreferitoListener(video, position);
+                });
+            } else {
+                mBinding.preferitoButton.setOnClickListener(v -> {
+                    mBinding.preferitoButton.setActivated(true);
+
+                    setSettingPreferito(position, false);
+
+                    mBinder.cancelPreferitoIntentDelete();
+                    setPreferitoListener(video, position);
+                });
+            }
+        }
     }
+
+
 }

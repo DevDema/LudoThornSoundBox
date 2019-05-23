@@ -16,6 +16,7 @@
     <dimen name="input_size_xs2">136dp</dimen>
     <dimen name="input_size_xs148">148dp</dimen>
     <dimen name="input_size_xs5">120dp</dimen>
+    <dimen name="input_size_xs6">110dp</dimen>
     <dimen name="input_size_xs4">160dp</dimen>
     <dimen name="input_size_ms">170dp</dimen>
     <dimen name="input_size_s">200dp</dimen>

@@ -8,12 +8,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.FragmentFavoriteBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.MainFragment;
 
-public class PreferitiFragment extends MainFragment {
+public class PreferitiFragment extends MainFragment implements IAudioVideoAdaptersBinder {
 
     private FragmentFavoriteBinding mBinding;
 
@@ -43,5 +44,29 @@ public class PreferitiFragment extends MainFragment {
         mBinding.viewPager.setAdapter(adapter);
 
         mBinding.tabLayout.setupWithViewPager(mBinding.viewPager);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        notifyChildrenHiddenChanged(hidden);
+    }
+
+    private void notifyChildrenHiddenChanged(boolean hidden) {
+        for(Fragment fragment : getChildFragmentManager().getFragments()) {
+            if(fragment instanceof ChildPreferitiFragment) {
+                ((ChildPreferitiFragment) fragment).onParentHiddenChanged(hidden);
+            }
+        }
+    }
+
+    @Override
+    public void notifySettingPreferito(Class<? extends PreferitiListAdapter> tClass, int position, boolean isSettingPreferito) {
+        for(Fragment fragment : getChildFragmentManager().getFragments()) {
+            if(fragment instanceof ChildPreferitiFragment) {
+                ((ChildPreferitiFragment) fragment).notifySettingPreferito(tClass, position, isSettingPreferito);
+            }
+        }
     }
 }

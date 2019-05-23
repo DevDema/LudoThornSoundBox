@@ -206,8 +206,11 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public void salvaVideoPreferito(LudoVideo video) {
         List<LudoVideo> videoList = getVideoPreferitiList() != null ? getVideoPreferitiList() : new ArrayList<>();
 
+        video.setPreferito(true);
+
         if(videoList.contains(video)) {
             if (videoList.remove(VideoUtils.findById(videoList, video))) {
+
                 videoList.add(video);
             }
         } else {
