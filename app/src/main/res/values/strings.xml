@@ -150,4 +150,7 @@
     <string name="search_audio">Cerca audio</string>
     <string name="audio_label">Audio</string>
     <string name="video_aggiunto_preferiti">Video aggiunto nei preferiti con successo.</string>
+    <string name="nofavorite_video">Non hai ancora aggiunto nessun video fra i preferiti.</string>
+    <string name="max_video_reached_label">Hai raggiunto il numero massimo di video preferiti!</string>
+    <string name="video_esistente_label">Il video esiste già nei preferiti!</string>
 </resources>

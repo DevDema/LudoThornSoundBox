@@ -4,6 +4,7 @@ import android.util.Log;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.DataManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
+import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
@@ -27,26 +28,6 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
-    /*@Override
-    public void getVideoList(List<Channel> channelList) {
-        getMvpView().showLoading();
-        getCompositeDisposable().add(Observable.fromIterable(channelList)
-                .flatMap(channel -> getDataManager().getVideoList(channel))
-                .observeOn(getSchedulerProvider().ui())
-                .subscribeOn(getSchedulerProvider().io())
-                .subscribe(videoList -> {
-                            getMvpView().hideLoading();
-                            getMvpView().onVideoListLoadSuccess(videoList);
-                        }
-                        , throwable -> {
-                            Log.e("VideoListREST", throwable.getMessage());
-                            getMvpView().onVideoListLoadFailed();
-                            getMvpView().hideLoading();
-                        }
-                )
-        );
-    }*/
-
     @Override
     public void getChannels(List<Channel> channelList) {
         getCompositeDisposable().add(
@@ -54,25 +35,17 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
                         .flatMap(channel -> getDataManager().getChannel(channel)
                                 .flatMap(channelModified -> getDataManager().getVideoList(channel)
                                         .flatMap(videoList -> Observable.fromIterable(videoList)
-                                                .flatMap(video -> Observable.zip(
-                                                        getDataManager().getThumbnail(video),
-                                                        getDataManager().getVideoInformation(video),
-                                                        GenericWrapper2::new
-                                                        )
-                                                )
+                                                .flatMap(video -> getDataManager().getVideoInformation(video))
                                         )
                                 )
                         )
                         .observeOn(getSchedulerProvider().ui())
                         .subscribeOn(getSchedulerProvider().io())
                         .subscribe(wrapper2 -> {
-                                }, throwable -> {
-                                    Log.e("ChannelListREST", throwable.getMessage());
-                                    getMvpView().onVideoListLoadFailed();
-                                }, () -> {
-                                    getMvpView().onVideoListLoadSuccess(channelList);
-                                }
-                        )
+                        }, throwable -> {
+                            Log.e("ChannelListREST", throwable.getMessage());
+                            getMvpView().onVideoListLoadFailed();
+                        }, () -> getMvpView().onVideoListLoadSuccess(channelList))
         );
     }
 
@@ -82,9 +55,7 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
                 Observable.fromIterable(channelList)
                         .flatMap(channel -> getDataManager().getMoreVideos(channel, date)
                                 .flatMap(videoListResponse -> Observable.fromIterable(videoListResponse)
-                                        .flatMap(video -> Observable.zip(
-                                                getDataManager().getThumbnail(video),
-                                                getDataManager().getVideoInformation(video),
+                                        .flatMap(video ->, getDataManager().getVideoInformation(video),
                                                 GenericWrapper2::new
                                                 )
                                         ).doOnComplete(() -> {
@@ -119,6 +90,22 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
 
     @Override
     public void aggiungiPreferito(LudoVideo video) {
+        List<LudoVideo> preferitiList = getPreferitiList();
+
+        //CONTROLLA SE HAI RAGGIUNTO IL NUMERO MASSIMO DI PREFERITI.
+        if (preferitiList.size() >= 5) {
+            getMvpView().onMaxVideoReached();
+            return;
+        }
+
+        //CONTROLLA SE ESISTE GIA'
+        for (LudoVideo videoInList : preferitiList) {
+            if (videoInList.getId().equals(video.getId())) {
+                getMvpView().onPreferitoEsistente(video);
+                return;
+            }
+        }
+
         getDataManager().salvaVideoPreferito(video);
         getMvpView().onPreferitoSavedSuccess(video);
     }

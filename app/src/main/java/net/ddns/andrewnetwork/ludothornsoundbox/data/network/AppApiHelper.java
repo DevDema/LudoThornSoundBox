@@ -25,6 +25,7 @@ import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
+import com.google.api.services.youtube.model.VideoSnippet;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
@@ -47,6 +48,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.LOOKUP_TYPE_VIDEO;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.ORDER_TYPE_VIDEO;
@@ -109,6 +111,23 @@ public class AppApiHelper implements ApiHelper {
             channel.setTotalNumberOfVideos(channelListResponse.getStatistics().getVideoCount().longValue());
             emitter.onNext(channel);
             emitter.onComplete();
+        });
+    }
+
+    @Override
+    public Single<Channel> getChannel(LudoVideo video) {
+        return Single.create(emitter -> {
+            Log.d("ChannelREST", "getting Channel for video " + video.getTitle());
+
+            YouTube.Videos.List channels;
+            channels = createTubeService().videos().list("snippet");
+            channels.setKey(AppUtils.getApiKey());
+            channels.setId(video.getId());
+            final Video videoResponse = channels.execute().getItems().get(0);
+            VideoSnippet videoSnippet = videoResponse.getSnippet();
+            Channel channel = new Channel(videoSnippet.getChannelId());
+            channel.setChannelName(videoSnippet.getChannelTitle());
+            emitter.onSuccess(channel);
         });
     }
 
@@ -191,7 +210,7 @@ public class AppApiHelper implements ApiHelper {
     @Override
     public Observable<LudoAudio> getVideoById(LudoAudio audio) {
         return Observable.create(emitter -> {
-            Log.d("VideoFromAudioREST", "getting Video for audio: " + audio.getTitle()+ " video:" + audio.getVideo());
+            Log.d("VideoFromAudioREST", "getting Video for audio: " + audio.getTitle() + " video:" + audio.getVideo());
             Log.d("ApiKey", AppUtils.getApiKey());
 
             YouTube.Videos.List search;
@@ -204,7 +223,7 @@ public class AppApiHelper implements ApiHelper {
             Log.d("VideoResponse", videoListResponse.toString());
 
             List<Video> searchResultList = new ArrayList<>(videoListResponse.getItems());
-            if(searchResultList.isEmpty()) {
+            if (searchResultList.isEmpty()) {
                 Throwable throwable = new IllegalArgumentException("No Videos were found for audio " + JsonUtil.getGson().toJson(audio));
                 throwable.printStackTrace();
                 emitter.onNext(audio);
@@ -212,8 +231,8 @@ public class AppApiHelper implements ApiHelper {
                 LudoVideo video = castToLudoVideo(searchResultList.get(0));
                 LudoVideo oldVideo = audio.getVideo();
                 List<LudoAudio> oldAudioList = new ArrayList<>();
-                if(oldVideo != null) {
-                   oldAudioList  = oldVideo.getConnectedAudioList();
+                if (oldVideo != null) {
+                    oldAudioList = oldVideo.getConnectedAudioList();
                 }
 
                 video.setAudioList(oldAudioList);

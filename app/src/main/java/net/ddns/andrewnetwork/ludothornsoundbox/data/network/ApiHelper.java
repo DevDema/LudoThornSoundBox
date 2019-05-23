@@ -36,6 +36,8 @@ public interface ApiHelper {
 
     Observable<Channel> getChannel(Channel channel);
 
+    Single<Channel> getChannel(LudoVideo video);
+
     Observable<Thumbnail> getThumbnail(LudoVideo video);
 
     Observable<VideoInformation> getVideoInformation(LudoVideo video);

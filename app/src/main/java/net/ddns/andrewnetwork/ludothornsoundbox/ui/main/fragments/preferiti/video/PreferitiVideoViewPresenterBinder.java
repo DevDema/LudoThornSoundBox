@@ -18,5 +18,7 @@ public interface PreferitiVideoViewPresenterBinder {
     interface IPreferitiPresenter<V extends IPreferitiView> extends PreferitiViewPresenterBinder.IPreferitiPresenter<LudoVideo, V> {
 
         void loadThumbnail(LudoVideo video, PreferitiListAdapter.ThumbnailLoadedListener thumbnailLoadedListener);
+
+        void loadChannel(LudoVideo video, IFragmentVideoPreferitiAdapterBinder.OnChannelLoadedListener onChannelLoadedListener);
     }
 }

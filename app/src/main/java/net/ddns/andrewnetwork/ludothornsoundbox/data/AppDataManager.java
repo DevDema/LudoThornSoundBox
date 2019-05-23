@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
@@ -58,6 +59,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<Channel> getChannel(Channel channel) {
         return mApiHelper.getChannel(channel);
+    }
+
+    @Override
+    public Single<Channel> getChannel(LudoVideo video) {
+        return mApiHelper.getChannel(video);
     }
 
     @Override

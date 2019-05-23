@@ -181,6 +181,6 @@ public class PreferitiVideoFragment extends BaseFragment implements IPreferitiVi
 
     @Override
     public void loadChannel(LudoVideo video, OnChannelLoadedListener onChannelLoadedListener) {
-        
+        mPresenter.loadChannel(video, onChannelLoadedListener);
     }
 }

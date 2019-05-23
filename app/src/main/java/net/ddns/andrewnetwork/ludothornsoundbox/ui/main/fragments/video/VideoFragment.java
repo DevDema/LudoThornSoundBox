@@ -215,7 +215,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
     @Override
     public void onPreferitoSavedSuccess(LudoVideo video) {
-        if(getView() != null) {
+        if (getView() != null) {
             Snackbar snackbar = Snackbar.make(getView(), mContext.getString(R.string.video_aggiunto_preferiti), Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
@@ -223,8 +223,18 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
         refreshPreferiti();
     }
 
+    @Override
+    public void onMaxVideoReached() {
+        CommonUtils.showDialog(mActivity, mActivity.getString(R.string.max_video_reached_label));
+    }
+
+    @Override
+    public void onPreferitoEsistente(LudoVideo video) {
+        CommonUtils.showDialog(mActivity, getString(R.string.video_esistente_label));
+    }
+
     private void refreshPreferiti() {
-        if(mBinding.videoRecycler.getAdapter() instanceof VideoRecyclerAdapter) {
+        if (mBinding.videoRecycler.getAdapter() instanceof VideoRecyclerAdapter) {
             ((VideoRecyclerAdapter) mBinding.videoRecycler.getAdapter()).setNewPreferiti(mPresenter.getPreferitiList());
         }
     }

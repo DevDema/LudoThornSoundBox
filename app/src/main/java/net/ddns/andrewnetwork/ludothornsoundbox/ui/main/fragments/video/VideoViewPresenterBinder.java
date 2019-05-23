@@ -19,6 +19,10 @@ public interface VideoViewPresenterBinder {
         void onMoreVideoListLoadSuccess(List<LudoVideo> channelList);
 
         void onPreferitoSavedSuccess(LudoVideo video);
+
+        void onMaxVideoReached();
+
+        void onPreferitoEsistente(LudoVideo video);
     }
 
     interface IVideoPresenter<V extends IVideoView> extends MvpPresenter<V> {

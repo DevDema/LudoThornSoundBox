@@ -6,6 +6,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.DataManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.video.IFragmentVideoPreferitiAdapterBinder.OnChannelLoadedListener;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.video.PreferitiVideoViewPresenterBinder.IPreferitiView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.SchedulerProvider;
 
@@ -57,6 +58,18 @@ public class PreferitiVideoPresenter<V extends IPreferitiView> extends BasePrese
                 .subscribe(thumbnailLoadedListener::onThumbnailLoaded, throwable -> {
                             Log.e("VideoThumbREST", video.getTitle() + " | " + throwable.getMessage());
                             thumbnailLoadedListener.onThumbnailLoaded(null);
+                        }
+                ));
+    }
+
+    @Override
+    public void loadChannel(LudoVideo video, OnChannelLoadedListener onChannelLoadedListener) {
+        getCompositeDisposable().add(getDataManager().getChannel(video)
+                .observeOn(getSchedulerProvider().ui())
+                .subscribeOn(getSchedulerProvider().io())
+                .subscribe(onChannelLoadedListener::onChannelLoaded, throwable -> {
+                            Log.e("ChannelREST", video.getTitle() + " | " + throwable.getMessage());
+                            onChannelLoadedListener.onChannelLoaded(null);
                         }
                 ));
     }
