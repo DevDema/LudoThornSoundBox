@@ -14,6 +14,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ContentAudioFavoriteBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BaseFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.ParentActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.ChildPreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioViewPresenterBinder.IPreferitiPresenter;
@@ -31,6 +33,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.google.android.material.snackbar.Snackbar;
+
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
 
 public class PreferitiAudioFragment extends ChildPreferitiFragment implements IPreferitiView, IFragmentAudioPreferitiAdapterBinder {
 
@@ -185,6 +189,16 @@ public class PreferitiAudioFragment extends ChildPreferitiFragment implements IP
     @Override
     public void loadVideo(LudoAudio audio, PreferitiAudioListAdapter.VideoLoadedListener videoLoadedListener) {
         mPresenter.loadVideo(audio, videoLoadedListener);
+    }
+
+    @Override
+    public void apriVideo(LudoVideo item) {
+        ParentActivity.AdClosedListener adClosedListener = () -> CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
+        if(Math.random() < 0.5) {
+            ((MainActivity) mActivity).showInterstitialAd(adClosedListener);
+        } else {
+            adClosedListener.onAdClosed();
+        }
     }
 
     @Override

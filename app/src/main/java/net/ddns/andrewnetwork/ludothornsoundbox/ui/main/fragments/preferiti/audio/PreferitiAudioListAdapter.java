@@ -153,7 +153,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
             mBinding.videoButton.setOnClickListener(v ->
                     CommonUtils.showDialog(mContext, "Aprire il video corrispondente su youtube?",
                             (dialog, which) -> {
-                                CommonUtils.openLink(mContext, buildVideoUrl(video.getId()));
+                                mBinder.apriVideo(video);
                                 dialog.dismiss();
                             },
                             true
