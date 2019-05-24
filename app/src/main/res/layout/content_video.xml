@@ -42,7 +42,7 @@
                     android:visibility="visible" />
             </LinearLayout>
 
-            <net.ddns.andrewnetwork.ludothornsoundbox.utils.view.TabLayoutItem
+            <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
                 style="@style/TabLayoutStyle"
                 android:layout_width="match_parent"
@@ -83,20 +83,12 @@
                 </LinearLayout>
 
             </net.ddns.andrewnetwork.ludothornsoundbox.view.InteractiveScrollView>-->
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/videoLayout"
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/videoRecycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:paddingBottom="50dp"/>
-
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                android:layout_marginTop="15dp"/>
 
 
         </LinearLayout>

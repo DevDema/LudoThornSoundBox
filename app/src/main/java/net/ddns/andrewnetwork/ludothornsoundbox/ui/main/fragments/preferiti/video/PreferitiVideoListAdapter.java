@@ -16,7 +16,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemVideoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.IAudioVideoAdaptersBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoRecyclerAdapter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.child.VideoRecyclerAdapter;
 
 import java.util.List;
 

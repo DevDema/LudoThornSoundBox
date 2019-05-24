@@ -43,6 +43,14 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
                         .subscribe(wrapper2 -> {
                         }, throwable -> {
                             Log.e("ChannelListREST", throwable.getMessage());
+
+                            if (!isViewAttached()) {
+                                return;
+                            }
+                            if (!getMvpView().isAppVisible()) {
+                                return;
+                            }
+
                             getMvpView().onVideoListLoadFailed();
                         }, () -> getMvpView().onVideoListLoadSuccess(channelList))
         );
@@ -69,6 +77,13 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
                         .subscribe(wrapper2 -> {
                                 }, throwable -> {
                                     Log.e("ChannelListREST", throwable.getMessage());
+
+                                    if (!isViewAttached()) {
+                                        return;
+                                    }
+                                    if (!getMvpView().isAppVisible()) {
+                                        return;
+                                    }
                                     getMvpView().onVideoListLoadFailed();
                                 }, () -> {
                                 }
@@ -106,7 +121,7 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
         getDataManager().salvaVideoPreferito(video);
         getMvpView().onPreferitoSavedSuccess(video);
 
-        if(preferitoDeletedListener != null) {
+        if (preferitoDeletedListener != null) {
             preferitoDeletedListener.onPreferitoDeleted(video);
         }
 
@@ -126,9 +141,9 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
 
     @Override
     public void rimuoviPreferito(LudoVideo item, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
-        if(getDataManager().rimuoviVideoPreferito(item)) {
+        if (getDataManager().rimuoviVideoPreferito(item)) {
             getMvpView().onPreferitoRimossoSuccess(item);
-            if(preferitoDeletedListener != null) {
+            if (preferitoDeletedListener != null) {
                 preferitoDeletedListener.onPreferitoDeleted(item);
             }
         } else {

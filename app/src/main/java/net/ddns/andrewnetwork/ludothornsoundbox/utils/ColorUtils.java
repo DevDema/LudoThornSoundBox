@@ -5,6 +5,7 @@ import android.util.Pair;
 
 
 import androidx.annotation.ColorRes;
+import androidx.annotation.StringRes;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 
@@ -14,15 +15,21 @@ import java.util.List;
 public final class ColorUtils {
 
     public static final List<Pair<String, String>> colorList = new ArrayList<>();
-    public static final String DEFAULT_COLOR = "ORANGE";
+    public static final String NULL_COLOR = "NULL";
+    public static final String DEFAULT_COLOR = "DEFAULT";
     static {
-        colorList.add(new Pair<>(DEFAULT_COLOR, "background"));
+        colorList.add(new Pair<>(DEFAULT_COLOR, "colorAccent"));
+        colorList.add(new Pair<>("ORANGE", "background"));
         colorList.add(new Pair<>("YELLOW", "yellow_background"));
         colorList.add(new Pair<>("BLUE", "blue_light"));
         colorList.add(new Pair<>("RED", "red"));
     }
 
     public static @ColorRes int getByName(Context context, String name) {
+        if(name.equals(NULL_COLOR)) {
+            return getByName(context, DEFAULT_COLOR);
+        }
+
         for(Pair<String, String> colorPair : colorList) {
             if(colorPair.first.toLowerCase().equals(name.toLowerCase())) {
                 return context.getResources().getIdentifier(colorPair.second, "color", context.getPackageName());
@@ -39,6 +46,6 @@ public final class ColorUtils {
             }
         }
 
-        return "NULL";
+        return NULL_COLOR;
     }
 }

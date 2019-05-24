@@ -15,7 +15,7 @@ public class PreferitiPagerAdapter extends FragmentPagerAdapter {
 
     private static final int POSITION_AUDIO = 0;
     private static final int POSITION_VIDEO = 1;
-    private Context mContext;
+    private final Context mContext;
 
     PreferitiPagerAdapter(Context context, FragmentManager fm) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);

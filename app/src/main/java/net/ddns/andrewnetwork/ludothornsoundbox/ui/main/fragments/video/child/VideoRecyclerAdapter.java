@@ -1,4 +1,4 @@
-package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video;
+package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.child;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,6 +17,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.FragmentAdapterVideoBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoInformationManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.DateHourUtils;
@@ -32,7 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
 
-public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filterable {
+public class VideoRecyclerAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
     private List<LudoVideo> videoList;
@@ -279,7 +280,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
         }
     }
 
-    @Override
+    /*@Override
     public Filter getFilter() {
         return new Filter() {
             @Override
@@ -315,7 +316,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter implements Filter
                 notifyDataSetChanged();
             }
         };
-    }
+    }*/
 
     void addItems(List<LudoVideo> ludoVideoList) {
 
