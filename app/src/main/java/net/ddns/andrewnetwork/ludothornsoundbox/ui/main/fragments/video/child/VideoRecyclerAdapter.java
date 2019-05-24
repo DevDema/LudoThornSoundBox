@@ -132,6 +132,10 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
                 thumbnailPlace.setImageBitmap(item.getThumbnail().getImage());
                 hideVideoLoading();
             }
+
+            itemView.setOnClickListener(v -> {
+                mBinder.apriVideo(item);
+            });
         }
 
         private void hideVideoLoading() {
@@ -244,13 +248,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
                 if (updated != null)
                     updated.setText(DateHourUtils.convertToTimestamp(item.getDateTime()));
             }
-            itemView.setOnClickListener(v -> {
-                if (item != null) {
-                    CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
-                } else {
-                    CommonUtils.showDialog(mContext, R.string.link_unavailable);
-                }
-            });
+
         }
     }
 

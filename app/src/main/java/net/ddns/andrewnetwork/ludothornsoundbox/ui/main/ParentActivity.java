@@ -25,9 +25,15 @@ public abstract class ParentActivity extends PreferencesManagerActivity {
 
     }
 
+    public interface AdClosedListener {
+
+        void onAdClosed();
+    }
+
     AdView mAdView;
     InterstitialAd mInterstitialAd;
     AdCustomListener adCustomListener;
+    AdClosedListener adClosedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +41,7 @@ public abstract class ParentActivity extends PreferencesManagerActivity {
 
 
         MobileAds.initialize(this, AppConstants.ADS_CODE);
-        mAdView =  new AdView(this);
+        mAdView = new AdView(this);
         LinearLayout masterLayout = findViewById(R.id.navigation_layout);//findViewById(R.id.adView);
         Bundle extras = new Bundle();
 
@@ -63,6 +69,11 @@ public abstract class ParentActivity extends PreferencesManagerActivity {
             public void onAdClosed() {
                 AdRequest adRequest = new AdRequest.Builder().build();
                 mInterstitialAd.loadAd(adRequest);
+
+                if (adClosedListener != null) {
+                    adClosedListener.onAdClosed();
+                    adClosedListener = null;
+                }
             }
 
         };
@@ -77,7 +88,7 @@ public abstract class ParentActivity extends PreferencesManagerActivity {
         AdRequest.Builder adRequestBuilder = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras);
 
         //CONFIGURA TEST DEVICE.
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             adRequestBuilder.addTestDevice("E471AADF1D21337710F1244766497DF9");
         }
 
@@ -94,9 +105,14 @@ public abstract class ParentActivity extends PreferencesManagerActivity {
 
     }
 
-    public void showInterstitialAd() {
-        if(mInterstitialAd.isLoaded()) {
+    public void showInterstitialAd(AdClosedListener adClosedListener) {
+
+        this.adClosedListener = adClosedListener;
+
+        if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
+        } else if (adClosedListener != null) {
+            adClosedListener.onAdClosed();
         }
     }
 }

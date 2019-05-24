@@ -13,6 +13,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ContentVideoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.ParentActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.MainFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.FragmentVideoChildBinder.FragmentVideoChild;
@@ -37,6 +39,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.data.prefs.AppPreferencesHelper.PREF_KEY_PREFERITI_VIDEO;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
 
 public class VideoFragment extends MainFragment implements IVideoView, FragmentAdapterVideoBinder, FragmentVideoChildBinder.FragmentVideoParent, SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -278,6 +281,16 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
     @Override
     public void rimuoviPreferito(LudoVideo item, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
         mPresenter.rimuoviPreferito(item, preferitoDeletedListener);
+    }
+
+    @Override
+    public void apriVideo(LudoVideo item) {
+        ParentActivity.AdClosedListener adClosedListener = () -> CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
+        if(Math.random() < 0.5) {
+            ((MainActivity) mActivity).showInterstitialAd(adClosedListener);
+        } else {
+            adClosedListener.onAdClosed();
+        }
     }
 
     public static boolean isLoadingMoreVideos() {
