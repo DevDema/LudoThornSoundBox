@@ -52,6 +52,7 @@ import io.reactivex.Single;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.LOOKUP_TYPE_VIDEO;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.ORDER_TYPE_VIDEO;
+import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants.VIDEO_PER_CHANNEL_LOADED;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils.castToLudoVideo;
 
@@ -82,7 +83,7 @@ public class AppApiHelper implements ApiHelper {
             search.setChannelId(channel.getId());
             search.setType(LOOKUP_TYPE_VIDEO);
             search.setOrder(ORDER_TYPE_VIDEO);
-            search.setMaxResults(10L);
+            search.setMaxResults(VIDEO_PER_CHANNEL_LOADED);
             final SearchListResponse searchResponse = search.execute();
 
             List<SearchResult> searchResultList = new ArrayList<>(searchResponse.getItems());
@@ -196,7 +197,7 @@ public class AppApiHelper implements ApiHelper {
             search.setPublishedBefore(new DateTime(beforeDate));
             search.setType(LOOKUP_TYPE_VIDEO);
             search.setOrder(ORDER_TYPE_VIDEO);
-            search.setMaxResults(10L);
+            search.setMaxResults(VIDEO_PER_CHANNEL_LOADED);
             final SearchListResponse searchResponse = search.execute();
 
             List<SearchResult> searchResultList = new ArrayList<>(searchResponse.getItems());

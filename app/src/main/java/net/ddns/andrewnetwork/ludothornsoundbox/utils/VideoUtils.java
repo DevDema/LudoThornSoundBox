@@ -22,6 +22,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig.CHANNELS;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment.ALL_CHANNELS;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
 public abstract class VideoUtils {
@@ -123,6 +124,16 @@ public abstract class VideoUtils {
         return null;
     }
 
+    public static Channel findChannelByName(List<Channel> channelList, String channelName) {
+        for(Channel channel : channelList) {
+            if(channel.getChannelName() != null && channel.getChannelName().equals(channelName)) {
+                return channel;
+            }
+        }
+
+        return null;
+    }
+
 
     public static List<LudoVideo> concatVideos(List<List<LudoVideo>> videoList) {
         ArrayList<LudoVideo> allVideos = new ArrayList<>();
@@ -154,37 +165,50 @@ public abstract class VideoUtils {
     }
 
     public static List<LudoVideo> removeDuplicates(List<LudoVideo> videoList) {
-        List<LudoVideo> ludoVideos = new ArrayList<>(videoList);
-        if (ludoVideos.size() > 1)
-            for (int i = 0; i < ludoVideos.size(); i++)
-                for (int j = 0; j < ludoVideos.size(); j++)
-                    if (ludoVideos.get(i).equals(ludoVideos.get(j)) && i != j)
-                        ludoVideos.remove(j);
-        return ludoVideos;
-    }
+        ArrayList<LudoVideo> newList = new ArrayList<>();
 
-    public static Date getMostRecentDate(List<Channel> channelList) {
-        List<Date> dateList = new ArrayList<>();
+        // Traverse through the first list
+        for (LudoVideo element : videoList) {
 
-        for (Channel channel : channelList) {
-            if (channel.getVideoList().isEmpty())
-                continue;
+            // If this element is not present in newList
+            // then add it
+            if (!newList.contains(element)) {
 
-            dateList.add(channel.getVideoList().get(channel.getVideoList().size() - 1).getDateTime());
+                newList.add(element);
+            }
         }
 
-        return Collections.max(dateList);
+        // return the new list
+        return newList;
     }
 
     public static Date getMostRecentDate(Channel channel) {
-        List<Date> dateList = new ArrayList<>();
+
 
         if (channel.getVideoList().isEmpty())
             return Calendar.getInstance().getTime();
 
-        dateList.add(channel.getVideoList().get(channel.getVideoList().size() - 1).getDateTime());
+        return channel.getVideoList().get(channel.getVideoList().size() - 1).getDateTime();
+
+    }
+
+    public static Date getMostRecentDate(List<Channel> channelListInput) {
+        List<Channel> channelList = new ArrayList<>(channelListInput);
+
+        List<Date> dateList = new ArrayList<>();
+
+        if(channelList.isEmpty()) {
+            return Calendar.getInstance().getTime();
+        }
+
+        channelList.remove(VideoUtils.findChannelByName(channelList, ALL_CHANNELS));
+
+        for(Channel channel : channelList) {
+            dateList.add(getMostRecentDate(channel));
+        }
 
         return Collections.max(dateList);
+
     }
 
     public static List<LudoVideo> filterList(List<LudoVideo> videoList) {
@@ -206,5 +230,15 @@ public abstract class VideoUtils {
         }
 
         return null;
+    }
+
+    public static List<LudoVideo> getVideoInChannelByName(List<Channel> channelList, String channelName) {
+        for(Channel channel : channelList) {
+            if (channel != null && channel.getChannelName().equals(channelName)) {
+                return channel.getVideoList();
+            }
+        }
+
+        return new ArrayList<>();
     }
 }

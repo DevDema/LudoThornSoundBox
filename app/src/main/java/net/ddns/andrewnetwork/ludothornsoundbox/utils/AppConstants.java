@@ -27,6 +27,7 @@ public final class AppConstants {
     public static final long NULL_INDEX = -1L;
     public static final String LOOKUP_TYPE_VIDEO = "video";
     public static final String ORDER_TYPE_VIDEO = "date";
+    public static final long VIDEO_PER_CHANNEL_LOADED = 5L;
 
     private AppConstants() {
         // This utility class is not publicly instantiable

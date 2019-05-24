@@ -3,6 +3,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.child;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.Html;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,9 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -206,7 +209,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
 
                 ImageView tt3 = itemView.findViewById(R.id.icon);
 
-                if (tt1 != null) {
+                if (tt1 != null && item.getTitle() != null) {
                     tt1.setText(Html.fromHtml(item.getTitle()));
                 }
 
@@ -280,46 +283,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
         }
     }
 
-    /*@Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();
-                List<LudoVideo> FilteredArrayNames = new ArrayList<>();
-                if (constraint == null) {
-                    FilteredArrayNames = itemsAll;
-                } else {
-                    // perform your search here using the searchConstraint String.
-
-                    constraint = constraint.toString().toLowerCase();
-                    for (int i = 0; i < itemsAll.size(); i++) {
-                        LudoVideo dataNames = itemsAll.get(i);
-                        if (dataNames.getChannel() != null && dataNames.getChannel().getId().toLowerCase().equals(constraint.toString().toLowerCase())) {
-                            FilteredArrayNames.add(dataNames);
-                        }
-                    }
-                }
-
-                results.count = FilteredArrayNames.size();
-                results.values = FilteredArrayNames;
-
-                return results;
-            }
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                if (results.values != null)
-                    videoList = (List<LudoVideo>) results.values;
-
-
-                notifyDataSetChanged();
-            }
-        };
-    }*/
-
     void addItems(List<LudoVideo> ludoVideoList) {
-
         //REMOVE THE PROGRESS BAR ITEM
 
         //ASSIGN TO ADAPTER VARIABLES

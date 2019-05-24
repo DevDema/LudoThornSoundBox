@@ -92,7 +92,7 @@ public class ChildVideoFragment extends BaseFragment implements FragmentVideoChi
                         }
 
                         if(channel.getChannelName().equals(ALL_CHANNELS)) {
-                            parent.getMoreVideos(VideoUtils.getMostRecentDate(channel), moreVideosLoadedListener);
+                            parent.getMoreVideos(moreVideosLoadedListener);
                         } else {
                             parent.getMoreVideos(channel, VideoUtils.getMostRecentDate(channel), moreVideosLoadedListener);
                         }
@@ -114,7 +114,7 @@ public class ChildVideoFragment extends BaseFragment implements FragmentVideoChi
     }
 
     @Override
-    public void onMoreVideosLoaded(List<LudoVideo> videoList) {
+    public void onMoreVideosLoaded(List<Channel> videoList) {
         List<LudoVideo> videoChannelList = getVideosInChannel(videoList);
         if(mBinding.recyclerView.getAdapter() != null) {
             ((VideoRecyclerAdapter) mBinding.recyclerView.getAdapter()).addItems(videoChannelList);
@@ -123,20 +123,12 @@ public class ChildVideoFragment extends BaseFragment implements FragmentVideoChi
         mBinding.masterLayout.setRefreshing(false);
     }
 
-    private List<LudoVideo> getVideosInChannel(List<LudoVideo> videoList) {
+    private List<LudoVideo> getVideosInChannel(List<Channel> channelList) {
 
         if(channel.getChannelName().equals(ALL_CHANNELS)) {
-            return new ArrayList<>(videoList);
+            return new ArrayList<>(VideoUtils.concatVideosInChannel(channelList));
         }
 
-        List<LudoVideo> ludoVideosOutput = new ArrayList<>();
-
-        for(LudoVideo ludoVideo : videoList) {
-            if(ludoVideo.getChannel() != null && ludoVideo.getChannel().getChannelName().equals(channel.getChannelName())) {
-                ludoVideosOutput.add(ludoVideo);
-            }
-        }
-
-        return ludoVideosOutput;
+        return VideoUtils.getVideoInChannelByName(channelList, channel.getChannelName());
     }
 }

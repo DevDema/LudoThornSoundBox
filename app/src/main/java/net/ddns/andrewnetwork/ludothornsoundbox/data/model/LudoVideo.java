@@ -135,7 +135,12 @@ public class LudoVideo implements Comparable<LudoVideo> {
 
     @Override
     public int compareTo(@NonNull LudoVideo o) {
-        return getDateTime().compareTo(o.getDateTime());
+        if(getDateTime() != null) {
+            return getDateTime().compareTo(o.getDateTime());
+        }
+
+        return 0;
+        
     }
 
     @Override

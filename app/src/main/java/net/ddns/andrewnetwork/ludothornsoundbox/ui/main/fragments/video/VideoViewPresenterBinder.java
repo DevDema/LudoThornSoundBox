@@ -18,7 +18,7 @@ public interface VideoViewPresenterBinder {
 
         void onVideoListLoadSuccess(List<Channel> channelList);
 
-        void onMoreVideoListLoadSuccess(List<LudoVideo> channelList);
+        void onMoreVideoListLoadSuccess(List<Channel> channelList);
 
         void onPreferitoSavedSuccess(LudoVideo video);
 

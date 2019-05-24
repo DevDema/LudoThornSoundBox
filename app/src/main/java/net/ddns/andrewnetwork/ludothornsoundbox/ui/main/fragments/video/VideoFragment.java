@@ -46,7 +46,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
     public interface MoreVideosLoadedListener {
 
-        void onMoreVideosLoaded(List<LudoVideo> videoList);
+        void onMoreVideosLoaded(List<Channel> videoList);
     }
 
     public static VideoFragment newInstance() {
@@ -144,7 +144,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
         setUpTabLayout();
         mBinding.progressBar.setVisibility(View.INVISIBLE);
         mBinding.progressVideoLoadingLabel.setVisibility(View.INVISIBLE);
-        onMoreVideoListLoadSuccess(VideoUtils.concatVideosInChannel(channelList));
+        onMoreVideoListLoadSuccess(channelList);
 
     }
 
@@ -166,14 +166,14 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
     }
 
     @Override
-    public void onMoreVideoListLoadSuccess(List<LudoVideo> videoList) {
+    public void onMoreVideoListLoadSuccess(List<Channel> videoList) {
         mActivity.runOnUiThread(() -> {
             notifyMoreVideosLoaded(videoList);
             VideoFragment.loadingMoreVideos = false;
         });
     }
 
-    private void notifyMoreVideosLoaded(List<LudoVideo> videoList) {
+    private void notifyMoreVideosLoaded(List<Channel> videoList) {
         for (Fragment fragment : getChildFragmentManager().getFragments()) {
             if (fragment instanceof FragmentVideoChildBinder.FragmentVideoChild) {
                 ((FragmentVideoChildBinder.FragmentVideoChild) fragment).onMoreVideosLoaded(videoList);
@@ -264,7 +264,8 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
         mPresenter.getMoreVideos(channel, mostRecentDate, moreVideosLoadedListener);
     }
 
-    public void getMoreVideos(Date mostRecentDate, MoreVideosLoadedListener moreVideosLoadedListener) {
-        mPresenter.getMoreVideos(channelList, mostRecentDate, moreVideosLoadedListener);
+    public void getMoreVideos(MoreVideosLoadedListener moreVideosLoadedListener) {
+
+        mPresenter.getMoreVideos(channelList, VideoUtils.getMostRecentDate(channelList), moreVideosLoadedListener);
     }
 }

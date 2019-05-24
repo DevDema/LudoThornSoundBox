@@ -9,6 +9,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.SchedulerProvider;
 
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment.ALL_CHANNELS;
 
 public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> implements IVideoPresenter<V> {
 
@@ -57,19 +60,20 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void getMoreVideos(List<Channel> channelList, Date date, VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener) {
+    public void getMoreVideos(List<Channel> channelListInput, Date date, VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener) {
+        List<Channel> channelList = new ArrayList<>(channelListInput);
+        Channel allChannel = VideoUtils.findChannelByName(channelList, ALL_CHANNELS);
+
+        if (allChannel != null) {
+            channelList.remove(allChannel);
+        }
+
         getCompositeDisposable().add(
                 Observable.fromIterable(channelList)
                         .flatMap(channel -> getDataManager().getMoreVideos(channel, date)
                                 .flatMap(videoListResponse -> Observable.fromIterable(videoListResponse)
                                         .flatMap(video -> getDataManager().getVideoInformation(video)
-                                        ).doOnComplete(() -> {
-                                            if (moreVideosLoadedListener != null) {
-                                                moreVideosLoadedListener.onMoreVideosLoaded(videoListResponse);
-                                            }
-
-                                            getMvpView().onMoreVideoListLoadSuccess(videoListResponse);
-                                        })
+                                        )
                                 )
                         )
                         .observeOn(getSchedulerProvider().ui())
@@ -86,6 +90,11 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
                                     }
                                     getMvpView().onVideoListLoadFailed();
                                 }, () -> {
+                                    if (moreVideosLoadedListener != null) {
+                                        moreVideosLoadedListener.onMoreVideosLoaded(channelList);
+                                    }
+
+                                    getMvpView().onMoreVideoListLoadSuccess(channelList);
                                 }
                         )
         );
