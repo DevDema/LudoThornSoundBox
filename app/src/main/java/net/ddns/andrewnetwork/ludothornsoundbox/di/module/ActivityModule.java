@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.di.ActivityContext;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainView;
@@ -28,6 +29,9 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewP
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiMainPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiMainViewPresenterBinder;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioViewPresenterBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.video.PreferitiVideoPresenter;
@@ -135,6 +139,11 @@ public class ActivityModule {
 
     @Provides
     PreferitiVideoViewPresenterBinder.IPreferitiPresenter<PreferitiVideoViewPresenterBinder.IPreferitiView> provideVideoPreferitiPresenter(PreferitiVideoPresenter<PreferitiVideoViewPresenterBinder.IPreferitiView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    PreferitiMainViewPresenterBinder.IPreferitiMainPresenter<MvpView> provideMainPreferitiPresenter(PreferitiMainPresenter<MvpView> presenter) {
         return presenter;
     }
 }

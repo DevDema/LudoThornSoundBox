@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.video;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -111,6 +112,12 @@ public class PreferitiVideoFragment extends ChildPreferitiFragment implements IP
     }
 
     @Override
+    public void onPreferenceChanged(SharedPreferences sharedPreferences) {
+        loadPreferiti();
+    }
+
+
+    @Override
     public void loadThumbnail(LudoVideo item, PreferitiListAdapter.ThumbnailLoadedListener thumbnailLoadedListener) {
         mPresenter.loadThumbnail(item, thumbnailLoadedListener);
     }
@@ -172,10 +179,6 @@ public class PreferitiVideoFragment extends ChildPreferitiFragment implements IP
     @Override
     public void onParentHiddenChanged(boolean hidden) {
         super.onParentHiddenChanged(hidden);
-
-        if (!hidden) {
-            loadPreferiti();
-        }
     }
 
     @Override

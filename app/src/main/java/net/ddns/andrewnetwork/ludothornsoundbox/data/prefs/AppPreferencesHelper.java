@@ -47,7 +47,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String PREF_KEY_CURRENT_USER_ID = "PREF_KEY_CURRENT_USER_ID";
     private static final String PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN";
-    private static final String PREF_KEY_PREFERITI_AUDIO = "PREF_KEY_PREFERITI_AUDIO";
+    public static final String PREF_KEY_PREFERITI_AUDIO = "PREF_KEY_PREFERITI_AUDIO";
     private static final String PREF_KEY_AUDIO = "PREF_KEY_AUDIO";
     private static final String KEY_USAGE_COUNTER = "KEY_USAGE_COUNTER";
     private static final String KEY_USAGE_THRESOLD = "KEY_USAGE_THRESOLD";

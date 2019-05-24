@@ -178,9 +178,9 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
         }
 
         private void loadDrawable(LudoAudio item) {
-            if (item.getVideo().getThumbnail() != null && item.getVideo().getThumbnail().getImage() != null) {
+            /*if (item.getVideo().getThumbnail() != null && item.getVideo().getThumbnail().getImage() != null) {
                 drawables.put(item.getAudio(), item.getVideo().getThumbnail().getImage());
-            }
+            }*/
 
             if (drawables.get(item.getAudio()) == null) {
                 showThumbnailLoading();

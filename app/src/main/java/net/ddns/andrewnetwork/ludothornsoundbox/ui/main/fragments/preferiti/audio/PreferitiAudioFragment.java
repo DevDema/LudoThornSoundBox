@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio;
 
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -84,15 +85,16 @@ public class PreferitiAudioFragment extends ChildPreferitiFragment implements IP
     @Override
     public void onParentHiddenChanged(boolean hidden) {
         super.onParentHiddenChanged(hidden);
-
-        if (!hidden) {
-            loadPreferiti();
-        }
     }
 
     @Override
     protected PreferitiListAdapter getListAdapter() {
         return (PreferitiListAdapter) mBinding.recyclerView.getAdapter();
+    }
+
+    @Override
+    public void onPreferenceChanged(SharedPreferences sharedPreferences) {
+        loadPreferiti();
     }
 
     @Override
