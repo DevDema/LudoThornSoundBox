@@ -94,7 +94,12 @@ public class AudioPlayer extends ConstraintLayout implements MediaPlayerObserver
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(fromUser) {
-                    DataSingleTon.getInstance().getMediaPlayer().seekTo(progress);
+                    try {
+                        DataSingleTon.getInstance().getMediaPlayer().seekTo(progress);
+                    }catch (IllegalStateException e) {
+                        Log.d("IllegalState", "Tried to change progress on an illegal state.");
+                    }
+
                 }
             }
 
@@ -108,7 +113,6 @@ public class AudioPlayer extends ConstraintLayout implements MediaPlayerObserver
 
             }
         });
-
 
         playButton.setOnClickListener(v -> play(audio));
 
