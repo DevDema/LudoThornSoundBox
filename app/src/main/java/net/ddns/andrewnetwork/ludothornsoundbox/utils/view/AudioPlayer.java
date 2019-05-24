@@ -76,20 +76,6 @@ public class AudioPlayer extends ConstraintLayout implements MediaPlayerObserver
         audioProgress.getProgressDrawable().setColorFilter(
                 Color.BLUE, android.graphics.PorterDuff.Mode.SRC_IN);
 
-        //TENTATIVO FALLITO DI SETTARE LA SEEKBAR
-
-        /*audioProgress.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                float x = event.getX();
-
-                float progress = audioProgress.getWidth()*x/DataSingleTon.getInstance().getMediaPlayer().getDuration();
-                DataSingleTon.getInstance().getMediaPlayer().seekTo((int) progress);
-                audioProgress.setProgress((int) progress);
-                return true;
-            }
-        });*/
-
         audioProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
