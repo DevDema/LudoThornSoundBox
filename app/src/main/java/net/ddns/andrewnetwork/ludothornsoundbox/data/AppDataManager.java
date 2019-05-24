@@ -1,6 +1,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.data;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
@@ -188,5 +189,15 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean rimuoviVideoPreferito(LudoVideo video) {
         return mPreferencesHelper.rimuoviVideoPreferito(video);
+    }
+
+    @Override
+    public void registerOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
+        mPreferencesHelper.registerOnSharedPreferencesChangeListener(onSharedPreferenceChangeListener);
+    }
+
+    @Override
+    public void unregisterOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
+        mPreferencesHelper.unregisterOnSharedPreferencesChangeListener(onSharedPreferenceChangeListener);
     }
 }

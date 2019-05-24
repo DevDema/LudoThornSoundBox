@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.DataManager;
@@ -158,6 +159,16 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
         } else {
             getMvpView().onPreferitoRimossoFailed();
         }
+    }
+
+    @Override
+    public void registerOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
+        getDataManager().registerOnSharedPreferencesChangeListener(onSharedPreferenceChangeListener);
+    }
+
+    @Override
+    public void unregisterOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
+        getDataManager().unregisterOnSharedPreferencesChangeListener(onSharedPreferenceChangeListener);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video;
 
+import android.content.SharedPreferences;
+
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.MvpPresenter;
@@ -46,5 +48,9 @@ public interface VideoViewPresenterBinder {
         void loadThumbnail(LudoVideo item, ThumbnailLoadedListener thumbnailLoadedListener);
 
         void rimuoviPreferito(LudoVideo item, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener);
+
+        void registerOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener);
+
+        void unregisterOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener);
     }
 }

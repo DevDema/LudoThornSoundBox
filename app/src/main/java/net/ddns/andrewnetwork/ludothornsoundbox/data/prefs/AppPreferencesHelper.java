@@ -17,6 +17,8 @@ package net.ddns.andrewnetwork.ludothornsoundbox.data.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.preference.PreferenceManager;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -49,14 +51,14 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PREF_KEY_AUDIO = "PREF_KEY_AUDIO";
     private static final String KEY_USAGE_COUNTER = "KEY_USAGE_COUNTER";
     private static final String KEY_USAGE_THRESOLD = "KEY_USAGE_THRESOLD";
-    private static final String PREF_KEY_PREFERITI_VIDEO = "PREF_KEY_PREFERITI_VIDEO";
+    public static final String PREF_KEY_PREFERITI_VIDEO = "PREF_KEY_PREFERITI_VIDEO";
 
     private final SharedPreferences mPrefs;
 
     @Inject
     public AppPreferencesHelper(@ApplicationContext Context context,
                                 @PreferenceInfo String prefFileName) {
-        mPrefs = context.getSharedPreferences(prefFileName, Context.MODE_PRIVATE);
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Override
@@ -246,4 +248,13 @@ public class AppPreferencesHelper implements PreferencesHelper {
         }
     }
 
+    @Override
+    public void registerOnSharedPreferencesChangeListener(OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
+        mPrefs.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+    }
+
+    @Override
+    public void unregisterOnSharedPreferencesChangeListener(OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
+        mPrefs.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+    }
 }

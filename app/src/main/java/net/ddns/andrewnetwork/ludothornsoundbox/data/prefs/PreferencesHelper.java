@@ -15,6 +15,8 @@
 
 package net.ddns.andrewnetwork.ludothornsoundbox.data.prefs;
 
+import android.content.SharedPreferences;
+
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 
@@ -64,4 +66,8 @@ public interface PreferencesHelper {
     void saveVideoList(List<LudoVideo> videoList);
 
     boolean rimuoviVideoPreferito(LudoVideo video);
+
+    void registerOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener);
+
+    void unregisterOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener);
 }

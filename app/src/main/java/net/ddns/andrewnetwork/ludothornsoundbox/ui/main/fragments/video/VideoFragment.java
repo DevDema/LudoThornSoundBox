@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ContentVideoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.MainFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.FragmentVideoChildBinder.FragmentVideoChild;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ColorUtils;
@@ -34,7 +36,9 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-public class VideoFragment extends MainFragment implements IVideoView, FragmentAdapterVideoBinder, FragmentVideoChildBinder.FragmentVideoParent {
+import static net.ddns.andrewnetwork.ludothornsoundbox.data.prefs.AppPreferencesHelper.PREF_KEY_PREFERITI_VIDEO;
+
+public class VideoFragment extends MainFragment implements IVideoView, FragmentAdapterVideoBinder, FragmentVideoChildBinder.FragmentVideoParent, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private ContentVideoBinding mBinding;
     private static boolean loadingMoreVideos;
@@ -69,9 +73,18 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
             mPresenter.onAttach(this);
         }
 
+        mPresenter.registerOnSharedPreferencesChangeListener(this);
+
         refreshChannels(true);
 
         return mBinding.getRoot();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mPresenter.unregisterOnSharedPreferencesChangeListener(this);
     }
 
     @Override
@@ -159,10 +172,17 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
         }
 
-        mBinding.viewPager.setAdapter(new VideoPagerAdapter(getChildFragmentManager(), channelList));
+        mBinding.viewPager.setAdapter(new VideoPagerAdapter(getChildFragmentManager(), channelList, mPresenter.getPreferitiList()));
         mBinding.viewPager.setOffscreenPageLimit(channelList.size());
         mBinding.tabLayout.setupWithViewPager(mBinding.viewPager);
 
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(PREF_KEY_PREFERITI_VIDEO)) {
+            notifyRefreshPreferiti(mPresenter.getPreferitiList());
+        }
     }
 
     @Override
@@ -173,10 +193,18 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
         });
     }
 
+    private void notifyRefreshPreferiti(List<LudoVideo> preferitiList) {
+        for (Fragment fragment : getChildFragmentManager().getFragments()) {
+            if (fragment instanceof FragmentVideoChild) {
+                ((FragmentVideoChild) fragment).refreshPrefiti(preferitiList);
+            }
+        }
+    }
+
     private void notifyMoreVideosLoaded(List<Channel> videoList) {
         for (Fragment fragment : getChildFragmentManager().getFragments()) {
-            if (fragment instanceof FragmentVideoChildBinder.FragmentVideoChild) {
-                ((FragmentVideoChildBinder.FragmentVideoChild) fragment).onMoreVideosLoaded(videoList);
+            if (fragment instanceof FragmentVideoChild) {
+                ((FragmentVideoChild) fragment).onMoreVideosLoaded(videoList);
             }
         }
     }
@@ -231,8 +259,8 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
     private void notifyFragmentsRefreshing(boolean refreshing) {
         for (Fragment fragment : getChildFragmentManager().getFragments()) {
-            if (fragment instanceof FragmentVideoChildBinder.FragmentVideoChild) {
-                ((FragmentVideoChildBinder.FragmentVideoChild) fragment).setRecyclerViewRefreshing(refreshing);
+            if (fragment instanceof FragmentVideoChild) {
+                ((FragmentVideoChild) fragment).setRecyclerViewRefreshing(refreshing);
             }
         }
     }
