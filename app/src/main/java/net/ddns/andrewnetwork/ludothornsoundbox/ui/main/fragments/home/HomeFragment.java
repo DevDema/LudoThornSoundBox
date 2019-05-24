@@ -151,7 +151,7 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
     @Override
     public void onButtonSelected(LudoAudio audio, int position, View button) {
         if (mActivity instanceof ParentActivity && ListUtils.getRandomBoolean()) {
-            ((ParentActivity) mActivity).showInterstitialAd();
+            ((ParentActivity) mActivity).showInterstitialAd(null);
         } else {
             mBinding.audioPlayer.play(audio);
         }
