@@ -5,15 +5,11 @@
             <gradient
                 android:angle="315"
                 android:endColor="@color/colorAccent"
-                android:startColor="@color/colorPrimary" />
+                android:startColor="@color/colorAccent" />
         </shape>
     </item>
     <item
         android:drawable="@mipmap/ic_splash_icon"
         android:gravity="center" >
-        <shape android:innerRadius="20dp" android:shape="oval">
-            <solid android:color="#CCC" />
-            <size android:width="300dp" android:height="300dp"/>
-        </shape>
     </item>
 </layer-list>
