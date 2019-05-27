@@ -76,8 +76,11 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
                 .observeOn(getSchedulerProvider().ui())
                 .subscribeOn(getSchedulerProvider().io())
                 .subscribe(audioListWrapper -> {
-                    getMvpView().onAudioListReceived(manageAudioLists(audioListWrapper));
+                    List<LudoAudio> ludoAudioList = manageAudioLists(audioListWrapper);
+                    getMvpView().onAudioListReceived(ludoAudioList);
+
                     getMvpView().hideLoading();
+
                 }, throwable -> {
                     throwable.printStackTrace();
                     getMvpView().onVideoInformationNotLoaded();
@@ -125,8 +128,6 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
         }
 
         AudioUtils.attachSameVideoToAudios(listFromPref);
-
-        saveAudioListInPref(listFromPref);
 
         return listFromPref;
     }

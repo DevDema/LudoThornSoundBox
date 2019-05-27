@@ -287,6 +287,8 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
 
         configureAdapter(audioList);
 
+        mPresenter.saveAudioListInPref(audioList);
+
         mBinding.buttonRight.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_RIGHT));
 
         mBinding.buttonLeft.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_LEFT));
