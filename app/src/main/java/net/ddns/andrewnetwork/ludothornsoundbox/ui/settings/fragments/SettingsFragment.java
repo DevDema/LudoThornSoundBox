@@ -16,18 +16,26 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.credits.CreditsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icons.SettingsIconActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.LudoNavigationItem;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.SettingsNavigationItemsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments.SettingsViewPresenterBinder.ISettingsView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
+
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity.REQUEST_HIDDEN_SELECTED;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioActivity.RESULT_HIDDEN_AUDIO_LIST;
@@ -42,7 +50,8 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navi
 
 public class SettingsFragment extends BasePrefencesFragment implements ISettingsView, Preference.OnPreferenceChangeListener, MvpView, BaseFragment.Callback, Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private @StringRes int[] mandatoryPreferences = {R.string.usa_font_app_key, R.string.reset_app_key};
+    private @StringRes
+    int[] mandatoryPreferences = {R.string.usa_font_app_key, R.string.reset_app_key};
     private int currentNavigationItemPosition;
     private int firstNavigationItemPosition;
 
@@ -61,7 +70,7 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getArguments() != null) {
+        if (getArguments() != null) {
             currentNavigationItemPosition = getArguments().getInt(KEY_CURRENT_POSITION_BOT_NAV_MENU);
             firstNavigationItemPosition = getFirstNavigationItemPosition();
         }
@@ -76,9 +85,37 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
         bindPreferenceSummaryToValue(findPreference(getString(R.string.credits_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pag_iniziale_key)));
 
+        setInitialFragmentData();
 
         android.preference.PreferenceManager.getDefaultSharedPreferences(mActivity).registerOnSharedPreferenceChangeListener(this);
 
+    }
+
+    private void setInitialFragmentData() {
+        Preference preference = findPreference(getString(R.string.pag_iniziale_key));
+        if (preference instanceof ListPreference) {
+            ListPreference listPreference = (ListPreference) preference;
+            List<CharSequence> newEntryValues = new ArrayList<>();
+            List<LudoNavigationItem> navigationItems = JsonUtil.getGson().fromJson(
+                    getPreferenceManager().getSharedPreferences().getString(getString(R.string.cambia_ordine_key), ""),
+                    new TypeToken<List<LudoNavigationItem>>() {
+                    }.getType()
+            );
+
+            if (navigationItems != null) {
+                for (LudoNavigationItem navigationItem : navigationItems) {
+                    if (navigationItem.getVisible()) {
+                        newEntryValues.add(navigationItem.getName());
+
+                    }
+                }
+            }
+
+            if (!newEntryValues.isEmpty()) {
+                listPreference.setEntryValues(newEntryValues.toArray(new CharSequence[0]));
+                listPreference.setEntries(newEntryValues.toArray(new CharSequence[0]));
+            }
+        }
     }
 
     private int getFirstNavigationItemPosition() {
@@ -92,7 +129,7 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     }
 
     private void bindPreferenceSummaryToValue(Preference preference) {
-        if(preference != null) {
+        if (preference != null) {
             preference.setOnPreferenceChangeListener(this);
             preference.setOnPreferenceClickListener(this);
         }
@@ -204,7 +241,7 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
             PreferenceManager.getDefaultSharedPreferences(mActivity).edit().clear().apply();
 
             return true;
-        } else if(key.equals(getString(R.string.credits_key))) {
+        } else if (key.equals(getString(R.string.credits_key))) {
             onPreferenceChange(preference, key);
             Intent creditsIntent = new Intent(mActivity, CreditsActivity.class);
 
@@ -227,11 +264,11 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
                     AppUtils.changeIcon(mActivity, position);
                     break;
                 case REQUEST_HIDDEN_SELECTED:
-                        Preference hiddenPreference = findPreference(getString(R.string.audio_nascosti_key));
+                    Preference hiddenPreference = findPreference(getString(R.string.audio_nascosti_key));
 
-                        getPreferenceManager().getSharedPreferences().edit().putString(hiddenPreference.getKey(),
-                                (String) data.getExtras().get(RESULT_HIDDEN_AUDIO_LIST)
-                        ).apply();
+                    getPreferenceManager().getSharedPreferences().edit().putString(hiddenPreference.getKey(),
+                            (String) data.getExtras().get(RESULT_HIDDEN_AUDIO_LIST)
+                    ).apply();
                     break;
                 case REQUEST_NAVIGATION_SELECTED:
                     Preference navigationPreference = findPreference(getString(R.string.cambia_ordine_key));
@@ -248,8 +285,10 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(mActivity != null && key.equals(mActivity.getString(R.string.pag_iniziale_key))) {
+        if (key.equals(getString(R.string.pag_iniziale_key))) {
             firstNavigationItemPosition = getFirstNavigationItemPosition();
+        } else if (key.equals(getString(R.string.cambia_ordine_key))) {
+            setInitialFragmentData();
         }
     }
 }
