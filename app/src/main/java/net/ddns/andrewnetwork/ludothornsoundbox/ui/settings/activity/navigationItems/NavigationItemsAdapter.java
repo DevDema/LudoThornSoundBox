@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemNavigationItemBinding;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,7 +29,7 @@ class NavigationItemsAdapter extends RecyclerView.Adapter {
         this.currentPosition = currentPosition;
         this.firstPosition = firstPosition;
 
-        for(int i=0; i<ludoNavigationItemList.size();i++) {
+        for (int i = 0; i < ludoNavigationItemList.size(); i++) {
             checkedArray[i] = ludoNavigationItemList.get(i).getVisible();
         }
     }
@@ -47,6 +46,8 @@ class NavigationItemsAdapter extends RecyclerView.Adapter {
         }
 
         public void set(LudoNavigationItem navigationItem, int position) {
+            mBinding.checkbox.setOnCheckedChangeListener(null);
+
             mBinding.imageBlock.setImageResource(navigationItem.getDrawableId());
             mBinding.titleLabel.setText(navigationItem.getName());
 
@@ -57,7 +58,7 @@ class NavigationItemsAdapter extends RecyclerView.Adapter {
 
                 navigationItem.setVisible(isChecked);
 
-                changeVisibleBackground(navigationItem, position);
+                changeVisibleBackground(position);
             });
 
             mBinding.arrowUp.setOnClickListener(v -> swapBackWard(position));
@@ -66,14 +67,14 @@ class NavigationItemsAdapter extends RecyclerView.Adapter {
 
             changeArrowsByPosition(position);
 
-            changeVisibleBackground(navigationItem, position);
+            changeVisibleBackground(position);
 
-            if(navigationItem.getId() == currentPosition || navigationItem.getId() == firstPosition) {
+            if (navigationItem.getId() == currentPosition || navigationItem.getId() == firstPosition) {
                 mBinding.checkbox.setEnabled(false);
                 mBinding.errorLabel.setVisibility(View.VISIBLE);
-                if(navigationItem.getId() == currentPosition) {
+                if (navigationItem.getId() == currentPosition) {
                     mBinding.errorLabel.setText(mContext.getString(R.string.error_current_position));
-                } else if(navigationItem.getId() == firstPosition) {
+                } else if (navigationItem.getId() == firstPosition) {
                     mBinding.errorLabel.setText(mContext.getString(R.string.error_first_position));
                 }
             } else {
@@ -82,21 +83,21 @@ class NavigationItemsAdapter extends RecyclerView.Adapter {
         }
 
         private void changeArrowsByPosition(int position) {
-            if(position == list.size()-1) {
+            if (position == list.size() - 1) {
                 mBinding.arrowDown.setVisibility(View.INVISIBLE);
             } else {
                 mBinding.arrowDown.setVisibility(View.VISIBLE);
             }
 
-            if(position == 0) {
+            if (position == 0) {
                 mBinding.arrowUp.setVisibility(View.INVISIBLE);
             } else {
                 mBinding.arrowUp.setVisibility(View.VISIBLE);
             }
         }
 
-        private void changeVisibleBackground(LudoNavigationItem navigationItem, int position) {
-            if(navigationItem.getVisible()) {
+        private void changeVisibleBackground(int position) {
+            if (checkedArray[position]) {
                 mBinding.arrowDown.setVisibility(View.VISIBLE);
                 mBinding.arrowUp.setVisibility(View.VISIBLE);
 
@@ -113,29 +114,29 @@ class NavigationItemsAdapter extends RecyclerView.Adapter {
     }
 
     private void swapForward(int position) {
-        Collections.swap(list, position, position+1);
+        Collections.swap(list, position, position + 1);
 
         boolean temp = checkedArray[position];
-        checkedArray[position] = checkedArray[position+1];
-        checkedArray[position+1] = temp;
+        checkedArray[position] = checkedArray[position + 1];
+        checkedArray[position + 1] = temp;
 
-        notifyItemMoved(position, position+1);
+        notifyItemMoved(position, position + 1);
 
         notifyItemChanged(position);
 
-        notifyItemChanged(position+1);
+        notifyItemChanged(position + 1);
     }
 
     private void swapBackWard(int position) {
-        Collections.swap(list, position-1, position);
+        Collections.swap(list, position - 1, position);
 
-        boolean temp = checkedArray[position-1];
-        checkedArray[position-1] = checkedArray[position];
+        boolean temp = checkedArray[position - 1];
+        checkedArray[position - 1] = checkedArray[position];
         checkedArray[position] = temp;
 
-        notifyItemMoved(position-1, position);
+        notifyItemMoved(position - 1, position);
 
-        notifyItemChanged(position-1);
+        notifyItemChanged(position - 1);
 
         notifyItemChanged(position);
     }
@@ -153,12 +154,12 @@ class NavigationItemsAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         LudoNavigationItem navigationItem = list.get(position);
 
-        if(viewHolder instanceof ViewHolder) {
+        if (viewHolder instanceof ViewHolder) {
             ((ViewHolder) viewHolder).set(navigationItem, position);
         }
 
         viewHolder.itemView.setTag(navigationItem.getDrawableId());
-}
+    }
 
     @Override
     public int getItemCount() {

@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
@@ -54,7 +56,16 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     int[] mandatoryPreferences = {R.string.usa_font_app_key, R.string.reset_app_key};
     private int currentNavigationItemPosition;
     private int firstNavigationItemPosition;
-
+    private String usaFontAppKey;
+    private String caricaAudioInsiemeKey;
+    private String dimensionePulsantiKey;
+    private String cambiaIconaKey;
+    private String cambiaOrdineKey;
+    private String audioNascostiKey;
+    private String resetAppKey;
+    private String creditsKey;
+    private String pagInizialeKey;
+    
     public static SettingsFragment newInstance(int currentPosition) {
 
         Bundle args = new Bundle();
@@ -75,15 +86,15 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
             firstNavigationItemPosition = getFirstNavigationItemPosition();
         }
 
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.usa_font_app_key)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.carica_audio_insieme_key)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.dimensione_pulsanti_key)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.cambia_icona_key)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.cambia_ordine_key)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.audio_nascosti_key)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.reset_app_key)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.credits_key)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pag_iniziale_key)));
+        bindPreferenceSummaryToValue(findPreference(usaFontAppKey));
+        bindPreferenceSummaryToValue(findPreference(caricaAudioInsiemeKey));
+        bindPreferenceSummaryToValue(findPreference(dimensionePulsantiKey));
+        bindPreferenceSummaryToValue(findPreference(cambiaIconaKey));
+        bindPreferenceSummaryToValue(findPreference(cambiaOrdineKey));
+        bindPreferenceSummaryToValue(findPreference(audioNascostiKey));
+        bindPreferenceSummaryToValue(findPreference(resetAppKey));
+        bindPreferenceSummaryToValue(findPreference(creditsKey));
+        bindPreferenceSummaryToValue(findPreference(pagInizialeKey));
 
         setInitialFragmentData();
 
@@ -92,12 +103,12 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     }
 
     private void setInitialFragmentData() {
-        Preference preference = findPreference(getString(R.string.pag_iniziale_key));
+        Preference preference = findPreference(pagInizialeKey);
         if (preference instanceof ListPreference) {
             ListPreference listPreference = (ListPreference) preference;
             List<CharSequence> newEntryValues = new ArrayList<>();
             List<LudoNavigationItem> navigationItems = JsonUtil.getGson().fromJson(
-                    getPreferenceManager().getSharedPreferences().getString(getString(R.string.cambia_ordine_key), ""),
+                    getPreferenceManager().getSharedPreferences().getString(cambiaOrdineKey, ""),
                     new TypeToken<List<LudoNavigationItem>>() {
                     }.getType()
             );
@@ -120,7 +131,7 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
 
     private int getFirstNavigationItemPosition() {
         return StringUtils.getActionIdByString(PreferenceManager.getDefaultSharedPreferences(mActivity)
-                .getString(mActivity.getString(R.string.pag_iniziale_key), "Home"));
+                .getString(pagInizialeKey, "Home"));
     }
 
     @Override
@@ -139,6 +150,15 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
+        audioNascostiKey = context.getString(R.string.audio_nascosti_key);
+        usaFontAppKey = context.getString(R.string.usa_font_app_key);
+        caricaAudioInsiemeKey = context.getString(R.string.carica_audio_insieme_key);
+        dimensionePulsantiKey = context.getString(R.string.dimensione_pulsanti_key);
+        cambiaIconaKey = context.getString(R.string.cambia_icona_key);
+        cambiaOrdineKey = context.getString(R.string.cambia_ordine_key);
+        resetAppKey = context.getString(R.string.reset_app_key);
+        creditsKey = context.getString(R.string.credits_key);
+        pagInizialeKey = context.getString(R.string.pag_iniziale_key);
     }
 
     @Override
@@ -208,9 +228,9 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
     @Override
     public boolean onPreferenceClick(Preference preference) {
         String key = preference.getKey();
-        final String iconKey = getString(R.string.cambia_icona_key);
-        final String ordineKey = getString(R.string.cambia_ordine_key);
-        final String hiddenKey = getString(R.string.audio_nascosti_key);
+        final String iconKey = cambiaIconaKey;
+        final String ordineKey = cambiaOrdineKey;
+        final String hiddenKey = audioNascostiKey;
 
         if (key.equals(iconKey)) {
             int currentPosition = getPreferenceManager().getSharedPreferences().getInt(iconKey, 0);
@@ -235,13 +255,13 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
             startActivityForResult(hiddenIntent, REQUEST_HIDDEN_SELECTED);
 
             return true;
-        } else if (key.equals(getString(R.string.reset_app_key))) {
+        } else if (key.equals(resetAppKey)) {
 
             onPreferenceChange(preference, key);
             PreferenceManager.getDefaultSharedPreferences(mActivity).edit().clear().apply();
 
             return true;
-        } else if (key.equals(getString(R.string.credits_key))) {
+        } else if (key.equals(creditsKey)) {
             onPreferenceChange(preference, key);
             Intent creditsIntent = new Intent(mActivity, CreditsActivity.class);
 
@@ -257,21 +277,21 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
         if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
             switch (requestCode) {
                 case REQUEST_ICON_SELECTED:
-                    Preference iconPreference = findPreference(getString(R.string.cambia_icona_key));
+                    Preference iconPreference = findPreference(cambiaIconaKey);
                     int position = (int) data.getExtras().get(EXTRA_ICON_SELECTED);
                     //save to preferences
                     getPreferenceManager().getSharedPreferences().edit().putInt(iconPreference.getKey(), position).apply();
                     AppUtils.changeIcon(mActivity, position);
                     break;
                 case REQUEST_HIDDEN_SELECTED:
-                    Preference hiddenPreference = findPreference(getString(R.string.audio_nascosti_key));
+                    Preference hiddenPreference = findPreference(audioNascostiKey);
 
                     getPreferenceManager().getSharedPreferences().edit().putString(hiddenPreference.getKey(),
                             (String) data.getExtras().get(RESULT_HIDDEN_AUDIO_LIST)
                     ).apply();
                     break;
                 case REQUEST_NAVIGATION_SELECTED:
-                    Preference navigationPreference = findPreference(getString(R.string.cambia_ordine_key));
+                    Preference navigationPreference = findPreference(cambiaOrdineKey);
 
                     getPreferenceManager().getSharedPreferences().edit().putString(navigationPreference.getKey(),
                             (String) data.getExtras().get(KEY_NAVIGATION_ITEMS)
@@ -285,9 +305,9 @@ public class SettingsFragment extends BasePrefencesFragment implements ISettings
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pag_iniziale_key))) {
+        if (key.equals(pagInizialeKey)) {
             firstNavigationItemPosition = getFirstNavigationItemPosition();
-        } else if (key.equals(getString(R.string.cambia_ordine_key))) {
+        } else if (key.equals(cambiaOrdineKey)) {
             setInitialFragmentData();
         }
     }
