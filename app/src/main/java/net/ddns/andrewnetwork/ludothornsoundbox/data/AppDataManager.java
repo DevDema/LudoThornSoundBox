@@ -200,4 +200,19 @@ public class AppDataManager implements DataManager {
     public void unregisterOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
         mPreferencesHelper.unregisterOnSharedPreferencesChangeListener(onSharedPreferenceChangeListener);
     }
+
+    @Override
+    public void saveAudioNascosto(LudoAudio audio) {
+        mPreferencesHelper.saveAudioNascosto(audio);
+    }
+
+    @Override
+    public void saveAudioListNascosti(List<LudoAudio> audioList) {
+        mPreferencesHelper.saveAudioListNascosti(audioList);
+    }
+
+    @Override
+    public List<LudoAudio> getAudioNascosti() {
+        return mPreferencesHelper.getAudioNascosti() != null ? mPreferencesHelper.getAudioNascosti() : new ArrayList<>();
+    }
 }

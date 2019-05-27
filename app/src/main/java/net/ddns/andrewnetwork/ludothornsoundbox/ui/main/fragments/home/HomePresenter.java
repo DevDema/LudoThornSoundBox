@@ -141,4 +141,14 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
     public void saveAudioListInPref(List<LudoAudio> audioList) {
         getDataManager().saveAudioList(audioList);
     }
+
+    @Override
+    public void saveAudioNascosto(LudoAudio audio) {
+        getDataManager().saveAudioNascosto(audio);
+    }
+
+    @Override
+    public List<LudoAudio> getHiddenAudioList() {
+        return getDataManager().getAudioNascosti();
+    }
 }

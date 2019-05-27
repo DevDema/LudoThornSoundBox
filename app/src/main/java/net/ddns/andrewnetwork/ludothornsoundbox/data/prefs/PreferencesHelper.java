@@ -70,4 +70,10 @@ public interface PreferencesHelper {
     void registerOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener);
 
     void unregisterOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener);
+
+    void saveAudioNascosto(LudoAudio audio);
+
+    void saveAudioListNascosti(List<LudoAudio> audioList);
+
+    List<LudoAudio> getAudioNascosti();
 }

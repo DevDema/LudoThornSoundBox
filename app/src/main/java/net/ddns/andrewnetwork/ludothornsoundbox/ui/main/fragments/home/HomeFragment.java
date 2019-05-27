@@ -185,7 +185,7 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
                         break;
                     case R.id.nascondi_audio:
                         audio.setHidden(true);
-                        mPresenter.salvaAudio(audio);
+                        mPresenter.saveAudioNascosto(audio);
                         if (mActivity instanceof MainActivity) {
                             if (mBinding.buttonsAudioPager.getAdapter() != null
                                     && ((MainActivity) mActivity).forceSearchViewListener()) {
@@ -285,15 +285,26 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
 
     private void configAudioList(List<LudoAudio> audioList) {
 
-        configureAdapter(audioList);
-
         mPresenter.saveAudioListInPref(audioList);
+
+        List<LudoAudio> hiddenAudioList = mPresenter.getHiddenAudioList();
+
+        audioList = removeAudioIfHidden(audioList, hiddenAudioList);
+        configureAdapter(audioList);
 
         mBinding.buttonRight.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_RIGHT));
 
         mBinding.buttonLeft.setOnClickListener(v -> mBinding.buttonsAudioPager.arrowScroll(View.FOCUS_LEFT));
 
 
+    }
+
+    private static List<LudoAudio> removeAudioIfHidden(List<LudoAudio> audioList, List<LudoAudio> hiddenAudioList) {
+        List<LudoAudio> outputAudioList = new ArrayList<>(audioList);
+
+        outputAudioList.removeAll(hiddenAudioList);
+
+        return outputAudioList;
     }
 
     private ButtonViewPagerAdapter<LudoAudio> configureAdapter(List<LudoAudio> audioList) {

@@ -22,13 +22,11 @@ public class SettingsHiddenAudioPresenter<V extends ISettingsHiddenAudioView> ex
 
     @Override
     public List<LudoAudio> getAudioList() {
-        return getDataManager().getAudioSavedList();
+        return getDataManager().getAudioNascosti();
     }
 
     @Override
     public void salvaListaAudio(List<LudoAudio> audios) {
-        for(LudoAudio audio : audios) {
-            getDataManager().saveAudio(audio);
-        }
+        getDataManager().saveAudioListNascosti(audios);
     }
 }

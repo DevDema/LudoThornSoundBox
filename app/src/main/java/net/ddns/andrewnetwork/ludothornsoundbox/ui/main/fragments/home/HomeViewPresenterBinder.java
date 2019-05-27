@@ -36,5 +36,9 @@ public interface HomeViewPresenterBinder {
         List<LudoAudio> getAudioListFromPreferences();
 
         void saveAudioListInPref(List<LudoAudio> audioList);
+
+        void saveAudioNascosto(LudoAudio audio);
+
+        List<LudoAudio> getHiddenAudioList();
     }
 }

@@ -52,6 +52,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String KEY_USAGE_COUNTER = "KEY_USAGE_COUNTER";
     private static final String KEY_USAGE_THRESOLD = "KEY_USAGE_THRESOLD";
     public static final String PREF_KEY_PREFERITI_VIDEO = "PREF_KEY_PREFERITI_VIDEO";
+    private static final String PREF_KEY_NASCOSTI_AUDIO = "PREF_KEY_NASCOSTI_AUDIO";
 
     private final SharedPreferences mPrefs;
 
@@ -256,5 +257,37 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public void unregisterOnSharedPreferencesChangeListener(OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
         mPrefs.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+    }
+
+
+    @Override
+    public void saveAudioNascosto(LudoAudio audio) {
+        List<LudoAudio> audioList = getAudioNascosti() != null ? getAudioNascosti() : new ArrayList<>();
+
+        if(audioList.contains(audio)) {
+            if (audioList.remove(AudioUtils.findAudioById(audioList, audio))) {
+
+                audioList.add(audio);
+            }
+        } else {
+            audioList.add(audio);
+        }
+
+        saveAudioListNascosti(audioList);
+    }
+
+    @Override
+    public void saveAudioListNascosti(List<LudoAudio> audioList) {
+
+        String videoListString = JsonUtil.getGson().toJson(audioList);
+
+        mPrefs.edit().putString(PREF_KEY_NASCOSTI_AUDIO, videoListString).apply();
+    }
+
+    @Override
+    public List<LudoAudio> getAudioNascosti() {
+        String serializedList = mPrefs.getString(PREF_KEY_NASCOSTI_AUDIO, "");
+        return JsonUtil.getGson().fromJson(serializedList, new TypeToken<List<LudoAudio>>() {
+        }.getType());
     }
 }
