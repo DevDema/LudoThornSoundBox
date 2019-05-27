@@ -27,10 +27,12 @@ public abstract class ChildPreferitiFragment extends BaseFragment implements IAu
     @Override
     public void notifySettingPreferito(Class<? extends PreferitiListAdapter> tClass, int position, boolean isSettingPreferito) {
         PreferitiListAdapter adapter = getListAdapter();
-        if(adapter.getClass().equals(tClass)) {
-            adapter.notifyOtherItemsChanged(position);
-        } else {
-            adapter.notifyDataSetChanged();
+        if(adapter != null) {
+            if (adapter.getClass().equals(tClass)) {
+                adapter.notifyOtherItemsChanged(position);
+            } else {
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 

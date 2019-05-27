@@ -97,6 +97,9 @@ public class PreferitiVideoFragment extends ChildPreferitiFragment implements IP
 
         mBinding.videoRecycler.setLayoutManager(new LinearLayoutManager(mContext));
         mBinding.videoRecycler.setAdapter(adapter);
+
+        mBinding.globalLinear.setVisibility(View.GONE);
+        mBinding.videoRecycler.setVisibility(View.VISIBLE);
     }
 
     @Override
