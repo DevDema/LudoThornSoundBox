@@ -12,6 +12,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityBlankFragmentBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.PreferencesManagerActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
@@ -69,7 +70,7 @@ public class BlankFragmentActivity extends PreferencesManagerActivity {
             case R.id.action_home:
                 return HomeFragment.newInstance(loadAtOnce);
             case R.id.action_favorites:
-                return PreferitiAudioFragment.newInstance();
+                return PreferitiFragment.newInstance();
             case R.id.action_random:
                 return RandomFragment.newInstance();
             case R.id.action_video:
