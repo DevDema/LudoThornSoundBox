@@ -80,12 +80,11 @@ android {
 
     defaultConfig {
         applicationId "net.ddns.andrewnetwork.ludothornsoundbox"
+        versionName "2.0 Beta"
+        versionCode 13
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1
         multiDexEnabled true
-
-        versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -95,13 +94,11 @@ android {
 
         ludo {
             dimension "version"
-            versionNameSuffix LUDO_ENVIRONMENT
             resValue "string", "app_name", LONG_NAME_LUDO + " App"
         }
 
         lolfun {
             dimension "version"
-            versionNameSuffix LOLFUN_ENVIRONMENT
             resValue "string", "app_name", LONG_NAME_LOLFUN + " App"
         }
     }

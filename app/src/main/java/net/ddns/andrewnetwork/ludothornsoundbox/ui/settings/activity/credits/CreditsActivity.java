@@ -6,6 +6,7 @@ import android.text.method.LinkMovementMethod;
 
 import androidx.databinding.DataBindingUtil;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityCreditsBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.PreferencesManagerActivity;
@@ -32,6 +33,8 @@ public class CreditsActivity extends PreferencesManagerActivity {
 
         mBinding.mailLudoLabel.setMovementMethod(LinkMovementMethod.getInstance());
         mBinding.mailLudoLabel.setText(Html.fromHtml("Mail: <a href=\"mailto:" + AppUtils.MAIL_LUDO + "\">" + AppUtils.MAIL_LUDO + "</a>"));
+
+        mBinding.appVersionLabel.setText(String.format("%s: Versione %s", getString(R.string.app_name), BuildConfig.VERSION_NAME));
 
         mBinding.mailSegnalazioniLabel.setMovementMethod(LinkMovementMethod.getInstance());
         mBinding.mailSegnalazioniLabel.setText(Html.fromHtml("<a href=\"mailto:" + AppUtils.MAIL_SEGNALAZIONI + "\">" + AppUtils.MAIL_SEGNALAZIONI + "</a>"));
