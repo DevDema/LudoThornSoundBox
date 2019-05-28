@@ -45,6 +45,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.credits.CreditsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationItems.LudoNavigationItem;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.social.SocialActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.web.WebActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
@@ -112,6 +113,10 @@ public class MainActivity extends ParentActivity
                 return true;
             case R.id.action_merchandise:
                 WebActivity.newInstance(this, AppUtils.MERCHANDISE_LINK);
+                return true;
+            case R.id.action_social:
+                Intent socialIntent = new Intent(this, SocialActivity.class);
+                startActivityForResult(socialIntent, SocialActivity.REQUEST_SOCIAL);
                 return true;
         }
 

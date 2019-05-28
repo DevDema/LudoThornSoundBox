@@ -156,4 +156,6 @@
     <string name="video_esistente_label">Il video esiste già nei preferiti!</string>
     <string name="link_unavailable">Link non disponibile.</string>
     <string name="video_rimosso_preferiti_label">Video rimosso dai preferiti con successo.</string>
+    <string name="social_title">Social</string>
+    <string name="social_header_title">I miei Social</string>
 </resources>

@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:id="@+id/group_schermate"
+    <item
+        android:id="@+id/group_schermate"
         android:title="@string/schermate_label">
         <menu>
             <group android:checkableBehavior="single">
@@ -34,13 +35,17 @@
             <group android:checkableBehavior="single">
 
                 <item
+                    android:id="@+id/action_social"
+                    android:icon="@drawable/ic_person_black"
+                    android:title="@string/social_title" />
+                <item
                     android:id="@+id/action_merchandise"
-                    android:icon="@drawable/ic_settings_black"
+                    android:icon="@drawable/ic_open_in_browser_black"
                     android:title="@string/merchandise_title" />
 
                 <item
                     android:id="@+id/action_patreon"
-                    android:icon="@drawable/ic_settings_black"
+                    android:icon="@drawable/ic_open_in_browser_black"
                     android:title="@string/patreon_title" />
             </group>
         </menu>
@@ -52,7 +57,7 @@
 
                 <item
                     android:id="@+id/action_credits"
-                    android:icon="@drawable/ic_settings_black"
+                    android:icon="@drawable/ic_credits_black"
                     android:title="@string/credits_title" />
 
                 <item

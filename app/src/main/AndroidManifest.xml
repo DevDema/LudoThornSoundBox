@@ -37,7 +37,7 @@
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/main_activity_label"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".ui.web.WebActivity"
@@ -72,6 +72,10 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.social.SocialActivity"
+            android:label="@string/social_header_title"
+            android:theme="@style/PreferenceActivityTheme" />
 
         <activity-alias
             android:name=".MainActivity1"
