@@ -10,6 +10,8 @@ def API_KEY_LUDO = properties.getProperty('API_KEY_LUDO')
 def LONG_NAME_LUDO = properties.getProperty('LONG_NAME_LUDO')
 def SHORT_NAME_LUDO = properties.getProperty('SHORT_NAME_LUDO')
 def CHANNELS_LUDO = properties.getProperty('CHANNELS_LUDO')
+def SOCIAL_LUDO = properties.getProperty('SOCIAL_LUDO')
+def SOCIAL_LOLFUN = properties.getProperty('SOCIAL_LOLFUN')
 def MAIN_CHANNEL_LINK_LUDO = properties.getProperty('MAIN_CHANNEL_LINK_LUDO')
 
 //LOLFUN PROPERTIES
@@ -28,12 +30,14 @@ android.productFlavors.whenObjectAdded { flavor ->
         flavor.buildConfigField("String", "LONG_NAME", "\"${LONG_NAME_LUDO}\"")
         flavor.buildConfigField("String", "SHORT_NAME", "\"${SHORT_NAME_LUDO}\"")
         flavor.buildConfigField("String", "CHANNELS", "\""+CHANNELS_LUDO+"\"")
+        flavor.buildConfigField("String", "SOCIAL", "\""+SOCIAL_LUDO+"\"")
         flavor.buildConfigField("String", "MAIN_CHANNEL_LINK", "\""+MAIN_CHANNEL_LINK_LUDO+"\"")
     } else if (flavor.name == LOLFUN_ENVIRONMENT) {
         flavor.buildConfigField("String", "API_KEY", "\"${API_KEY_LOLFUN}\"")
         flavor.buildConfigField("String", "LONG_NAME", "\"${LONG_NAME_LOLFUN}\"")
         flavor.buildConfigField("String", "SHORT_NAME", "\"${SHORT_NAME_LOLFUN}\"")
         flavor.buildConfigField("String", "CHANNELS", "\""+CHANNELS_LOLFUN+"\"")
+        flavor.buildConfigField("String", "SOCIAL", "\""+SOCIAL_LOLFUN+"\"")
         flavor.buildConfigField("String", "MAIN_CHANNEL_LINK", "\""+MAIN_CHANNEL_LINK_LOLFUN+"\"")
     }
 }

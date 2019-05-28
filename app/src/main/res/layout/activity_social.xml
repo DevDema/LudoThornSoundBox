@@ -1,7 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorAccent">
+<layout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent">
+
+        <LinearLayout
+            android:id="@+id/social_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!--<RelativeLayout
+                android:id="@+id/instagram_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/block_color_dark"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/instagram_icon"
+                    android:layout_width="@dimen/input_size_xxs"
+                    android:layout_height="@dimen/input_size_xxs"
+                    android:contentDescription="@string/instagram_icone"
+                    app:srcCompat="@drawable/ic_instagram" />
+
+                <TextView
+                    android:layout_width="@dimen/input_size_m"
+                    android:layout_height="@dimen/input_size_xxs"
+                    android:layout_toEndOf="@id/instagram_icon"
+                    android:gravity="center"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/pagina_instagram_label"
+                    android:textAlignment="center"
+                    android:textSize="24sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/telegram_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/block_color_dark"
+
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/telegram_icon"
+                    android:layout_width="@dimen/input_size_xxs"
+                    android:layout_height="@dimen/input_size_xxs"
+                    android:contentDescription="@string/telegram_icone"
+                    app:srcCompat="@drawable/ic_telegram" />
+
+                <TextView
+                    android:layout_width="@dimen/input_size_m"
+                    android:layout_height="@dimen/input_size_xxs"
+                    android:layout_toEndOf="@id/telegram_icon"
+                    android:gravity="center"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/pagina_telegram_label"
+                    android:textAlignment="center"
+                    android:textSize="24sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/facebook_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/block_color_dark"
+
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/facebook_icon"
+                    android:layout_width="@dimen/input_size_xxs"
+                    android:layout_height="@dimen/input_size_xxs"
+                    android:contentDescription="@string/facebook_icone"
+
+                    app:srcCompat="@drawable/ic_facebook" />
+
+                <TextView
+                    android:layout_width="@dimen/input_size_m"
+                    android:layout_height="@dimen/input_size_xxs"
+                    android:layout_toEndOf="@id/facebook_icon"
+                    android:gravity="center"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/pagina_facebook_label"
+                    android:textAlignment="center"
+                    android:textSize="24sp" />
+            </RelativeLayout>-->
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

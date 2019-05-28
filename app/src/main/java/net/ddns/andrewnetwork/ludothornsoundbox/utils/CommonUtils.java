@@ -213,6 +213,10 @@ public final class CommonUtils {
 
 
     public static void openLink(Context context, String link) {
+        if(link == null) {
+            return;
+        }
+
         Uri uri = Uri.parse(link);
 
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
