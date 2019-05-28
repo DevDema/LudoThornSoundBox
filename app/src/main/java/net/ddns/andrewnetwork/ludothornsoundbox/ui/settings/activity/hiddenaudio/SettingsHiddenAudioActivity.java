@@ -18,7 +18,6 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.hiddenaudio.SettingsHiddenAudioViewPresenterBinder.ISettingsHiddenAudioView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -74,16 +73,7 @@ public class SettingsHiddenAudioActivity extends PreferencesManagerActivity impl
     }
 
     private List<LudoAudio> getHiddenAudioList() {
-        List<LudoAudio> hiddenAudioList = new ArrayList<>();
-        List<LudoAudio> audioList = mPresenter.getAudioList();
-
-        for (LudoAudio audio : audioList) {
-            if (audio.isHidden()) {
-                hiddenAudioList.add(audio);
-            }
-        }
-
-        return hiddenAudioList;
+        return mPresenter.getAudioList();
     }
 
     @Override
