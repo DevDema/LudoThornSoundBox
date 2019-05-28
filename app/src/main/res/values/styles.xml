@@ -47,7 +47,7 @@
         <item name="android:fontFamily">@font/knewave</item>
     </style>
     <style name="DefaultFont">
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:fontFamily">roboto</item>
     </style>
     <style name="Button" parent="android:Widget.Button">
         <item name="android:textColor">@drawable/button_white_text</item>
