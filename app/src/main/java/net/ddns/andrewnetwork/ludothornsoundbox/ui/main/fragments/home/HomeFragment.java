@@ -150,10 +150,11 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
 
     @Override
     public void onButtonSelected(LudoAudio audio, int position, View button) {
+        ParentActivity.AdClosedListener adClosedListener = () -> mBinding.audioPlayer.play(audio);
         if (mActivity instanceof ParentActivity && ListUtils.getRandomBoolean()) {
-            ((ParentActivity) mActivity).showInterstitialAd(null);
+            ((ParentActivity) mActivity).showInterstitialAd(adClosedListener);
         } else {
-            mBinding.audioPlayer.play(audio);
+            adClosedListener.onAdClosed();
         }
     }
 

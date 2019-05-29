@@ -170,7 +170,7 @@ public class AudioPlayer extends ConstraintLayout implements MediaPlayerObserver
 
     @Override
     public void notifyFinished() {
-        this.triggerCustomListener = false;
+
         defaultcompletionListener.onCompletion(DataSingleTon.getInstance().getMediaPlayer());
     }
 

@@ -166,4 +166,5 @@
     <string name="pagina_facebook_label">Pagina Facebook</string>
     <string name="pagina_label">Pagina %s</string>
     <string name="altra_roba_label">Altra Roba di %s</string>
+    <string name="help_message_ad">Guardare un po\' di pubblicità gratuitamente giusto per aiutare %s?</string>
 </resources>
