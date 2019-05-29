@@ -88,7 +88,5 @@ public class SocialItem extends RelativeLayout {
                 setText(social.getSocialImage().getString());
             }
         }
-
-        setOnClickListener(v -> CommonUtils.openLink(mContext, social.getUrl()));
     }
 }

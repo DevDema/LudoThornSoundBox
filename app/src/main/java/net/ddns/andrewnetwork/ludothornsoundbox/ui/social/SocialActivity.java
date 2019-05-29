@@ -1,6 +1,7 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.social;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
@@ -13,6 +14,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.AltriSocial;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Social;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivitySocialBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.PreferencesManagerActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.web.WebActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.view.SocialItem;
 
@@ -21,6 +24,7 @@ import java.util.List;
 public class SocialActivity extends PreferencesManagerActivity {
 
     public static final int REQUEST_SOCIAL = 4044;
+    private static final String[] EXCLUDED_URLS = { "https://t.me/", "http://t.me/"};
     private ActivitySocialBinding mBinding;
 
     @Override
@@ -48,6 +52,8 @@ public class SocialActivity extends PreferencesManagerActivity {
 
             socialItem.setSocial(social);
 
+            socialItem.setOnClickListener(v -> openLink(social.getUrl()));
+
             socialItem.setLayoutParams(marginLayoutParams);
 
             mBinding.socialLayout.addView(socialItem);
@@ -64,12 +70,17 @@ public class SocialActivity extends PreferencesManagerActivity {
 
             socialItem.setSocial(social);
 
+            socialItem.setOnClickListener(v -> openLink(social.getUrl()));
+
             socialItem.setLayoutParams(marginLayoutParams);
 
             mBinding.altriSocialLayout.addView(socialItem);
         }
 
-        mBinding.altriSocialLabel.setText(getString(R.string.altra_roba_label, BuildConfig.SHORT_NAME));
+        if(!altriSocialList.isEmpty()) {
+            mBinding.altriSocialLabel.setText(getString(R.string.altra_roba_label, BuildConfig.SHORT_NAME));
+            mBinding.altriSocialLabel.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -80,5 +91,23 @@ public class SocialActivity extends PreferencesManagerActivity {
     @Override
     protected int getFragmentContainerView() {
         return 0;
+    }
+
+    private void openLink(String url) {
+        if(!startsWithExcluded(url)) {
+            WebActivity.newInstance(this, url);
+        } else {
+            CommonUtils.openLink(this, url);
+        }
+    }
+
+    private static boolean startsWithExcluded(String url) {
+        for(String excluded : EXCLUDED_URLS) {
+            if(url.startsWith(excluded)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
