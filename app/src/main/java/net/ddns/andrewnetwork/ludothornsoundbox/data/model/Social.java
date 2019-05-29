@@ -8,9 +8,9 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 public class Social {
 
     public enum SocialImage {
-        SOCIAL_FACEBOOK(0, R.drawable.ic_facebook, "Facebook"),
-        SOCIAL_INSTAGRAM(1, R.drawable.ic_instagram, "Instagram"),
-        SOCIAL_TELEGRAM(2, R.drawable.ic_telegram, "Telegram");
+        SOCIAL_FACEBOOK(0, R.drawable.ic_facebook, "Pagina Facebook"),
+        SOCIAL_INSTAGRAM(1, R.drawable.ic_instagram, "Pagina Instagram"),
+        SOCIAL_TELEGRAM(2, R.drawable.ic_telegram, "Canale Telegram");
 
         final int index;
         final @DrawableRes int socialImage;

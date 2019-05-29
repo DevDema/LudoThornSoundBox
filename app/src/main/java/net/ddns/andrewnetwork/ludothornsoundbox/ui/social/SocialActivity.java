@@ -68,6 +68,8 @@ public class SocialActivity extends PreferencesManagerActivity {
 
             mBinding.altriSocialLayout.addView(socialItem);
         }
+
+        mBinding.altriSocialLabel.setText(getString(R.string.altra_roba_label, BuildConfig.SHORT_NAME));
     }
 
     @Override

@@ -85,7 +85,7 @@ public class SocialItem extends RelativeLayout {
             if(social instanceof AltriSocial) {
                 setText(((AltriSocial) social).getTitle());
             } else {
-                setTextPagina(social.getSocialImage().getString());
+                setText(social.getSocialImage().getString());
             }
         }
 

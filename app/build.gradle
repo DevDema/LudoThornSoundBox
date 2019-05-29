@@ -11,7 +11,7 @@ def LONG_NAME_LUDO = properties.getProperty('LONG_NAME_LUDO')
 def SHORT_NAME_LUDO = properties.getProperty('SHORT_NAME_LUDO')
 def CHANNELS_LUDO = properties.getProperty('CHANNELS_LUDO')
 def SOCIAL_LUDO = properties.getProperty('SOCIAL_LUDO')
-def SOCIAL_LOLFUN = properties.getProperty('SOCIAL_LOLFUN')
+def ALTRI_SOCIAL_LUDO = properties.getProperty('ALTRI_SOCIAL_LUDO')
 def MAIN_CHANNEL_LINK_LUDO = properties.getProperty('MAIN_CHANNEL_LINK_LUDO')
 
 //LOLFUN PROPERTIES
@@ -19,6 +19,8 @@ def API_KEY_LOLFUN = properties.getProperty('API_KEY_LOLFUN')
 def LONG_NAME_LOLFUN = properties.getProperty('LONG_NAME_LOLFUN')
 def SHORT_NAME_LOLFUN = properties.getProperty('SHORT_NAME_LOLFUN')
 def CHANNELS_LOLFUN = properties.getProperty('CHANNELS_LOLFUN')
+def SOCIAL_LOLFUN = properties.getProperty('SOCIAL_LOLFUN')
+def ALTRI_SOCIAL_LOLFUN = properties.getProperty('ALTRI_SOCIAL_LOLFUN')
 def MAIN_CHANNEL_LINK_LOLFUN = properties.getProperty('MAIN_CHANNEL_LINK_LOLFUN')
 
 
@@ -32,6 +34,7 @@ android.productFlavors.whenObjectAdded { flavor ->
         flavor.buildConfigField("String", "CHANNELS", "\""+CHANNELS_LUDO+"\"")
         flavor.buildConfigField("String", "SOCIAL", "\""+SOCIAL_LUDO+"\"")
         flavor.buildConfigField("String", "MAIN_CHANNEL_LINK", "\""+MAIN_CHANNEL_LINK_LUDO+"\"")
+        flavor.buildConfigField("String", "ALTRI_SOCIAL", "\""+ALTRI_SOCIAL_LUDO+"\"")
     } else if (flavor.name == LOLFUN_ENVIRONMENT) {
         flavor.buildConfigField("String", "API_KEY", "\"${API_KEY_LOLFUN}\"")
         flavor.buildConfigField("String", "LONG_NAME", "\"${LONG_NAME_LOLFUN}\"")
@@ -39,6 +42,8 @@ android.productFlavors.whenObjectAdded { flavor ->
         flavor.buildConfigField("String", "CHANNELS", "\""+CHANNELS_LOLFUN+"\"")
         flavor.buildConfigField("String", "SOCIAL", "\""+SOCIAL_LOLFUN+"\"")
         flavor.buildConfigField("String", "MAIN_CHANNEL_LINK", "\""+MAIN_CHANNEL_LINK_LOLFUN+"\"")
+        flavor.buildConfigField("String", "ALTRI_SOCIAL", "\""+ALTRI_SOCIAL_LOLFUN+"\"")
+
     }
 }
 
