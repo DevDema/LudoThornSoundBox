@@ -17,6 +17,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemVideoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.IAudioVideoAdaptersBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.child.VideoRecyclerAdapter;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
 import java.util.List;
 
@@ -97,6 +99,8 @@ public class PreferitiVideoListAdapter extends PreferitiListAdapter<LudoVideo> {
             mBinding.preferitoButton.setEnabled(!isSettingPreferito);
 
             setPreferitoListener(item, position);
+
+            mBinding.getRoot().setOnClickListener(v -> mAdapterBinder.apriVideo(item));
         }
 
         private void hideLoading() {

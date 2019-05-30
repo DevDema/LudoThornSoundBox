@@ -12,5 +12,7 @@ public interface IFragmentVideoPreferitiAdapterBinder extends IFragmentPreferiti
         void onChannelLoaded(Channel channel);
     }
 
+    void apriVideo(LudoVideo item);
+
     void loadChannel(LudoVideo video, OnChannelLoadedListener onChannelLoadedListener);
 }
