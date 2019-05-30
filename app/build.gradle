@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
 Properties properties = new Properties()
 properties.load(project.rootProject.file('properties/ludo.properties').newDataInputStream())
 
@@ -35,26 +37,25 @@ android.productFlavors.whenObjectAdded { flavor ->
         flavor.buildConfigField("String", "API_KEY", "\"${API_KEY_LUDO}\"")
         flavor.buildConfigField("String", "LONG_NAME", "\"${LONG_NAME_LUDO}\"")
         flavor.buildConfigField("String", "SHORT_NAME", "\"${SHORT_NAME_LUDO}\"")
-        flavor.buildConfigField("String", "CHANNELS", "\""+CHANNELS_LUDO+"\"")
-        flavor.buildConfigField("String", "SOCIAL", "\""+SOCIAL_LUDO+"\"")
-        flavor.buildConfigField("String", "MAIN_CHANNEL_LINK", "\""+MAIN_CHANNEL_LINK_LUDO+"\"")
-        flavor.buildConfigField("String", "ALTRI_SOCIAL", "\""+ALTRI_SOCIAL_LUDO+"\"")
+        flavor.buildConfigField("String", "CHANNELS", "\"" + CHANNELS_LUDO + "\"")
+        flavor.buildConfigField("String", "SOCIAL", "\"" + SOCIAL_LUDO + "\"")
+        flavor.buildConfigField("String", "MAIN_CHANNEL_LINK", "\"" + MAIN_CHANNEL_LINK_LUDO + "\"")
+        flavor.buildConfigField("String", "ALTRI_SOCIAL", "\"" + ALTRI_SOCIAL_LUDO + "\"")
         flavor.buildConfigField("String", "MAIL_PERSONALE", "\"${MAIL_PERSONALE_LUDO}\"")
         flavor.buildConfigField("String", "MAIL_SEGNALAZIONI", "\"${MAIL_SEGNALAZIONI_LUDO}\"")
     } else if (flavor.name == LOLFUN_ENVIRONMENT) {
         flavor.buildConfigField("String", "API_KEY", "\"${API_KEY_LOLFUN}\"")
         flavor.buildConfigField("String", "LONG_NAME", "\"${LONG_NAME_LOLFUN}\"")
         flavor.buildConfigField("String", "SHORT_NAME", "\"${SHORT_NAME_LOLFUN}\"")
-        flavor.buildConfigField("String", "CHANNELS", "\""+CHANNELS_LOLFUN+"\"")
-        flavor.buildConfigField("String", "SOCIAL", "\""+SOCIAL_LOLFUN+"\"")
-        flavor.buildConfigField("String", "MAIN_CHANNEL_LINK", "\""+MAIN_CHANNEL_LINK_LOLFUN+"\"")
+        flavor.buildConfigField("String", "CHANNELS", "\"" + CHANNELS_LOLFUN + "\"")
+        flavor.buildConfigField("String", "SOCIAL", "\"" + SOCIAL_LOLFUN + "\"")
+        flavor.buildConfigField("String", "MAIN_CHANNEL_LINK", "\"" + MAIN_CHANNEL_LINK_LOLFUN + "\"")
         flavor.buildConfigField("String", "MAIL_PERSONALE", "\"${MAIL_PERSONALE_LOLFUN}\"")
         flavor.buildConfigField("String", "MAIL_SEGNALAZIONI", "\"${MAIL_SEGNALAZIONI_LOLFUN}\"")
-        flavor.buildConfigField("String", "ALTRI_SOCIAL", "\""+ALTRI_SOCIAL_LOLFUN+"\"")
+        flavor.buildConfigField("String", "ALTRI_SOCIAL", "\"" + ALTRI_SOCIAL_LOLFUN + "\"")
 
     }
 }
-
 
 
 android {
@@ -140,8 +141,9 @@ android {
         enabled = true
     }
 
-    configurations{
-        all*.exclude group: 'com.google.guava', module: 'listenablefuture'}
+    configurations {
+        all*.exclude group: 'com.google.guava', module: 'listenablefuture'
+    }
 
 
 }
@@ -160,6 +162,7 @@ dependencies {
     implementation('com.google.apis:google-api-services-youtube:v3-rev205-1.24.1') {
         exclude group: 'org.apache.httpcomponents'
     }
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0-beta01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'
@@ -170,6 +173,4 @@ dependencies {
     testAnnotationProcessor "com.google.dagger:dagger-compiler:2.15"
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:2.15"
     implementation 'com.google.code.gson:gson:2.8.5'
-
-
 }
