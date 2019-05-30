@@ -70,6 +70,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/mail_ludo_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/ludo_thorn_label"
@@ -97,6 +98,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/mail_segnalazione_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"

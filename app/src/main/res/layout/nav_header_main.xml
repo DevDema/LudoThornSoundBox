@@ -16,11 +16,11 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/input_size_xs3"
+            android:layout_height="@dimen/input_size_xs3"
+            android:scaleType="fitCenter"
             android:contentDescription="@string/nav_header_desc"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"
-            app:srcCompat="@mipmap/ic_action_launcher_1_round" />
+            app:srcCompat="@mipmap/ic_action_launcher_1_layer" />
 
         <TextView
             android:layout_width="match_parent"

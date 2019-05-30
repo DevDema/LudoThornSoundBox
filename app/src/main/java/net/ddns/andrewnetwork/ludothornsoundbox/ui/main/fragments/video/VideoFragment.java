@@ -141,10 +141,6 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
                 mContext.getResources().getColor(R.color.white),
                 android.graphics.PorterDuff.Mode.SRC_IN);
 
-        //mBinding.videoLayout.setOnRefreshListener(() -> refreshChannels(false));
-
-        //mBinding.refreshButton.setOnClickListener(v -> refreshChannels(false));
-
         mBinding.progressVideoLoadingLabel.setText(mContext.getString(R.string.progress_video_loading_label, BuildConfig.SHORT_NAME));
     }
 
@@ -153,7 +149,9 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
         this.channelList = channelList;
 
-        channelList.add(0, new Channel(ALL_CHANNELS, null, ColorUtils.getByColorResource(mContext, R.color.colorAccent)));
+        if(channelList.size() > 1) {
+            channelList.add(0, new Channel(ALL_CHANNELS, null, ColorUtils.getByColorResource(mContext, R.color.colorAccent)));
+        }
 
         notifyFragmentsRefreshing(false);
 
@@ -242,12 +240,6 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
     public void onPreferitoRimossoFailed() {
         Toast.makeText(mContext, R.string.generic_error_label, Toast.LENGTH_SHORT).show();
     }
-
-    /*private void refreshPreferiti() {
-        if (mBinding.videoRecycler.getAdapter() instanceof VideoRecyclerAdapter) {
-            ((VideoRecyclerAdapter) mBinding.videoRecycler.getAdapter()).setNewPreferiti(mPresenter.getPreferitiList());
-        }
-    }*/
 
     @Override
     public void refreshChannels(boolean usesGlobalLoading) {

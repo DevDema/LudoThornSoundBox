@@ -22,7 +22,7 @@
                 android:layout_height="@dimen/input_size_xs"
                 android:contentDescription="@string/icon_1_description"
                 android:scaleType="center"
-                android:src="@mipmap/ic_action_launcher_1"
+                android:src="@mipmap/ic_action_launcher_1_layer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -62,7 +62,7 @@
                 android:layout_height="@dimen/input_size_xs"
                 android:contentDescription="@string/icon_1_description"
                 android:scaleType="center"
-                android:src="@mipmap/ic_action_launcher_2"
+                android:src="@mipmap/ic_action_launcher_2_layer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -101,7 +101,7 @@
                 android:layout_height="@dimen/input_size_xs"
                 android:contentDescription="@string/icon_1_description"
                 android:scaleType="center"
-                android:src="@mipmap/ic_action_launcher_3"
+                android:src="@mipmap/ic_action_launcher_3_layer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
