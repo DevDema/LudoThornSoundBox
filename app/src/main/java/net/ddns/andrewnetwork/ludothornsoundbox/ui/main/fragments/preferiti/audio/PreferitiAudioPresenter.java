@@ -84,7 +84,7 @@ public class PreferitiAudioPresenter<V extends IPreferitiView> extends BasePrese
 
     private boolean audioExists(List<LudoAudio> audioList, LudoAudio audio) {
         for (LudoAudio audioInList : audioList) {
-            if (audioInList.getAudio() == audio.getAudio()) {
+            if (audioInList.getTitle().equals(audio.getTitle())) {
                 return true;
             }
         }

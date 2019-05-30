@@ -3,8 +3,6 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.aud
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +18,17 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.IAud
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 
+import java.util.HashMap;
 import java.util.List;
 
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.ViewUtils.compareDrawables;
 
 
 public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
 
-    private static SparseArray<Bitmap> drawables = new SparseArray<>();
-    private static SparseBooleanArray isPlaying = new SparseBooleanArray();
-    private static SparseBooleanArray videoAvailable = new SparseBooleanArray();
+    private static HashMap<String, Bitmap> drawables = new HashMap<>();
+    private static HashMap<String, Boolean> isPlaying = new HashMap<>();
+    private static HashMap<String, Boolean> videoAvailable = new HashMap<>();
 
     PreferitiAudioListAdapter(IFragmentAudioPreferitiAdapterBinder binder, IAudioVideoAdaptersBinder audioVideoBinder, Context context, List<LudoAudio> list) {
         super(binder, audioVideoBinder, context, list);
@@ -75,8 +73,8 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
             mBinding.titleLabel.setText(item.getTitle());
 
             LudoVideo video = item.getVideo();
-
-            if (isPlaying.get(item.getAudio())) {
+            Boolean isPlayin = isPlaying.get(item.getTitle());
+            if (isPlayin != null && isPlayin) {
                 mBinding.playButton.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_stop_black_24dp));
             } else {
                 mBinding.playButton.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_play_black_24dp));
@@ -85,7 +83,8 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
             setPlayPauseListener(item, position);
 
             if (!isAnyPlaying()) {
-                if(videoAvailable.get(item.getAudio(), true)) {
+                Boolean videoAvailabl = videoAvailable.get(item.getTitle());
+                if(videoAvailabl != null && videoAvailabl) {
                     if (!isAlreadyLoaded(video)) {
                         showLoading();
                         mBinder.loadVideo(item, videoResponse -> {
@@ -120,12 +119,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
         }
 
         private boolean isAnyPlaying() {
-            for (int i = 0; i < isPlaying.size(); i++) {
-                if (isPlaying.valueAt(i)) {
-                    return true;
-                }
-            }
-            return false;
+            return isPlaying.containsValue(true);
         }
 
         private void manageVideoResponse(LudoAudio item, LudoVideo video) {
@@ -147,7 +141,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
 
         private void onVideoAvailable(LudoAudio item, LudoVideo video) {
 
-            videoAvailable.put(item.getAudio(), true);
+            videoAvailable.put(item.getTitle(), true);
 
             mBinding.videoTitleLabel.setText(video.getTitle());
             mBinding.videoButton.setOnClickListener(v ->
@@ -166,7 +160,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
 
         private void onVideoUnavailable(LudoAudio item) {
 
-            videoAvailable.put(item.getAudio(), false);
+            videoAvailable.put(item.getTitle(), false);
 
             mBinding.videoButton.setVisibility(View.GONE);
 
@@ -182,11 +176,11 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
                 drawables.put(item.getAudio(), item.getVideo().getThumbnail().getImage());
             }*/
 
-            if (drawables.get(item.getAudio()) == null) {
+            if (drawables.get(item.getTitle()) == null) {
                 showThumbnailLoading();
                 mBinder.loadThumbnail(item, thumbnail -> {
                     if (thumbnail != null) {
-                        drawables.put(item.getAudio(), thumbnail.getImage());
+                        drawables.put(item.getTitle(), thumbnail.getImage());
 
                         setDrawable(item);
                     } else {
@@ -205,7 +199,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
         }
 
         private void setDrawable(LudoAudio audio) {
-            mBinding.thumbnailImage.setImageBitmap(drawables.get(audio.getAudio()));
+            mBinding.thumbnailImage.setImageBitmap(drawables.get(audio.getTitle()));
 
             hideThumbnailLoading();
         }
@@ -264,7 +258,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
                 notifyOtherItemsChanged(position);
             }
 
-            isPlaying.put(audio.getAudio(), isPlayin);
+            isPlaying.put(audio.getTitle(), isPlayin);
 
             notifyItemChanged(position);
         }

@@ -91,7 +91,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public LudoAudio getVideoByIdInPref(LudoAudio audio) {
         List<LudoAudio> audioList = getAudioSavedList();
 
-        return AudioUtils.findAudioById(audioList, audio);
+        return AudioUtils.findAudioByTitle(audioList, audio);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
             int index = !audioList.isEmpty() ? audioList.size()-1 : 0;
 
             for(ListIterator<LudoAudio> iterator = audioList.listIterator(); iterator.hasNext();) {
-                if(audio.getAudio() == iterator.next().getAudio()) {
+                if(audio.getTitle().equals(iterator.next().getTitle())) {
                     iterator.remove();
                     index = iterator.nextIndex();
                 }
@@ -130,7 +130,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
         try {
             List<LudoAudio> audioList = getPreferitiList() != null ? getPreferitiList() : new ArrayList<>();
 
-            boolean result = audioList.remove(AudioUtils.findAudioById(audioList, audio));
+            boolean result = audioList.remove(AudioUtils.findAudioByTitle(audioList, audio));
 
             String audioListString = JsonUtil.getGson().toJson(audioList);
 
@@ -162,7 +162,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
         List<LudoAudio> audioList = getAudioSavedList();
 
         if(audioList.contains(audio)) {
-            if (audioList.remove(AudioUtils.findAudioById(audioList, audio))) {
+            if (audioList.remove(AudioUtils.findAudioByTitle(audioList, audio))) {
                 audioList.add(audio);
             }
         } else {
@@ -265,7 +265,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
         List<LudoAudio> audioList = getAudioNascosti() != null ? getAudioNascosti() : new ArrayList<>();
 
         if(audioList.contains(audio)) {
-            if (audioList.remove(AudioUtils.findAudioById(audioList, audio))) {
+            if (audioList.remove(AudioUtils.findAudioByTitle(audioList, audio))) {
 
                 audioList.add(audio);
             }

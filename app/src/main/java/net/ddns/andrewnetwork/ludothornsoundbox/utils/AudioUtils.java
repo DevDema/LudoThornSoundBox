@@ -1,8 +1,11 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -24,48 +27,75 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.google.gson.reflect.TypeToken;
+
 import static net.ddns.andrewnetwork.ludothornsoundbox.data.model.DataSingleTon.ACTION_FINISHED;
 import static net.ddns.andrewnetwork.ludothornsoundbox.data.model.DataSingleTon.ACTION_PLAYING;
+import static net.ddns.andrewnetwork.ludothornsoundbox.utils.FileUtils.createAudioPath;
 
 public abstract class AudioUtils {
 
+
     public static List<LudoAudio> createAudioList(Context context) {
         List<LudoAudio> audioList = new ArrayList<>();
-        final Resources resources = context.getResources();
-        final Class<R.raw> c = R.raw.class;
-        final Field[] fields = c.getFields();
-        final R.raw rawResources = new R.raw();
-        for (Field field : fields) {
-            String resourcename;
-            int resourceid;
-            try {
-                resourcename = field.getName();
-                if (resourcename.charAt(resourcename.length() - 1) != '_') {
-                    resourceid = field.getInt(rawResources);
-                    if(resourceid != R.raw.keep) {
-                        int resourceInfoId = resources.getIdentifier(resourcename + "_", "raw", context.getPackageName());
-                        if (resourceInfoId <= 0) {
-                            Log.e("AudioConstruct", "txt for " + resourcename + " not found.");
+        final AssetManager assetManager = context.getAssets();
+        final String[] SUPPORTED_AUDIO_EXTENSIONS = {".mp3", ".wav"};
+        final String[] SUPPORTED_TEXT_EXTENSIONS = {"_.txt", ".txt"};
+        try {
+            String[] list = assetManager.list(FileUtils.AudioAssetpath);
+
+            if (list != null && list.length > 0) {
+                for (String string : list) {
+                    String endsWith = StringUtils.endsWith(string, SUPPORTED_AUDIO_EXTENSIONS);
+                    if (endsWith != null) {
+                        LudoVideo ludoVideo;
+                        try {
+                            InputStream isTxt = null;
+                            int i = 0;
+                            while (true) {
+                                if (i >= SUPPORTED_TEXT_EXTENSIONS.length) {
+                                    break;
+                                }
+                                try {
+                                    isTxt = assetManager.open(createAudioPath(string.replace(endsWith, SUPPORTED_TEXT_EXTENSIONS[i])));
+                                    break;
+                                } catch (IOException e) {
+                                    i++;
+                                }
+                            }
+
+                            if(isTxt != null) {
+                                String json = FileUtils.inputStreamToString(isTxt);
+                                ludoVideo = JsonUtil.getGson().fromJson(json, new TypeToken<LudoVideo>() {}.getType());
+                            } else {
+                                Log.e("TxtFileException", "Txt for " + string + " not found.");
+                                ludoVideo = new LudoVideo();
+                            }
+
+                        } catch (IOException e) {
+                            Log.e("FolderException", "Folder not found.");
+                            ludoVideo = new LudoVideo();
+                            e.printStackTrace();
                         }
-                        LudoVideo ludoVideo = resourceInfoId > 0 ? JsonUtil.getGson().fromJson(FileUtils.readTextFile(resources.openRawResource(resourceInfoId)), LudoVideo.class) : new LudoVideo();
 
-
-                        audioList.add(new LudoAudio(resourcename, resourceid, ludoVideo));
+                        audioList.add(new LudoAudio(string, ludoVideo));
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-        }
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return audioList;
     }
 
@@ -73,31 +103,28 @@ public abstract class AudioUtils {
     public static void playTrack(Context context, LudoAudio audio) {
 
         stopTrack();
-        int resourceId = audio.getAudio();
-        MediaPlayer mediaPlayer;
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        final AssetManager assetManager = context.getAssets();
+
         try {
-            mediaPlayer = MediaPlayer.create(context, resourceId);
-            if(mediaPlayer == null) {
-                throw new Resources.NotFoundException();
-            }
-        } catch (Resources.NotFoundException e) {
+            AssetFileDescriptor afd = assetManager.openFd(createAudioPath(audio.getAudioFile()));
+            mediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+        } catch (IOException e) {
             e.printStackTrace();
-
-            resourceId = context.getResources().getIdentifier(StringUtils.buildPossibleFileName(audio), "raw", context.getPackageName());
-
-            mediaPlayer = MediaPlayer.create(context, resourceId);
-
-            audio.setId(resourceId);
+            return;
         }
 
         DataSingleTon.getInstance().setMediaPlayer(mediaPlayer);
 
-        if(DataSingleTon.getInstance().getMediaPlayer() != null) {
+        if (DataSingleTon.getInstance().getMediaPlayer() != null) {
             DataSingleTon.getInstance().getMediaPlayer().setOnCompletionListener(mp -> DataSingleTon.getInstance().notifyAll(ACTION_FINISHED, audio));
-            DataSingleTon.getInstance().getMediaPlayer().start();
+            DataSingleTon.getInstance().getMediaPlayer().prepareAsync();
+            DataSingleTon.getInstance().getMediaPlayer().setOnPreparedListener(mp -> {
+                mp.start();
+                DataSingleTon.getInstance().notifyAll(ACTION_PLAYING, audio);
+            });
         }
 
-        DataSingleTon.getInstance().notifyAll(ACTION_PLAYING, audio);
     }
 
     public static void stopTrack() {
@@ -157,10 +184,10 @@ public abstract class AudioUtils {
         Collections.reverse(arrayList);
     }
 
-    public static LudoAudio findAudioById(List<LudoAudio> audioList, LudoAudio audio) {
+    public static LudoAudio findAudioByTitle(List<LudoAudio> audioList, LudoAudio audio) {
         List<LudoAudio> audioList1 = new ArrayList<>(audioList);
         for (LudoAudio audioInList : audioList1) {
-            if (audio.getAudio() == audioInList.getAudio()) {
+            if (audio.getTitle().equals(audioInList.getTitle())) {
                 return audioInList;
             }
         }
@@ -168,46 +195,46 @@ public abstract class AudioUtils {
         return audio;
     }
 
-    public static void shareAudio(@NonNull BaseFragment fragment, @NonNull LudoAudio audio) {
+    public static void shareAudio(@NonNull Activity context, @NonNull LudoAudio audio) {
         Uri fileUri;
         if (Build.VERSION.SDK_INT >= 24) {
-            if (fragment.getContext() != null) {
-                writeToExternalStorage(fragment, audio);
+            if (context != null) {
+                writeToExternalStorage(context, audio);
                 fileUri = FileProvider.getUriForFile(
-                        fragment.getContext(),
-                        fragment.getContext().getApplicationContext().getPackageName() + ".utils.GenericFileProvider",
+                        context,
+                        context.getApplicationContext().getPackageName() + ".utils.GenericFileProvider",
                         createAudioFile(audio)
                 );
             } else {
                 throw new IllegalArgumentException("fragment not attached to a context");
             }
         } else {
-            fileUri = writeToExternalStorage(fragment, audio);
+            fileUri = writeToExternalStorage(context, audio);
         }
 
 
         if (fileUri == null) {
-            fragment.showMessage(fragment.getResources().getText(R.string.generic_error_label).toString());
+            CommonUtils.showDialog(context, R.string.generic_error_label);
             return;
         }
 
-        if (fragment.getContext() != null) {
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
 
-            shareIntent.putExtra(Intent.EXTRA_TEXT, fragment.getString(R.string.extra_audio_info));
+        shareIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.extra_audio_info));
 
-            shareIntent.setType(fragment.getContext().getString(R.string.MIME_AUDIO_ANY));
-            fragment.startActivity(Intent.createChooser(shareIntent, fragment.getResources().getText(R.string.send_audio_label)));
-        }
+        shareIntent.setType(context.getString(R.string.MIME_AUDIO_ANY));
+        context.startActivity(Intent.createChooser(shareIntent, context.getResources().getString(R.string.send_audio_label)));
+
     }
 
-    private static Uri writeToExternalStorage(Fragment fragment, LudoAudio audio) {
+    private static Uri writeToExternalStorage(Context context, LudoAudio audio) {
         InputStream inputStream;
         FileOutputStream fileOutputStream;
+        final AssetManager assetManager = context.getAssets();
         try {
-            inputStream = fragment.getResources().openRawResource(audio.getAudio());
+            inputStream = assetManager.open(createAudioPath(audio.getAudioFile()));
             File file = createAudioFile(audio);
             fileOutputStream = new FileOutputStream(file);
 
@@ -237,11 +264,11 @@ public abstract class AudioUtils {
 
     public static boolean setAsRingtone(Context context, LudoAudio audio, int type) {
         byte[] buffer;
-        InputStream fIn = context.getResources().openRawResource(
-                audio.getAudio());
+        final AssetManager assetManager = context.getAssets();
         int size = 0;
 
         try {
+            InputStream fIn = assetManager.open(createAudioPath(audio.getAudioFile()));
             size = fIn.available();
             buffer = new byte[size];
             fIn.read(buffer);
@@ -337,7 +364,7 @@ public abstract class AudioUtils {
     public static String[] getAudioNameArray(List<LudoAudio> audioList) {
         String[] strings = new String[audioList.size()];
 
-        for(int i=0; i<audioList.size();i++) {
+        for (int i = 0; i < audioList.size(); i++) {
             LudoAudio audio = audioList.get(i);
             strings[i] = audio.getTitle();
         }

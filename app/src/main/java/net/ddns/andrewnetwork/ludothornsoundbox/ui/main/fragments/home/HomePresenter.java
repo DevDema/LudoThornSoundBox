@@ -48,7 +48,7 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
 
         //CONTROLLA SE ESISTE GIA'
         for (LudoAudio audioInList : preferitiList) {
-            if (audioInList.getAudio() == audio.getAudio()) {
+            if (audioInList.getTitle().equals(audio.getTitle())) {
                 getMvpView().onPreferitoEsistente(audio);
                 return;
             }
@@ -101,12 +101,6 @@ public class HomePresenter<V extends IHomeView> extends BasePresenter<V> impleme
         for(LudoAudio audioFromServer : listFromServer) {
             for(LudoAudio audioFromPref : listFromPref) {
                 if(audioFromServer.getTitle().equals(audioFromPref.getTitle())) {
-
-                    //SE AUDIO HANNO RESOURCE ID DIFFERENTI, PROBABILMENTE QUELLO DELLE SHARED PREFERENCES E' SBAGLIATO.
-                    //RISETTARLO A QUELLO PIU' RECENTE.
-                    if(audioFromPref.getAudio() != audioFromServer.getAudio()) {
-                        audioFromPref.setId(audioFromServer.getAudio());
-                    }
 
                     if(!nonEmptyNonNull(audioFromServer.getVideo().getId())) {
                         Log.v("NoVideoREST","L'audio " +audioFromServer.getTitle() + "non ha video.");

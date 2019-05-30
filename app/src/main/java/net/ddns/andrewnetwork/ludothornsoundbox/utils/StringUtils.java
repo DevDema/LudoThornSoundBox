@@ -76,5 +76,29 @@ public abstract class StringUtils {
         return Arrays.asList(readFile.replaceAll("- ", "").split("[\\r?\\n]+"));
     }
 
+    public static boolean startsWith(String url, final String[] EXCLUDED_URLS) {
+        for(String excluded : EXCLUDED_URLS) {
+            if(url.startsWith(excluded)) {
+                return true;
+            }
+        }
 
+        return false;
+    }
+
+    /**
+     *
+     * @param url string to be compared
+     * @param EXCLUDED_URLS array of strings that the string should end with
+     * @return the suffix the strings ends by.
+     */
+    public static String endsWith(String url, final String[] EXCLUDED_URLS) {
+        for(String excluded : EXCLUDED_URLS) {
+            if(url.endsWith(excluded)) {
+                return excluded;
+            }
+        }
+
+        return null;
+    }
 }

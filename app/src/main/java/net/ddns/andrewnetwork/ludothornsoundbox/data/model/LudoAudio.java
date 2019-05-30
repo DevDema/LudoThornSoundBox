@@ -8,8 +8,8 @@ import androidx.annotation.Nullable;
 public class LudoAudio implements Serializable, Cloneable {
 
     private String title;
-    private int audio;
     private int order;
+    private String audioFile;
     private LudoVideo referredVideo;
     private boolean hidden;
 
@@ -17,38 +17,32 @@ public class LudoAudio implements Serializable, Cloneable {
 
     public static Comparator<LudoAudio> COMPARE_BY_NAME = (one, other) -> one.title.compareTo(other.title);
 
-    public LudoAudio() {
+    public LudoAudio() {}
 
-    }
-    public LudoAudio(String filename, int audio, LudoVideo ludoVideo) {
+    public LudoAudio(String filename, LudoVideo ludoVideo) {
+        this.audioFile = filename;
         this.referredVideo = ludoVideo;
 
-        if (filename.contains("_")) {
+        filename = filename.substring(filename.indexOf("/")+1);
+
+        if(filename.charAt(0) == 'n') {
             filename = filename.substring(1);
-            int underscore = filename.indexOf("_");
-            order = Integer.parseInt(filename.substring(0, underscore));
-            title = filename.substring(underscore + 1, filename.length()).replace("_", " ");
-        } else {
-            order = 0;
-            title = filename;
         }
 
-        this.audio = audio;
-    }
+        int divider = filename.contains("_") ? filename.indexOf("_") : filename.indexOf(" ");
 
-    public LudoAudio(String title, int audio, int order) {
-        this.title = title;
-        this.audio = audio;
-        this.order = order;
-        this.referredVideo = new LudoVideo();
+        try {
+            order = Integer.parseInt(filename.substring(0, divider));
+            title = filename.substring(divider + 1, filename.lastIndexOf(".")).replace("_", " ");
+        } catch (NumberFormatException e) {
+            //NO ORDER SPECIFIED
+            order = 0;
+            title = filename.substring(0, filename.lastIndexOf("."));
+        }
     }
 
     public String getTitle() {
         return title;
-    }
-
-    public int getAudio() {
-        return audio;
     }
 
     public int getOrder() {
@@ -80,10 +74,6 @@ public class LudoAudio implements Serializable, Cloneable {
         return hidden;
     }
 
-    public void setId(int audio) {
-        this.audio = audio;
-    }
-
     @Override
     protected LudoAudio clone() throws CloneNotSupportedException {
         LudoAudio audio = (LudoAudio) super.clone();
@@ -104,5 +94,9 @@ public class LudoAudio implements Serializable, Cloneable {
         }
 
         return ((LudoAudio) obj).getTitle().equals(getTitle());
+    }
+
+    public String getAudioFile() {
+        return audioFile;
     }
 }
