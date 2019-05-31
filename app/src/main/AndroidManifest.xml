@@ -58,12 +58,7 @@
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
-            <intent-filter>
-                <action android:name="OPEN_VIDEOS" />
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".ui.web.WebActivity"
@@ -102,6 +97,12 @@
             android:name=".ui.social.SocialActivity"
             android:label="@string/social_header_title"
             android:theme="@style/PreferenceActivityTheme" />
+        <activity android:name=".ui.videoinfo.VideoInformationActivity" >
+            <intent-filter>
+                <action android:name="OPEN_VIDEOS" />
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
         <activity-alias
             android:name=".MainActivity1"

@@ -247,6 +247,35 @@ public class AppApiHelper implements ApiHelper {
         });
     }
 
+    @Override
+    public Single<LudoVideo> getVideoById(String url) {
+        return Single.create(emitter -> {
+            Log.d("VideoFromUrlREST", "getting Video for URL: " + url);
+            Log.d("ApiKey", AppUtils.getApiKey());
+
+            YouTube.Videos.List search;
+            search = createTubeService().videos().list("id,snippet,statistics");
+            search.setKey(AppUtils.getApiKey());
+
+            search.setId(url);
+            search.setMaxResults(1L);
+            final VideoListResponse videoListResponse = search.execute();
+            Log.d("VideoResponse", videoListResponse.toString());
+
+            List<Video> searchResultList = new ArrayList<>(videoListResponse.getItems());
+            if (searchResultList.isEmpty()) {
+                Throwable throwable = new IllegalArgumentException("No Videos were found for URL: " + url);
+                throwable.printStackTrace();
+                emitter.onError(throwable);
+            } else {
+                LudoVideo video = castToLudoVideo(searchResultList.get(0));
+
+                emitter.onSuccess(video);
+
+            }
+        });
+    }
+
     private YouTube createTubeService() {
         return new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), request -> {
         }).setApplicationName(BuildConfig.LONG_NAME).build();

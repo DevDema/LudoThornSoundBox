@@ -9,12 +9,9 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.reflect.TypeToken;
 
 import androidx.annotation.IdRes;
@@ -35,8 +32,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
@@ -75,7 +72,7 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils.LINK_ASKIN
 import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmptyNonNull;
 
 
-public class MainActivity extends ParentActivity
+public class MainActivity extends AdsActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener, IMainView, SharedPreferences.OnSharedPreferenceChangeListener, SearchView.OnQueryTextListener {
 
 
@@ -197,6 +194,11 @@ public class MainActivity extends ParentActivity
         mBinding.appBarMain.navigation.setSelectedItemId(fragmentFirstSelection);
 
         handleIntents(getIntent()!= null ? getIntent() : new Intent());
+    }
+
+    @Override
+    protected LinearLayout getAdRootView() {
+        return (LinearLayout) mBinding.appBarMain.getRoot();
     }
 
     @Override

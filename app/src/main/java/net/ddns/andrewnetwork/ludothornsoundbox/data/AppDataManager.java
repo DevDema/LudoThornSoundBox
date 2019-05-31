@@ -96,6 +96,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Single<LudoVideo> getVideoById(String url) {
+        return mApiHelper.getVideoById(url);
+    }
+
+    @Override
     public void saveAudioList(List<LudoAudio> audioList) {
         mPreferencesHelper.saveAudioList(audioList);
 

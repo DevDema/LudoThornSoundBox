@@ -46,4 +46,5 @@ public interface ApiHelper {
 
     Observable<LudoAudio> getVideoById(LudoAudio audio);
 
+    Single<LudoVideo> getVideoById(String url);
 }

@@ -64,5 +64,22 @@ public class VideoInformationPresenter<V extends IVideoInformationView> extends 
                 ));
     }
 
+    @Override
+    public void getVideoByUrl(String url) {
+        getMvpView().showLoading();
+        getCompositeDisposable().add(getDataManager().getVideoById(url)
+                .observeOn(getSchedulerProvider().ui())
+                .subscribeOn(getSchedulerProvider().io())
+                .subscribe(video -> {
+                            getMvpView().onVideoByUrlLoadSuccess(video);
+                            getMvpView().hideLoading();
+                        }, throwable -> {
+                            throwable.printStackTrace();
+                            getMvpView().onVideoInformationLoadFailed();
+                            getMvpView().hideLoading();
+                        }
+                ));
+    }
+
 
 }

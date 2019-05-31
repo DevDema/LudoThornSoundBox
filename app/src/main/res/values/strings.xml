@@ -170,4 +170,6 @@
     <string name="notifiche_canale_channel">Notifiche del canale</string>
     <string name="notifiche_canale_channel_id">channel_notification_videos</string>
     <string name="notifiche_action">notifiche_action</string>
+    <string name="video_di_label">Video di \"%s\"</string>
+    <string name="new_video_label">Nuovo Video!</string>
 </resources>

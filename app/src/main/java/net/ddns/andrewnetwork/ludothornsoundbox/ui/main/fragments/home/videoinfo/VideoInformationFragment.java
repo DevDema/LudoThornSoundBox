@@ -184,6 +184,11 @@ public class VideoInformationFragment extends ReducedDialogFragment implements I
     }
 
     @Override
+    public void onVideoByUrlLoadSuccess(LudoVideo video) {
+
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 

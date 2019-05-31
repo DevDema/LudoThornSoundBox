@@ -21,6 +21,8 @@ public interface VideoInformationViewPresenterBinder {
         void onVideoInformationLoadFailed();
 
         void onVideoInformationLoadSuccess(LudoAudio audio);
+
+        void onVideoByUrlLoadSuccess(LudoVideo video);
     }
 
     interface IVideoInformationPresenter<V extends IVideoInformationView> extends MvpPresenter<V> {
@@ -28,5 +30,7 @@ public interface VideoInformationViewPresenterBinder {
         void getThumbnail(LudoVideo video);
 
         void getVideoInformation(LudoAudio id);
+
+        void getVideoByUrl(String url);
     }
 }

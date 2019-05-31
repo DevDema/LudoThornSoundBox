@@ -26,7 +26,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 
 import java.util.function.Function;
 
-public abstract class ParentActivity extends PreferencesManagerActivity {
+public abstract class AdsActivity extends PreferencesManagerActivity {
 
     public interface AdCustomListener {
 
@@ -49,15 +49,7 @@ public abstract class ParentActivity extends PreferencesManagerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         MobileAds.initialize(this, AppConstants.ADS_CODE);
-        LinearLayout linearLayout = new LinearLayout(this);
-        button = new ImageButton(this);
-
-        mAdView = new AdView(this);
-
-        LinearLayout masterLayout = findViewById(R.id.navigation_layout);//findViewById(R.id.adView);
-        Bundle extras = new Bundle();
 
         AdListener adListener = new AdListener() {
 
@@ -96,45 +88,57 @@ public abstract class ParentActivity extends PreferencesManagerActivity {
             }
 
         };
-        mAdView.setAdListener(adListener);
-        mAdView.setAdUnitId("ca-app-pub-3889032681139142/8666737012");
-        mAdView.setAdSize(AdSize.BANNER);
 
         mInterstitialAd = new InterstitialAd(this);
 
         mInterstitialAd.setAdUnitId("ca-app-pub-3889032681139142/3864341552");
         mInterstitialAd.setAdListener(adListener);
-
+        Bundle extras = new Bundle();
         AdRequest.Builder adRequestBuilder = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras);
 
+        mInterstitialAd.loadAd(adRequestBuilder.build());
         //CONFIGURA TEST DEVICE.
         if (BuildConfig.DEBUG) {
             adRequestBuilder.addTestDevice("E471AADF1D21337710F1244766497DF9");
         }
-        button.setEnabled(false);
-        mAdView.loadAd(adRequestBuilder.build());
-        mInterstitialAd.loadAd(adRequestBuilder.build());
 
-        mAdView.setVisibility(View.GONE);
-        mAdView.setLayoutParams(new DrawerLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout masterLayout = getAdRootView();
+        if(masterLayout != null) {
 
-        button.setBackground(ContextCompat.getDrawable(this, R.drawable.block_color_dark));
-        button.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_browser_open_white));
-        button.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
-        button.setOnClickListener(v -> CommonUtils.showDialog(this, getString(R.string.help_message_ad, BuildConfig.SHORT_NAME), (dialog, which) -> showInterstitialAd(null), true));
 
-        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        linearLayout.addView(mAdView);
-        linearLayout.addView(button);
+            LinearLayout linearLayout = new LinearLayout(this);
+            button = new ImageButton(this);
 
-        masterLayout.addView(linearLayout);
+            mAdView = new AdView(this);
+
+
+            mAdView.setAdListener(adListener);
+            mAdView.setAdUnitId("ca-app-pub-3889032681139142/8666737012");
+            mAdView.setAdSize(AdSize.BANNER);
+
+
+            button.setEnabled(false);
+            mAdView.loadAd(adRequestBuilder.build());
+
+
+            mAdView.setVisibility(View.GONE);
+            mAdView.setLayoutParams(new DrawerLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            button.setBackground(ContextCompat.getDrawable(this, R.drawable.block_color_dark));
+            button.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_browser_open_white));
+            button.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+            button.setOnClickListener(v -> CommonUtils.showDialog(this, getString(R.string.help_message_ad, BuildConfig.SHORT_NAME), (dialog, which) -> showInterstitialAd(null), true));
+
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            linearLayout.addView(mAdView);
+            linearLayout.addView(button);
+
+            masterLayout.addView(linearLayout);
+        }
     }
 
-    @Override
-    public void onBackPressed() {
-        moveTaskToBack(true);
-
-    }
+    protected abstract LinearLayout getAdRootView();
 
     public void showInterstitialAd(AdClosedListener adClosedListener) {
 

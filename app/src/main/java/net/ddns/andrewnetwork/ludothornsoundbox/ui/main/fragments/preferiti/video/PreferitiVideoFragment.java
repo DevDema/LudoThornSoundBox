@@ -19,7 +19,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ContentVideoFavoriteBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.ParentActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.AdsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.ChildPreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.video.PreferitiVideoViewPresenterBinder.IPreferitiPresenter;
@@ -114,7 +114,7 @@ public class PreferitiVideoFragment extends ChildPreferitiFragment implements IP
 
     @Override
     public void apriVideo(LudoVideo item) {
-        ParentActivity.AdClosedListener adClosedListener = () -> CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
+        AdsActivity.AdClosedListener adClosedListener = () -> CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
         if(Math.random() < 0.5) {
             ((MainActivity) mActivity).showInterstitialAd(adClosedListener);
         } else {

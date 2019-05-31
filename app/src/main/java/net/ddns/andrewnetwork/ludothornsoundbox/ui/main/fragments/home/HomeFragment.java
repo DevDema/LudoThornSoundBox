@@ -2,10 +2,8 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,13 +20,13 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.FragmentHomeBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.ParentActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.AdsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.MainFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomeView;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.ButtonViewPagerAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.OnButtonSelectedListener;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo.VideoInformationActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
@@ -150,9 +148,9 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
 
     @Override
     public void onButtonSelected(LudoAudio audio, int position, View button) {
-        ParentActivity.AdClosedListener adClosedListener = () -> mBinding.audioPlayer.play(audio);
-        if (mActivity instanceof ParentActivity && ListUtils.getRandomBoolean()) {
-            ((ParentActivity) mActivity).showInterstitialAd(adClosedListener);
+        AdsActivity.AdClosedListener adClosedListener = () -> mBinding.audioPlayer.play(audio);
+        if (mActivity instanceof AdsActivity && ListUtils.getRandomBoolean()) {
+            ((AdsActivity) mActivity).showInterstitialAd(adClosedListener);
         } else {
             adClosedListener.onAdClosed();
         }
@@ -175,7 +173,7 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
                         break;
                     case R.id.video_collegato:
                         if (mActivity != null && audio.getVideo() != null && nonEmptyNonNull(audio.getVideo().getId())) {
-                            mActivity.newDialogFragment(VideoInformationFragment.newInstance(loadAtOnce, audio, audio.getVideo().getConnectedAudioList()));
+                            VideoInformationActivity.newInstance(mActivity, loadAtOnce, audio, audio.getVideo().getConnectedAudioList());
                         } else {
                             CommonUtils.showDialog(getContext(), "Video non disponibile per questo audio!");
                             Log.e("AudioMissing", "Missing id for " + audio.getTitle() + ": Video:" + audio.getVideo());
