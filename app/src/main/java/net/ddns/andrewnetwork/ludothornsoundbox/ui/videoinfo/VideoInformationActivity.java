@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.gson.reflect.TypeToken;
@@ -176,6 +177,8 @@ public class VideoInformationActivity extends AdsActivity implements IVideoInfor
     @Override
     public void onThumbnailLoadFailed() {
         CommonUtils.showDialog(this, "Ooops! Non sono riuscito a caricare la thumbnail di questo video.");
+
+        mBinding.thumbnailImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_error_outline_white_24dp));
     }
 
     @Override
