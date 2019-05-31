@@ -176,14 +176,14 @@ public class VideoInformationActivity extends AdsActivity implements IVideoInfor
 
     @Override
     public void onThumbnailLoadFailed() {
-        CommonUtils.showDialog(this, "Ooops! Non sono riuscito a caricare la thumbnail di questo video.");
+        CommonUtils.showDialog(this, getString(R.string.video_info_no_thumbnail_message));
 
         mBinding.thumbnailImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_error_outline_white_24dp));
     }
 
     @Override
     public void onVideoInformationLoadFailed() {
-        CommonUtils.showDialog(this, "Ooops! Non sono riuscito a caricare le informazioni di questo video.", (dialog, which) -> finish(), false);
+        CommonUtils.showDialog(this, getString(R.string.video_info_no_info_message), (dialog, which) -> finish(), false);
 
     }
 
