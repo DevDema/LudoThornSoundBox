@@ -169,4 +169,5 @@
     <string name="help_message_ad">Guardare un po\' di pubblicità gratuitamente giusto per aiutare %s?</string>
     <string name="notifiche_canale_channel">Notifiche del canale</string>
     <string name="notifiche_canale_channel_id">channel_notification_videos</string>
+    <string name="notifiche_action">notifiche_action</string>
 </resources>

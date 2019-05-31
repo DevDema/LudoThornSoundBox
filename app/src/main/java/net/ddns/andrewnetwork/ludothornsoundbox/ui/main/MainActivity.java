@@ -38,6 +38,7 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
@@ -168,10 +169,12 @@ public class MainActivity extends ParentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        logCurrentFirebaseInstanceId();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        if(BuildConfig.DEBUG) {
+            logCurrentFirebaseInstanceId();
+        }
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mBinding.drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mBinding.drawerLayout.addDrawerListener(toggle);
@@ -188,9 +191,27 @@ public class MainActivity extends ParentActivity
         mBinding.navView.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
         mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this);
 
-        mBinding.appBarMain.navigation.setSelectedItemId(fragmentFirstSelection);
 
         PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).registerOnSharedPreferenceChangeListener(this);
+
+        mBinding.appBarMain.navigation.setSelectedItemId(fragmentFirstSelection);
+
+        handleIntents(getIntent()!= null ? getIntent() : new Intent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        handleIntents(intent);
+
+    }
+
+    private void handleIntents(Intent intent) {
+        if (intent != null && intent.getAction() != null && intent.getAction().equals("OPEN_VIDEOS")) {
+            selectOnBottomNavigationOrInstantiate(R.id.action_video);
+            Log.d("IntentAction", intent.getAction() +" Received");
+        }
     }
 
     private void logCurrentFirebaseInstanceId() {
@@ -201,14 +222,13 @@ public class MainActivity extends ParentActivity
                         return;
                     }
 
-                    if(task.getResult() != null) {
+                    if (task.getResult() != null) {
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
 
                         // Log and toast
                         String msg = "Token Firebase: " + token;
                         Log.d(TAG, msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     } else {
                         Log.d(TAG, "Nessun Token");
                     }
@@ -374,11 +394,11 @@ public class MainActivity extends ParentActivity
         int orientation = newConfig.orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             mAdView.setVisibility(View.VISIBLE);
-        } else if( orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             getView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    if(getFragmentContainer().getHeight()<600) {
+                    if (getFragmentContainer().getHeight() < 600) {
                         mAdView.setVisibility(View.GONE);
                         getView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
@@ -455,7 +475,7 @@ public class MainActivity extends ParentActivity
     public boolean onCreateOptionsMenu(Menu menu) {
 
 
-        if (currentFragment.getClass().equals(HomeFragment.class)) {
+        if (currentFragment != null && currentFragment.getClass().equals(HomeFragment.class)) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.options_home_menu, menu);
 
