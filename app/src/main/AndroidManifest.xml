@@ -47,13 +47,10 @@
             android:value="ca-app-pub-3889032681139142~8858308706" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@mipmap/ic_action_launcher_3" />
+            android:resource="@drawable/ic_action_launcher_1_layer" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
-        <meta-data
-            android:name="@string/notifiche_canale_channel_id"
-            android:value="@string/notifiche_canale_channel" />
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"

@@ -43,6 +43,8 @@ android.productFlavors.whenObjectAdded { flavor ->
         flavor.buildConfigField("String", "ALTRI_SOCIAL", "\"" + ALTRI_SOCIAL_LUDO + "\"")
         flavor.buildConfigField("String", "MAIL_PERSONALE", "\"${MAIL_PERSONALE_LUDO}\"")
         flavor.buildConfigField("String", "MAIL_SEGNALAZIONI", "\"${MAIL_SEGNALAZIONI_LUDO}\"")
+        flavor.buildConfigField("String", "TOPIC_DEBUG", "\"ludo_video_notification_debug\"")
+        flavor.buildConfigField("String", "TOPIC_RELEASE", "\"ludo_video_notification_release\"")
     } else if (flavor.name == LOLFUN_ENVIRONMENT) {
         flavor.buildConfigField("String", "API_KEY", "\"${API_KEY_LOLFUN}\"")
         flavor.buildConfigField("String", "LONG_NAME", "\"${LONG_NAME_LOLFUN}\"")
@@ -53,6 +55,8 @@ android.productFlavors.whenObjectAdded { flavor ->
         flavor.buildConfigField("String", "MAIL_PERSONALE", "\"${MAIL_PERSONALE_LOLFUN}\"")
         flavor.buildConfigField("String", "MAIL_SEGNALAZIONI", "\"${MAIL_SEGNALAZIONI_LOLFUN}\"")
         flavor.buildConfigField("String", "ALTRI_SOCIAL", "\"" + ALTRI_SOCIAL_LOLFUN + "\"")
+        flavor.buildConfigField("String", "TOPIC_DEBUG", "\"lolfun_video_notification_debug\"")
+        flavor.buildConfigField("String", "TOPIC_RELEASE", "\"lolfun_video_notification_release\"")
 
     }
 }

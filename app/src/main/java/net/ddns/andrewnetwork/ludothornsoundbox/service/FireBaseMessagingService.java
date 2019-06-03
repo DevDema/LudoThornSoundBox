@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -22,8 +23,12 @@ import com.google.firebase.messaging.RemoteMessage;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo.VideoInformationActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
+import java.io.IOException;
 import java.util.Map;
+
+import static android.app.NotificationManager.IMPORTANCE_LOW;
 
 public class FireBaseMessagingService extends FirebaseMessagingService {
 
@@ -56,7 +61,8 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
 
     private void sendNotification(RemoteMessage message) {
 
-
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         RemoteMessage.Notification notification = message.getNotification();
         Map<String, String> data = message.getData();
         if (notification != null) {
@@ -73,26 +79,34 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
             }
 
 
-
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                     PendingIntent.FLAG_ONE_SHOT);
+            Bitmap thumbnail;
+            try {
+                thumbnail = VideoUtils.getThumbnailURLFromVideoId(data.get("VideoURL"));
+            } catch (IOException e) {
+                thumbnail = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_action_launcher_1_layer);
+            }
 
-            String channelId = getString(R.string.notifiche_canale_channel_id);
             Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             NotificationCompat.Builder notificationBuilder =
-                    new NotificationCompat.Builder(this, channelId)
-                            .setSmallIcon(R.mipmap.ic_action_launcher_1_layer)
+                    new NotificationCompat.Builder(this, "notify_001")
+                            .setSmallIcon(R.drawable.logo)
                             .setContentTitle(notification.getTitle())
                             .setContentText(notification.getBody())
-                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_action_launcher_1_layer))
+                            .setLargeIcon(thumbnail)
                             .setAutoCancel(true)
                             .setSound(defaultSoundUri)
                             .setContentIntent(pendingIntent);
 
-            NotificationManager notificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                String channelId = getString(R.string.notifiche_canale_channel_id);
+                NotificationChannel channel = new NotificationChannel(channelId, getString(R.string.notifiche_canale_channel), IMPORTANCE_LOW);
+                notificationManager.createNotificationChannel(channel);
+                notificationBuilder.setChannelId(channelId);
+            }
             notificationManager.notify(ID_NOTIFICATION_CHANNEL_VIDEOS, notificationBuilder.build());
+
         }
     }
 }

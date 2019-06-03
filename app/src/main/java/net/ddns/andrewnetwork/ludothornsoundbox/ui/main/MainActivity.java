@@ -167,8 +167,8 @@ public class MainActivity extends AdsActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FirebaseMessaging.getInstance().subscribeToTopic("test");
-        FirebaseMessaging.getInstance().subscribeToTopic("test");
+        subscribeToTopics();
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -197,6 +197,21 @@ public class MainActivity extends AdsActivity
         mBinding.appBarMain.navigation.setSelectedItemId(fragmentFirstSelection);
 
         handleIntents(getIntent()!= null ? getIntent() : new Intent());
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static void subscribeToTopics() {
+        String topic;
+        if(BuildConfig.DEBUG) {
+            topic = BuildConfig.TOPIC_DEBUG;
+        } else {
+            topic = BuildConfig.TOPIC_RELEASE;
+        }
+
+        Log.d("FCMTopic" , topic);
+
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+
     }
 
     @Override

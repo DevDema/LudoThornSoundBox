@@ -1,5 +1,8 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.SearchResultSnippet;
@@ -13,6 +16,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.VideoInformation;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -240,5 +245,10 @@ public abstract class VideoUtils {
         }
 
         return new ArrayList<>();
+    }
+
+    public static Bitmap getThumbnailURLFromVideoId(String videoURL) throws IOException {
+        URL url = new URL("https://img.youtube.com/vi/" + videoURL + "/default.jpg");
+        return BitmapFactory.decodeStream(url.openConnection().getInputStream());
     }
 }
