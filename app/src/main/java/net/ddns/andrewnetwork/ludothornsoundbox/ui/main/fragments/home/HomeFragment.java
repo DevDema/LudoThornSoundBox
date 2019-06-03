@@ -175,7 +175,7 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
                         if (mActivity != null && audio.getVideo() != null && nonEmptyNonNull(audio.getVideo().getId())) {
                             VideoInformationActivity.newInstance(mActivity, loadAtOnce, audio, audio.getVideo().getConnectedAudioList());
                         } else {
-                            CommonUtils.showDialog(getContext(), "Video non disponibile per questo audio!");
+                            CommonUtils.showDialog(mContext, "Video non disponibile per questo audio!");
                             Log.e("AudioMissing", "Missing id for " + audio.getTitle() + ": Video:" + audio.getVideo());
                         }
                         break;
@@ -466,9 +466,13 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
 
 
     public void onAudioListChanged() {
-        this.audioList = mPresenter.getAudioListFromPreferences();
+        List<LudoAudio> audioList = mPresenter.getAudioListFromPreferences();
+
+        AudioUtils.attachSameVideoToAudios(audioList);
 
         onAudioListReceived(audioList);
+
+        this.audioList = audioList;
     }
 
     public void searchAudioByTitle(String title) {
