@@ -20,6 +20,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.Pref
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.FragmentVideoChildBinder.FragmentVideoChild;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ColorUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
@@ -277,7 +278,11 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
     @Override
     public void apriVideo(LudoVideo item) {
-        AdsActivity.AdClosedListener adClosedListener = () -> CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
+        AdsActivity.AdClosedListener adClosedListener = () -> {
+            AudioUtils.stopTrack();
+            CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
+        };
+        
         if(Math.random() < 0.5) {
             ((MainActivity) mActivity).showInterstitialAd(adClosedListener);
         } else {
