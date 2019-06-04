@@ -40,7 +40,7 @@ public class ButtonsView<T> extends LinearLayout {
         super(context);
 
         this.mContext = context;
-        this.infoVisible = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(mContext.getString(R.string.mostra_info_in_audio_key), false);
+        this.infoVisible = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(mContext.getString(R.string.mostra_info_in_audio_key), true);
         inflate();
         bindViews();
     }

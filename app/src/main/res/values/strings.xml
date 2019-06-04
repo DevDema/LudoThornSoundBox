@@ -35,7 +35,7 @@
     <string name="audio_esistente_label">Questo audio esiste già nei preferiti.</string>
     <string name="salvato_correttamente_audio_label">Audio salvato nei preferiti con successo!</string>
     <string name="salvato_fallito_audio_label">Salvataggio nei preferiti fallito!</string>
-    <string name="nofavorite">Non hai aggiunto nessun audio fra i preferiti! Aggiungi un audio dalla sezione Home tenendo premuto su audio o tramite il pulsante a lato su ogni audio (in base alle tue impostazioni).</string>
+    <string name="nofavorite">Non hai aggiunto nessun audio fra i preferiti!</string>
     <string name="deletefavorite">Per cancellare un audio da questa lista, tieni premuto sul pulsante corrispondente.</string>
     <string name="audio_rimosso_preferiti_label">Audio rimosso dai preferiti con successo!</string>
     <string name="audio_non_rimosso_preferiti_label">Si è verificato un errore nella rimozione del preferito.</string>
