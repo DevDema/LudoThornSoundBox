@@ -26,6 +26,9 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.ButtonsView.MAX_COLUMNS;
+import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.view.ButtonsView.MAX_ROWS;
+
 @SuppressWarnings("unchecked")
 public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterable {
 
@@ -98,11 +101,8 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
     }
 
     private void computeMaxItemsPerPage() {
-        int buttonWidth = ButtonsView.getWidthFromPreferences(mContext);
-        int buttonHeight = (int) mContext.getResources().getDimension(R.dimen.input_size_xxxs);
 
-        final int MAX_COLUMNS = (int) Math.floor(collection.getWidth() * 1.0 / buttonWidth);
-        final int MAX_ROWS = (int) Math.floor(collection.getHeight() * 1.0 / buttonHeight);
+       ButtonsView.computeMaxItems(mContext, collection);
         maxItemsPerPage = MAX_COLUMNS * MAX_ROWS;
     }
 
@@ -178,7 +178,7 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
                     int width  = buttonsView.getMeasuredWidth();
                     int height = buttonsView.getMeasuredHeight();
                     if(width != 0 || height != 0) {
-                        buttonsView.inflateButtons(mContext, 5);
+                        buttonsView.inflateButtons(mContext);
 
                         configureButtonsView(buttonsView, position);
 

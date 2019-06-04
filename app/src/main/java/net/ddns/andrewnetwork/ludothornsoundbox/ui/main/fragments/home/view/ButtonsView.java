@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -29,9 +30,9 @@ public class ButtonsView<T> extends LinearLayout {
     private OnViewReadyListener onViewReadyListener;
     private LayoutInflater layoutInflater;
     private Context mContext;
-    private static int MAX_COLUMNS;
-    private static int MAX_ROWS;
-    private static int MARGIN;
+    public static int MAX_COLUMNS;
+    public static int MAX_ROWS;
+    private static int MARGIN = 5;
     private List<T> list;
     private LinearLayout masterLayout;
     private boolean infoVisible;
@@ -135,17 +136,10 @@ public class ButtonsView<T> extends LinearLayout {
         }
     }
 
-    public void inflateButtons(Context context, int margin) {
-        MARGIN = margin;
-
-        inflateButtons(context);
-    }
-
     public void inflateButtons(Context context) {
         int buttonWidth = getWidthFromPreferences(context);
         int buttonHeight = (int) context.getResources().getDimension(R.dimen.input_size_xxxs);
-        MAX_COLUMNS = (int) Math.floor(getWidth() * 1.0 / (buttonWidth + 2 * MARGIN));
-        MAX_ROWS = (int) Math.floor(getHeight() * 1.0 / (buttonHeight + 2 * MARGIN));
+
         for (int i = 0; i < MAX_ROWS; i++) {
             LinearLayout linearLayout = new LinearLayout(context);
             linearLayout.setGravity(Gravity.CENTER);
@@ -156,10 +150,12 @@ public class ButtonsView<T> extends LinearLayout {
                 if (infoVisible) {
                     button = new OptionsMenuButton(context);
                     ((OptionsMenuButton) button).setTypeface(ResourcesCompat.getFont(mContext, R.font.knewave));
+                    ((OptionsMenuButton) button).setAllCaps(true);
                     ((OptionsMenuButton) button).setMaxLines(1);
                 } else {
                     button = new Button(context);
                     ((Button) button).setTypeface(ResourcesCompat.getFont(mContext, R.font.knewave));
+                    ((Button) button).setAllCaps(true);
                     ((Button) button).setMaxLines(1);
                 }
                 LayoutParams layoutParams = new LayoutParams(buttonWidth, buttonHeight);
@@ -207,5 +203,12 @@ public class ButtonsView<T> extends LinearLayout {
                 return (int) context.getResources().getDimension(R.dimen.input_size_l);
 
         }
+    }
+
+    public static void computeMaxItems(Context context, ViewGroup viewGroup) {
+        int buttonWidth = getWidthFromPreferences(context);
+        int buttonHeight = (int) context.getResources().getDimension(R.dimen.input_size_xxxs);
+        MAX_COLUMNS = (int) Math.floor(viewGroup.getWidth() * 1.0 / (buttonWidth + 2 * MARGIN));
+        MAX_ROWS = (int) Math.floor(viewGroup.getHeight() * 1.0 / (buttonHeight + 2 * MARGIN));
     }
 }

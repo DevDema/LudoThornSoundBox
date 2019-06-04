@@ -90,4 +90,8 @@ public class OptionsMenuButton extends ConstraintLayout {
 
         defaultButton.setLongClickable(false);
     }
+
+    public void setAllCaps(boolean b) {
+        defaultButton.setAllCaps(b);
+    }
 }
