@@ -51,7 +51,28 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
     private boolean loadingFailed;
     public static final String ALL_CHANNELS = "Tutti";
     private List<Channel> channelList;
+    private int currentPosition = -1;
+    private TabLayout.OnTabSelectedListener onTabSelectedListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            currentPosition = tab.getPosition();
+            Channel channel = channelList.get(tab.getPosition());
 
+            if(getView() != null) {
+                getView().setBackgroundColor(ContextCompat.getColor(mActivity, ColorUtils.getByName(mContext, channel.getBackGroundColor())));
+            }
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
+    };
     public interface MoreVideosLoadedListener {
 
         void onMoreVideosLoaded(List<Channel> videoList);
@@ -118,25 +139,6 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
         super.onViewCreated(viewCreated, savedInstanceState);
 
         loadingFailed = false;
-        mBinding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                Channel channel = channelList.get(tab.getPosition());
-
-                viewCreated.setBackgroundColor(ContextCompat.getColor(mActivity, ColorUtils.getByName(mContext, channel.getBackGroundColor())));
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
 
         mBinding.progressBar.getIndeterminateDrawable().setColorFilter(
                 mContext.getResources().getColor(R.color.white),
@@ -150,7 +152,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
         this.channelList = channelList;
 
-        if(channelList.size() > 1) {
+        if (channelList.size() > 1) {
             channelList.add(0, new Channel(ALL_CHANNELS, null, ColorUtils.getByColorResource(mContext, R.color.colorAccent)));
         }
 
@@ -161,6 +163,14 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
         mBinding.progressVideoLoadingLabel.setVisibility(View.INVISIBLE);
         onMoreVideoListLoadSuccess(channelList);
 
+        if (currentPosition != -1) {
+            TabLayout.Tab tab = mBinding.tabLayout.getTabAt(currentPosition);
+            if (tab != null) {
+                tab.select();
+            }
+        }
+
+        mBinding.tabLayout.addOnTabSelectedListener(onTabSelectedListener);
     }
 
     private void setUpTabLayout() {
@@ -171,7 +181,6 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
         for (Channel channel : channelList) {
             TabLayout.Tab tab = mBinding.tabLayout.newTab();
             mBinding.tabLayout.addTab(tab.setText(channel.getChannelName()));
-
         }
 
         mBinding.viewPager.setAdapter(new VideoPagerAdapter(getChildFragmentManager(), channelList, mPresenter.getPreferitiList()));
@@ -182,7 +191,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(PREF_KEY_PREFERITI_VIDEO)) {
+        if (key.equals(PREF_KEY_PREFERITI_VIDEO)) {
             notifyRefreshPreferiti(mPresenter.getPreferitiList());
         }
     }
@@ -244,6 +253,8 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
     @Override
     public void refreshChannels(boolean usesGlobalLoading) {
+        mBinding.tabLayout.removeOnTabSelectedListener(onTabSelectedListener);
+
         if (!usesGlobalLoading) {
             notifyFragmentsRefreshing(true);
         } else {
@@ -283,7 +294,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
             CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
         };
 
-        if(Math.random() < 0.5) {
+        if (Math.random() < 0.5) {
             ((MainActivity) mActivity).showInterstitialAd(adClosedListener);
         } else {
             adClosedListener.onAdClosed();
