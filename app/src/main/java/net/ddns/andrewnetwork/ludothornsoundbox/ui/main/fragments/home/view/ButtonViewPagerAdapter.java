@@ -238,7 +238,7 @@ public class ButtonViewPagerAdapter<T> extends PagerAdapter implements Filterabl
                     constraint = constraint.toString().toLowerCase();
                     for (int i = 0; i < ungroupedList.size(); i++) {
                         T dataNames = ungroupedList.get(i);
-                        if (parser.parseToString(dataNames).toLowerCase().startsWith(constraint.toString().toLowerCase()) && otherFilters.filterBy(dataNames)) {
+                        if (parser.parseToString(dataNames).toLowerCase().contains(constraint.toString().toLowerCase()) && otherFilters.filterBy(dataNames)) {
                             FilteredArrayNames.add(dataNames);
                         }
                     }

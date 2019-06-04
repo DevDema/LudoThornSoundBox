@@ -282,7 +282,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
             AudioUtils.stopTrack();
             CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
         };
-        
+
         if(Math.random() < 0.5) {
             ((MainActivity) mActivity).showInterstitialAd(adClosedListener);
         } else {
