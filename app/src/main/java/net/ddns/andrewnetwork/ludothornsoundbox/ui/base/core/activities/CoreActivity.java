@@ -118,6 +118,7 @@ public abstract class CoreActivity extends AppCompatActivity implements ICoreAct
      * Contains the class implementation
      **/
     private Delegate mDelegate = new Delegate(this);
+    private boolean countBackStackOnBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -444,17 +445,24 @@ public abstract class CoreActivity extends AppCompatActivity implements ICoreAct
         }
         // If fragment does not implement onBackPressed
         if (!hasOnBackPressed) {
-            if (getBackStackCount() > 0) {
+            if (countBackStackOnBackPressed && getBackStackCount() > 0) {
                 mFragmentManager.popBackStack();
                 Log.d(TAG, ".onBackPressed() -> popping backstack");
             } else {
                 super.onBackPressed();
-                Log.d(TAG, ".onBackPressed() -> nothing on backstack, calling super");
+
+                if(countBackStackOnBackPressed) {
+                    Log.d(TAG, ".onBackPressed() -> nothing on backstack, calling super");
+                }
             }
         }
     }
 
     public View getFragmentContainer() {
         return findViewById(getFragmentContainerView());
+    }
+
+    public void setCountBackStackOnBackPressed(boolean countBackStackOnBackPressed) {
+        this.countBackStackOnBackPressed = countBackStackOnBackPressed;
     }
 }

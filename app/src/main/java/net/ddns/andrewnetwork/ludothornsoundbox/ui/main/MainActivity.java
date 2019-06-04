@@ -59,7 +59,9 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.ListUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ViewUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.inject.Inject;
 
@@ -86,6 +88,7 @@ public class MainActivity extends AdsActivity
     private Fragment currentFragment;
     private List<LudoNavigationItem> orderedNavigationMenu;
 
+    private List<Integer> lastItems;
     private NavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = menuItem -> {
         int id = menuItem.getItemId();
 
@@ -167,7 +170,11 @@ public class MainActivity extends AdsActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        lastItems = new ArrayList<>();
+
         subscribeToTopics();
+
+        setCountBackStackOnBackPressed(false);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -348,6 +355,10 @@ public class MainActivity extends AdsActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            if(lastItems.size() > 1) {
+                mBinding.appBarMain.navigation.setSelectedItemId(lastItems.get(1));
+                lastItems.remove(0);
+            }
         }
     }
 
@@ -355,6 +366,10 @@ public class MainActivity extends AdsActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+        if(!lastItems.contains(id)) {
+            lastItems.add(0, id);
+        }
 
         mBinding.drawerLayout.closeDrawer(GravityCompat.START);
         Fragment fragment;
