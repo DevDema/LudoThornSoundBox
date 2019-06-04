@@ -32,6 +32,14 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
 
     PreferitiAudioListAdapter(IFragmentAudioPreferitiAdapterBinder binder, IAudioVideoAdaptersBinder audioVideoBinder, Context context, List<LudoAudio> list) {
         super(binder, audioVideoBinder, context, list);
+
+        initVideoAvailable();
+    }
+
+    private void initVideoAvailable() {
+        for (LudoAudio audio : list) {
+            videoAvailable.put(audio.getTitle(), audio.getVideo() != null && audio.getVideo().getId() != null);
+        }
     }
 
     interface VideoLoadedListener {
@@ -61,6 +69,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
 
         public void set(LudoAudio item, int position) {
 
+
             mBinding.thumbnailProgressBar.getIndeterminateDrawable().setColorFilter(
                     mContext.getResources().getColor(R.color.white),
                     android.graphics.PorterDuff.Mode.SRC_IN);
@@ -84,7 +93,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
 
             if (!isAnyPlaying()) {
                 Boolean videoAvailabl = videoAvailable.get(item.getTitle());
-                if(videoAvailabl != null && videoAvailabl) {
+                if (videoAvailabl != null && videoAvailabl) {
                     if (!isAlreadyLoaded(video)) {
                         showLoading();
                         mBinder.loadVideo(item, videoResponse -> {
@@ -103,7 +112,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
                 }
             }
 
-            if(isSettingPreferito) {
+            if (isSettingPreferito) {
                 mBinding.progressBackground.setVisibility(View.VISIBLE);
             }
 
@@ -132,7 +141,6 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
         }
 
         private void onVideoAvailableAndLoadDrawable(LudoAudio item, LudoVideo video) {
-            item.setVideo(video);
 
             onVideoAvailable(item, video);
             callFinalizeVideoLoaded(item);
@@ -172,9 +180,9 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
         }
 
         private void loadDrawable(LudoAudio item) {
-            /*if (item.getVideo().getThumbnail() != null && item.getVideo().getThumbnail().getImage() != null) {
-                drawables.put(item.getAudio(), item.getVideo().getThumbnail().getImage());
-            }*/
+            if (item.getVideo().getThumbnail() != null && item.getVideo().getThumbnail().getImage() != null) {
+                drawables.put(item.getTitle(), item.getVideo().getThumbnail().getImage());
+            }
 
             if (drawables.get(item.getTitle()) == null) {
                 showThumbnailLoading();
@@ -182,7 +190,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
                     if (thumbnail != null) {
                         drawables.put(item.getTitle(), thumbnail.getImage());
 
-                        setDrawable(item);
+                        setDrawable(thumbnail.getImage());
                     } else {
                         hideThumbnailLoading();
 
@@ -190,7 +198,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
                     }
                 });
             } else {
-                setDrawable(item);
+                setDrawable(drawables.get(item.getTitle()));
             }
         }
 
@@ -198,8 +206,8 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
             mBinder.saveInPref(audio);
         }
 
-        private void setDrawable(LudoAudio audio) {
-            mBinding.thumbnailImage.setImageBitmap(drawables.get(audio.getTitle()));
+        private void setDrawable(Bitmap bitmap) {
+            mBinding.thumbnailImage.setImageBitmap(bitmap);
 
             hideThumbnailLoading();
         }
@@ -299,5 +307,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
 
     void setList(List<LudoAudio> list) {
         this.list = list;
+
+        initVideoAvailable();
     }
 }

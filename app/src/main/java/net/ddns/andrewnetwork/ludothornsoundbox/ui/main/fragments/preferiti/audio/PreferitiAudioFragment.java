@@ -139,12 +139,8 @@ public class PreferitiAudioFragment extends ChildPreferitiFragment implements IP
         }
 
         PreferitiAudioListAdapter currentAdapter = (PreferitiAudioListAdapter) mBinding.recyclerView.getAdapter();
-        if(currentAdapter == null) {
-            mBinding.recyclerView.setAdapter(new PreferitiAudioListAdapter(this, getParent(), mContext, audioList));
-        } else {
-            currentAdapter.setList(audioList);
-            currentAdapter.notifyDataSetChanged();
-        }
+
+        mBinding.recyclerView.setAdapter(new PreferitiAudioListAdapter(this, getParent(), mContext, audioList));
     }
 
     @Override
@@ -193,7 +189,7 @@ public class PreferitiAudioFragment extends ChildPreferitiFragment implements IP
     @Override
     public void apriVideo(LudoVideo item) {
         AdsActivity.AdClosedListener adClosedListener = () -> CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
-        if(Math.random() < 0.5) {
+        if (Math.random() < 0.5) {
             ((MainActivity) mActivity).showInterstitialAd(adClosedListener);
         } else {
             adClosedListener.onAdClosed();
@@ -234,10 +230,10 @@ public class PreferitiAudioFragment extends ChildPreferitiFragment implements IP
 
     @Override
     public void cancelPreferitoIntentDelete() {
-        if(timer != null) {
+        if (timer != null) {
             timer.cancel();
 
-            if(getView() != null) {
+            if (getView() != null) {
                 snackbar = Snackbar.make(getView(), mContext.getString(R.string.canceled_operation_message), Snackbar.LENGTH_SHORT);
 
                 snackbar.show();
