@@ -19,10 +19,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <receiver android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver" android:exported="true" android:permission="com.google.android.c2dm.permission.SEND">
+        <receiver
+            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
                 <category android:name="net.ddns.andrewnetwork.ludothornsoundbox" />
             </intent-filter>
         </receiver>
@@ -42,6 +46,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3889032681139142~8858308706" />
@@ -51,6 +56,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
+
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -94,10 +100,10 @@
             android:name=".ui.social.SocialActivity"
             android:label="@string/social_header_title"
             android:theme="@style/PreferenceActivityTheme" />
-        <activity android:name=".ui.videoinfo.VideoInformationActivity" >
+        <activity android:name=".ui.videoinfo.VideoInformationActivity">
             <intent-filter>
                 <action android:name="OPEN_VIDEOS" />
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 

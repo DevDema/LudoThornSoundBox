@@ -15,13 +15,11 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo.VideoInformationActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
@@ -35,6 +33,13 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
     private static final int ID_NOTIFICATION_CHANNEL_VIDEOS = Integer.MAX_VALUE;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        Log.d(TAG, "Service is starting...");
+
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
