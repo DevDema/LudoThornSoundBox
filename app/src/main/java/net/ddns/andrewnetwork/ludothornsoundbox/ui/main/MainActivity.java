@@ -172,7 +172,9 @@ public class MainActivity extends AdsActivity
 
         lastItems = new ArrayList<>();
 
-        subscribeToTopics();
+        resetAppIcon();
+
+        AppUtils.subscribeToTopics();
 
         setCountBackStackOnBackPressed(false);
 
@@ -206,19 +208,14 @@ public class MainActivity extends AdsActivity
         handleIntents(getIntent()!= null ? getIntent() : new Intent());
     }
 
-    @SuppressWarnings("SameParameterValue")
-    private static void subscribeToTopics() {
-        String topic;
-        if(BuildConfig.DEBUG) {
-            topic = BuildConfig.TOPIC_DEBUG;
-        } else {
-            topic = BuildConfig.TOPIC_RELEASE;
+    private void resetAppIcon() {
+        int iconPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(getString(R.string.cambia_icona_key), -1);
+
+        if(iconPosition == -1) {
+            iconPosition = 0;
         }
 
-        Log.d("FCMTopic" , topic);
-
-        FirebaseMessaging.getInstance().subscribeToTopic(topic);
-
+        AppUtils.changeIcon(this, iconPosition);
     }
 
     @Override

@@ -19,15 +19,16 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.Settings;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Display;
 
-import androidx.appcompat.view.menu.MenuBuilder;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
@@ -54,6 +55,7 @@ public final class AppUtils {
     public static int DAYS_BEFORE_ASKING_FEEDBACK = 10;
     public static int DAYS_LATER_ASKING_FEEDBACK = 5;
     public static String LINK_ASKING_FEEDBACK = "https://play.google.com/store/apps/details?id=net.ddns.andrewnetwork.ludothornsoundbox&hl=it";
+    private static volatile boolean receiversRegistered = false;
 
     private static final String ALIAS_1 = "MainActivity1";
     private static final String ALIAS_2 = "MainActivity2";
@@ -157,10 +159,26 @@ public final class AppUtils {
                 }, true);
             }
         }
+
         return settingsCanWrite;
     }
 
     public static String getApiKey() {
         return new String(Base64.decode(BuildConfig.API_KEY, 0));
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    public static void subscribeToTopics() {
+        String topic;
+        if(BuildConfig.DEBUG) {
+            topic = BuildConfig.TOPIC_DEBUG;
+        } else {
+            topic = BuildConfig.TOPIC_RELEASE;
+        }
+
+        Log.d("FCMTopic" , topic);
+
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+
     }
 }
