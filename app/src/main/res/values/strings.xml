@@ -122,7 +122,7 @@
     <string name="suoneria_notifiche_cambiata_label">Suoneria delle notifiche cambiata con successo</string>
     <string name="imposta_come_notifica">Imposta come suono di notifica</string>
     <string name="generic_error_suoneria_label">Oops! Si è verificato un errore. Verificare se sono state concesse all\'app le autorizzazioni necessarie.</string>
-    <string name="necessary_write_settings_permission">Per cambiare la suoneria è necessario concedere all\'app l\'autorizzazione di cambiare le impostazioni di sistema.</string>
+    <string name="necessary_write_settings_permission">Per cambiare la suoneria è necessario concedere all\'app l\'autorizzazione di cambiare le impostazioni di sistema e riprovare.</string>
     <string name="money_label">Money</string>
     <string name="altro_label">Altro</string>
     <string name="merchandise_title">Merchandise</string>

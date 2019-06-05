@@ -151,9 +151,9 @@ public final class AppUtils {
 
             if (!settingsCanWrite) {
                 CommonUtils.showDialog(context, context.getString(R.string.necessary_write_settings_permission), (dialog, which) -> {
+                    dialog.dismiss();
                     Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                     context.startActivity(intent);
-                    dialog.dismiss();
                 }, true);
             }
         }

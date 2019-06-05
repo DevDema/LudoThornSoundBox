@@ -201,7 +201,7 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
                         checkAndChangeRingtone(audio, RingtoneManager.TYPE_RINGTONE, R.string.suoneria_cambiata_label);
                         break;
                     case R.id.suoneria_notifica_audio:
-                        checkAndChangeRingtone(audio, RingtoneManager.TYPE_ALARM, R.string.suoneria_notifiche_cambiata_label);
+                        checkAndChangeRingtone(audio, RingtoneManager.TYPE_NOTIFICATION, R.string.suoneria_notifiche_cambiata_label);
                         break;
 
                 }
