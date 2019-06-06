@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -31,6 +30,9 @@ import java.util.List;
 
 public abstract class AdsActivity extends PreferencesManagerActivity {
 
+    private static final String[] ADS_BANNER_UNIT_IDS = {"ca-app-pub-3889032681139142/8666737012", "ca-app-pub-3889032681139142/5292103053", "ca-app-pub-3889032681139142/5292103053"};
+    private static final String[] TOKEN_TEST_DEVICES = {"95AC5A23C9D7F20AC40305659DC13A0F", "E471AADF1D21337710F1244766497DF9"};
+
     protected LinearLayout bottomBanner;
 
     public interface AdClosedListener {
@@ -40,10 +42,8 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
 
     private List<AdView> mAdViews = new ArrayList<>();
     private InterstitialAd mInterstitialAd;
-    private AdClosedListener adClosedListener;
     private ImageButton button;
     private int[] adsBannerTrial;
-    private String[] adsBannerUnitId = {"ca-app-pub-3889032681139142/8666737012", "ca-app-pub-3889032681139142/8666737012", "ca-app-pub-3889032681139142/8666737012"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,14 +81,16 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
 
         mInterstitialAd.setAdUnitId("ca-app-pub-3889032681139142/3864341552");
         mInterstitialAd.setAdListener(adInterstitialListener);
+
         Bundle extras = new Bundle();
         AdRequest.Builder adRequestBuilder = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras);
 
-        mInterstitialAd.loadAd(adRequestBuilder.build());
-        //CONFIGURA TEST DEVICE.
+        //CONFIGURA TEST DEVICE
         if (BuildConfig.DEBUG) {
-            adRequestBuilder.addTestDevice("E471AADF1D21337710F1244766497DF9");
+            addTestDevices(adRequestBuilder);
         }
+
+        mInterstitialAd.loadAd(adRequestBuilder.build());
 
         initBanner(false);
     }
@@ -96,8 +98,6 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
     protected abstract LinearLayout getAdRootView();
 
     public void showInterstitialAd(AdClosedListener adClosedListener) {
-
-        this.adClosedListener = adClosedListener;
 
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
@@ -146,9 +146,9 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
             initAdView((short) 0, new OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    if(mAdViews.get(0) != null && mAdViews.get(0).getWidth() > 0) {
+                    if (mAdViews.get(0) != null && mAdViews.get(0).getWidth() > 0) {
                         final double floatItems = (bottomBanner.getWidth() - buttonWidth) * 1.0 / mAdViews.get(0).getWidth();
-                        final short totalAdViews = (short) Math.min(adsBannerUnitId.length, Math.floor(floatItems));
+                        final short totalAdViews = (short) Math.min(ADS_BANNER_UNIT_IDS.length, Math.floor(floatItems));
 
                         if (totalAdViews > 1) {
                             for (short i = 1; i < totalAdViews; i++) {
@@ -167,7 +167,7 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
                         bottomBanner.addView(button);
 
                         //REMOVE ALL LISTENERS, IF EXIST
-                        for (short i = 1; i < totalAdViews; i++) {
+                        for (short i = 0; i < totalAdViews; i++) {
                             mAdViews.get(i).getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         }
                     }
@@ -196,10 +196,10 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
             public void onAdFailedToLoad(int error) {
                 adView.setVisibility(View.GONE);
 
-                Log.e("AdFailedBann", "Ad failed to load, errorcode: " + error + ". Trial:" + adsBannerTrial + ".");
+                Log.e("AdFailedBann", "Ad failed to load, errorcode: " + error + ". Trial:" + adsBannerTrial[counter] + ".");
 
                 if (adsBannerTrial[counter] < 5) {
-                    AdRequest adRequest = new AdRequest.Builder().build();
+                    AdRequest adRequest = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, new Bundle()).build();
                     adView.loadAd(adRequest);
                     adsBannerTrial[counter]++;
                 } else {
@@ -213,10 +213,26 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
         };
 
         adView.setAdListener(adBannerListener);
-        adView.setAdUnitId(adsBannerUnitId[i]);
+        adView.setAdUnitId(ADS_BANNER_UNIT_IDS[i]);
         adView.setAdSize(AdSize.BANNER);
 
+        //CONFIGURA TEST DEVICE.
+        if (BuildConfig.DEBUG) {
+            addTestDevices(adRequestBuilder);
+        }
 
+        configAdView(adView, adRequestBuilder, onGlobalLayoutListener);
+
+
+    }
+
+    private static void addTestDevices(AdRequest.Builder adRequestBuilder) {
+        for (String tokenTestDevice : TOKEN_TEST_DEVICES) {
+            adRequestBuilder.addTestDevice(tokenTestDevice);
+        }
+    }
+
+    private void configAdView(AdView adView, AdRequest.Builder adRequestBuilder, OnGlobalLayoutListener onGlobalLayoutListener) {
         adView.loadAd(adRequestBuilder.build());
 
         adView.setVisibility(View.GONE);
@@ -226,7 +242,7 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
 
         mAdViews.add(adView);
 
-        if(onGlobalLayoutListener != null) {
+        if (onGlobalLayoutListener != null) {
             adView.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
         }
     }

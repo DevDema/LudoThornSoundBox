@@ -2,6 +2,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -9,6 +10,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 
 import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -100,5 +103,30 @@ public abstract class StringUtils {
         }
 
         return null;
+    }
+
+    public static String md5(final String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance("MD5");
+            digest.update(s.getBytes());
+            byte[] messageDigest = digest.digest();
+
+            // Create Hex String
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : messageDigest) {
+                String h = Integer.toHexString(0xFF & b);
+                while (h.length() < 2)
+                    h = "0" + h;
+                hexString.append(h);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            Log.e("MD5Exception",e.getMessage());
+        }
+        return "";
     }
 }
