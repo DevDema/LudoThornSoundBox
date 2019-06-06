@@ -22,6 +22,7 @@
     <dimen name="input_size_s">200dp</dimen>
     <dimen name="input_size_m">260dp</dimen>
     <dimen name="input_size_l">340dp</dimen>
+    <dimen name="input_size_ml">300dp</dimen>
     <dimen name="input_size_xl">420dp</dimen>
     <dimen name="input_size_xsl">380dp</dimen>
     <dimen name="input_size_xxl">480dp</dimen>

@@ -425,14 +425,22 @@ public class MainActivity extends AdsActivity
 
         int orientation = newConfig.orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mAdView.setVisibility(View.VISIBLE);
+            bottomBanner.setVisibility(View.VISIBLE);
+            initBanner(true);
         } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             getView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    if (getFragmentContainer().getHeight() < 600) {
-                        mAdView.setVisibility(View.GONE);
+                    if(getFragmentContainer().getHeight()>0) {
+                         if (getFragmentContainer().getHeight() < 600) {
+                            bottomBanner.setVisibility(View.GONE);
+
+                        } else {
+                            initBanner(true);
+                        }
+
                         getView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
                     }
                 }
             });
