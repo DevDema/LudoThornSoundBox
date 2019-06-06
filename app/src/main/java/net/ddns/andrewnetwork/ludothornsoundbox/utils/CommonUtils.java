@@ -248,7 +248,7 @@ public final class CommonUtils {
         List<LudoNavigationItem> navigationItemList = new ArrayList<>();
 
         navigationItemList.add(new LudoNavigationItem(R.id.action_home, R.drawable.ic_home_white_24dp, context.getString(R.string.home)));
-        navigationItemList.add(new LudoNavigationItem(R.id.action_random,R.drawable.ic_action_name, context.getString(R.string.random)));
+        navigationItemList.add(new LudoNavigationItem(R.id.action_random,R.drawable.ic_dado_casuale_white, context.getString(R.string.random)));
         navigationItemList.add(new LudoNavigationItem(R.id.action_video, R.drawable.ic_video_white_24dp, context.getString(R.string.video)));
         navigationItemList.add(new LudoNavigationItem(R.id.action_favorites, R.drawable.ic_star_white_24dp, context.getString(R.string.favorites)));
 

@@ -6,7 +6,7 @@
         android:title="@string/home" />
     <item android:id="@+id/action_random"
         android:title="@string/random"
-       android:icon="@drawable/ic_action_name"/>
+       android:icon="@drawable/ic_dado_casuale_white"/>
     <item android:id="@+id/action_video"
         android:title="@string/video"
         android:icon="@drawable/ic_video_white_24dp" />

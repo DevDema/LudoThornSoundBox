@@ -15,7 +15,7 @@
 
                 <item
                     android:id="@id/action_random"
-                    android:icon="@drawable/ic_action_random_back"
+                    android:icon="@drawable/ic_dado_casuale"
                     android:title="@string/random" />
 
                 <item
@@ -40,7 +40,7 @@
                     android:title="@string/social_title" />
                 <item
                     android:id="@+id/action_merchandise"
-                    android:icon="@drawable/ic_open_in_browser_black"
+                    android:icon="@drawable/ic_merchandise"
                     android:title="@string/merchandise_title" />
 
                 <item
