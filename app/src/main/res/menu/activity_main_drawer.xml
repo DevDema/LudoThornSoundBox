@@ -45,7 +45,7 @@
 
                 <item
                     android:id="@+id/action_patreon"
-                    android:icon="@drawable/ic_open_in_browser_black"
+                    android:icon="@drawable/ic_patreon"
                     android:title="@string/patreon_title" />
             </group>
         </menu>
