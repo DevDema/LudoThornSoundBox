@@ -117,12 +117,16 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
     @Override
     public void onVideoListLoadFailed() {
         //mBinding.videoLayout.setRefreshing(false);
-        CommonUtils.showDialog(mContext, "Oops! Sembra che si sia verificato un errore nel caricamento. \nContatta " + BuildConfig.SHORT_NAME + ", saprà sicuramente come risolvere il problema!");
+        showErrorMessage();
 
         mBinding.progressBar.setVisibility(View.INVISIBLE);
         mBinding.progressVideoLoadingLabel.setVisibility(View.INVISIBLE);
 
         loadingFailed = true;
+    }
+
+    private void showErrorMessage() {
+        mBinding.errorConnectionLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -147,6 +151,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
                 android.graphics.PorterDuff.Mode.SRC_IN);
 
         mBinding.progressVideoLoadingLabel.setText(mContext.getString(R.string.progress_video_loading_label, BuildConfig.SHORT_NAME));
+        mBinding.errorConnectionButton.setOnClickListener(v -> refreshChannels(true));
     }
 
     @Override
@@ -225,6 +230,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
     @Override
     public void refreshChannels(boolean usesGlobalLoading) {
+        mBinding.errorConnectionLayout.setVisibility(View.GONE);
         mBinding.tabLayout.removeOnTabSelectedListener(onTabSelectedListener);
 
         if (!usesGlobalLoading) {

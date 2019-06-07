@@ -160,7 +160,7 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
 
                         button.setEnabled(false);
                         button.setBackground(ContextCompat.getDrawable(AdsActivity.this, R.drawable.block_color_dark));
-                        button.setImageDrawable(ContextCompat.getDrawable(AdsActivity.this, R.drawable.ic_browser_open_white));
+                        button.setImageDrawable(ContextCompat.getDrawable(AdsActivity.this, R.drawable.ic_support_me));
                         button.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
                         button.setOnClickListener(v -> CommonUtils.showDialog(AdsActivity.this, getString(R.string.help_message_ad, BuildConfig.SHORT_NAME), (dialog, which) -> showInterstitialAd(null), true));
 

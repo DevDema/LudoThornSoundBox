@@ -175,4 +175,5 @@
     <string name="video_info_no_thumbnail_message">Ooops! Non sono riuscito a caricare la thumbnail di questo video.</string>
     <string name="video_info_no_info_message">Ooops! Non sono riuscito a caricare le informazioni di questo video.</string>
     <string name="selected_video_label">Video selezionato</string>
+    <string name="error_connection_label">Errore nel caricamento dei video.\nSei connesso a Internet?</string>
 </resources>
