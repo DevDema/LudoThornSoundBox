@@ -174,4 +174,5 @@
     <string name="new_video_label">Nuovo Video!</string>
     <string name="video_info_no_thumbnail_message">Ooops! Non sono riuscito a caricare la thumbnail di questo video.</string>
     <string name="video_info_no_info_message">Ooops! Non sono riuscito a caricare le informazioni di questo video.</string>
+    <string name="selected_video_label">Video selezionato</string>
 </resources>

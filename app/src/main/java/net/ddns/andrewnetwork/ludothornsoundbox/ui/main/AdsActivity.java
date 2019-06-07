@@ -146,7 +146,7 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
             initAdView((short) 0, new OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    if (mAdViews.get(0) != null && mAdViews.get(0).getWidth() > 0) {
+                    if (!mAdViews.isEmpty() && mAdViews.get(0) != null && mAdViews.get(0).getWidth() > 0) {
                         final double floatItems = (bottomBanner.getWidth() - buttonWidth) * 1.0 / mAdViews.get(0).getWidth();
                         final short totalAdViews = (short) Math.min(ADS_BANNER_UNIT_IDS.length, Math.floor(floatItems));
 

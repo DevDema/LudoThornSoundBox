@@ -77,20 +77,59 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <RelativeLayout
+                        android:id="@+id/youtube_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/button_youtube"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingStart="40dp"
+                        android:paddingEnd="30dp"
+                        app:layout_constraintTop_toBottomOf="@id/thumbnail_global_layout"
+                        app:layout_constraintStart_toStartOf="@id/thumbnail_global_layout"
+                        app:layout_constraintEnd_toEndOf="@id/thumbnail_global_layout">
+
+                        <ImageButton
+                            android:id="@+id/youtube_logo"
+                            android:layout_width="@dimen/input_size_xxxs"
+                            android:layout_height="@dimen/input_size_xxxs"
+                            android:contentDescription="@string/guarda_su_youtube_label"
+                            android:background="@color/transparent"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@drawable/ic_youtube_logo"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/input_size_xxxs"
+                            android:layout_toEndOf="@id/youtube_logo"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textAllCaps="true"
+                            android:textStyle="bold"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:gravity="center"
+                            android:text="Guarda su Youtube"/>
+                    </RelativeLayout>
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/video_info"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/thumbnail_global_layout">
+                        app:layout_constraintTop_toBottomOf="@id/youtube_button">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/like_dislike_layout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-
+                            android:layout_marginTop="10dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">

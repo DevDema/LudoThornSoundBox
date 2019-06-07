@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.gson.reflect.TypeToken;
@@ -32,6 +33,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ListUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
 import java.util.List;
 
@@ -44,6 +46,7 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils.nonEmpt
 public class VideoInformationActivity extends AdsActivity implements IVideoInformationView {
 
     private static final String KEY_AUDIO = "KEY_AUDIO";
+    private static final String KEY_VIDEO = "KEY_VIDEO";
     private static final String KEY_VIDEO_LIST = "KEY_VIDEO_LIST";
     private DialogVideoBinding mBinding;
 
@@ -57,6 +60,15 @@ public class VideoInformationActivity extends AdsActivity implements IVideoInfor
         intent.putExtra(KEY_AUDIO, JsonUtil.getGson().toJson(audio));
         intent.putExtra(KEY_VIDEO_LIST, JsonUtil.getGson().toJson(audioList));
         intent.putExtra(KEY_LOAD_AT_ONCE, audioAtonce);
+
+        context.startActivity(intent);
+    }
+
+    public static void newInstance(Context context, LudoVideo video) {
+
+        Intent intent = new Intent(context, VideoInformationActivity.class);
+
+        intent.putExtra(KEY_VIDEO, JsonUtil.getGson().toJson(video));
 
         context.startActivity(intent);
     }
@@ -79,11 +91,14 @@ public class VideoInformationActivity extends AdsActivity implements IVideoInfor
         }
 
         LudoAudio audio = getIntent() != null && getIntent().getExtras() != null ? JsonUtil.getGson().fromJson(getIntent().getExtras().getString(KEY_AUDIO), LudoAudio.class) : new LudoAudio();
+        LudoVideo video = getIntent() != null && getIntent().getExtras() != null ? JsonUtil.getGson().fromJson(getIntent().getExtras().getString(KEY_VIDEO), LudoVideo.class) : new LudoVideo();
         String url = getIntent() != null && getIntent().getExtras() != null ? getIntent().getExtras().getString("VideoURL") : null;
         if (audio != null && nonEmptyNonNull(audio.getTitle())) {
             setTitle(getString(R.string.video_di_label, audio.getTitle()));
-        } else {
+        } else if (nonEmptyNonNull(url)) {
             setTitle(getString(R.string.new_video_label));
+        } else {
+            setTitle(getString(R.string.selected_video_label));
         }
 
         boolean loadAtOnce;
@@ -99,13 +114,17 @@ public class VideoInformationActivity extends AdsActivity implements IVideoInfor
 
             if (!loadAtOnce) {
                 mPresenter.getVideoInformation(audio);
+            } else if (video != null) {
+                mPresenter.getVideoInformation(video);
             } else {
                 setVideo(this, audio.getVideo());
             }
         } else if (nonEmptyNonNull(url)) {
             mPresenter.getVideoByUrl(url);
+        } else if (video != null) {
+            mPresenter.getVideoInformation(video);
         } else {
-            throw new IllegalArgumentException("Fragment" + getClass().getName() + " called without url or audio.");
+            throw new IllegalArgumentException("Fragment" + getClass().getName() + " called without url or audio nor video.");
         }
     }
 
@@ -144,10 +163,14 @@ public class VideoInformationActivity extends AdsActivity implements IVideoInfor
             for (LudoAudio audio : video.getConnectedAudioList()) {
                 Button button = new Button(context);
                 button.setText(audio.getTitle());
-                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                params.topMargin = 10;
+
                 button.setLayoutParams(params);
+                button.setTypeface(ResourcesCompat.getFont(context, R.font.knewave));
                 button.setOnClickListener(v -> AudioUtils.playTrack(context, audio));
 
                 mBinding.audioListLayout.addView(button);
@@ -157,7 +180,9 @@ public class VideoInformationActivity extends AdsActivity implements IVideoInfor
             mBinding.audioListLayout.setVisibility(View.GONE);
         }
 
-        mBinding.thumbnailImage.setOnClickListener(v -> apriVideo(video));
+        View.OnClickListener onClickListener = v -> apriVideo(video);
+        mBinding.thumbnailImage.setOnClickListener(onClickListener);
+        mBinding.youtubeButton.setOnClickListener(onClickListener);
     }
 
     public void apriVideo(LudoVideo item) {
@@ -194,6 +219,14 @@ public class VideoInformationActivity extends AdsActivity implements IVideoInfor
 
     @Override
     public void onVideoByUrlLoadSuccess(LudoVideo video) {
-        setVideo(this, video);
+        if(video != null ) {
+            if(video.getConnectedAudioList().isEmpty()) {
+                VideoUtils.attachAudiosToVideo(this, video);
+            }
+
+            setVideo(this, video);
+        } else {
+            onVideoInformationLoadFailed();
+        }
     }
 }

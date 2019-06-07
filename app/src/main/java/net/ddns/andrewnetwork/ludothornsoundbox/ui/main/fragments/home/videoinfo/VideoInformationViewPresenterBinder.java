@@ -31,6 +31,8 @@ public interface VideoInformationViewPresenterBinder {
 
         void getVideoInformation(LudoAudio id);
 
+        void getVideoInformation(LudoVideo video);
+
         void getVideoByUrl(String url);
     }
 }

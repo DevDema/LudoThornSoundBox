@@ -3,12 +3,9 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.child;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.Html;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -20,21 +17,16 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Thumbnail;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.FragmentAdapterVideoBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoInformationManager;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.DateHourUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
 
 public class VideoRecyclerAdapter extends RecyclerView.Adapter {
 
@@ -133,9 +125,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
                 hideVideoLoading();
             }
 
-            itemView.setOnClickListener(v -> {
-                mBinder.apriVideo(item);
-            });
+            itemView.setOnClickListener(v -> mBinder.apriVideo(item));
         }
 
         private void hideVideoLoading() {

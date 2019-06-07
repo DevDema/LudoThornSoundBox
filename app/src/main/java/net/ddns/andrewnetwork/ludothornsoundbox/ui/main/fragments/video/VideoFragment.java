@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.Pref
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.FragmentVideoChildBinder.FragmentVideoChild;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo.VideoInformationActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ColorUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
@@ -289,16 +291,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
     @Override
     public void apriVideo(LudoVideo item) {
-        AdsActivity.AdClosedListener adClosedListener = () -> {
-            AudioUtils.stopTrack();
-            CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
-        };
-
-        if (Math.random() < 0.5) {
-            ((MainActivity) mActivity).showInterstitialAd(adClosedListener);
-        } else {
-            adClosedListener.onAdClosed();
-        }
+        VideoInformationActivity.newInstance(mActivity, item);
     }
 
     public static boolean isLoadingMoreVideos() {

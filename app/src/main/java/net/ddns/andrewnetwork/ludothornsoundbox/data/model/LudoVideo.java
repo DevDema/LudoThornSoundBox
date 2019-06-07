@@ -169,7 +169,7 @@ public class LudoVideo implements Comparable<LudoVideo> {
     }
 
 
-    void addAudio(LudoAudio audio) {
+    public void addAudio(LudoAudio audio) {
         if (!audioList.contains(audio)) {
             audioList.add(audio);
         }

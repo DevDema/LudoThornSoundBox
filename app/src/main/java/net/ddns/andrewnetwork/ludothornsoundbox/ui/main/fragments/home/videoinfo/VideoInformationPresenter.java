@@ -11,6 +11,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.SchedulerProvider;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.wrapper.GenericWrapper2;
 
@@ -59,6 +60,23 @@ public class VideoInformationPresenter<V extends IVideoInformationView> extends 
                         }, throwable -> {
                             throwable.printStackTrace();
                             getMvpView().onVideoInformationLoadFailed();
+                            getMvpView().hideLoading();
+                        }
+                ));
+    }
+
+    @Override
+    public void getVideoInformation(LudoVideo video) {
+        getMvpView().showLoading();
+        getCompositeDisposable().add(getDataManager().getVideoById(video.getId())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribeOn(getSchedulerProvider().io())
+                .subscribe(video1 -> {
+                            getMvpView().onVideoByUrlLoadSuccess(video1);
+                            getMvpView().hideLoading();
+                        }, throwable -> {
+                            throwable.printStackTrace();
+                            getMvpView().onVideoByUrlLoadSuccess(video);
                             getMvpView().hideLoading();
                         }
                 ));
