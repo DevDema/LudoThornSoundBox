@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -43,9 +44,9 @@ public class PreferitiVideoFragment extends ChildPreferitiFragment implements IP
     private CountDownTimer timer;
 
     public static PreferitiVideoFragment newInstance() {
-        
+
         Bundle args = new Bundle();
-        
+
         PreferitiVideoFragment fragment = new PreferitiVideoFragment();
         fragment.setArguments(args);
         return fragment;
@@ -57,7 +58,7 @@ public class PreferitiVideoFragment extends ChildPreferitiFragment implements IP
         mBinding = DataBindingUtil.inflate(inflater, R.layout.content_video_favorite, container, false);
 
         ActivityComponent activityComponent = getActivityComponent();
-        if(activityComponent != null) {
+        if (activityComponent != null) {
             activityComponent.inject(this);
             mPresenter.onAttach(this);
         }
@@ -71,6 +72,8 @@ public class PreferitiVideoFragment extends ChildPreferitiFragment implements IP
         super.onViewCreated(view, savedInstanceState);
 
         loadPreferiti();
+
+        mBinding.swipeRefreshLayout.setOnRefreshListener(this::loadPreferiti);
     }
 
     @Override
@@ -120,7 +123,7 @@ public class PreferitiVideoFragment extends ChildPreferitiFragment implements IP
             CommonUtils.openLink(mContext, buildVideoUrl(item.getId()));
         };
 
-        if(Math.random() < 0.5) {
+        if (Math.random() < 0.5) {
             ((MainActivity) mActivity).showInterstitialAd(adClosedListener);
         } else {
             adClosedListener.onAdClosed();
@@ -178,10 +181,10 @@ public class PreferitiVideoFragment extends ChildPreferitiFragment implements IP
 
     @Override
     public void cancelPreferitoIntentDelete() {
-        if(timer != null) {
+        if (timer != null) {
             timer.cancel();
 
-            if(getView() != null) {
+            if (getView() != null) {
                 snackbar = Snackbar.make(getView(), mContext.getString(R.string.canceled_operation_message), Snackbar.LENGTH_SHORT);
 
                 snackbar.show();
@@ -196,6 +199,8 @@ public class PreferitiVideoFragment extends ChildPreferitiFragment implements IP
         } else {
             onPreferitiListLoaded(audioList);
         }
+
+        mBinding.swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

@@ -13,13 +13,11 @@ import androidx.core.content.ContextCompat;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
-import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemVideoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemVideoPreferitoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.IAudioVideoAdaptersBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.child.VideoRecyclerAdapter;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoInformationManager;
 
 import java.util.List;
 
@@ -53,12 +51,17 @@ public class PreferitiVideoListAdapter extends PreferitiListAdapter<LudoVideo> {
         protected void set(LudoVideo item, int position) {
             super.set(item, position);
 
+            VideoInformationManager videoInformationManager = new VideoInformationManager(mContext, item);
+
             mBinding.icon.setImageDrawable(null);
+
+            mBinding.likes.setText(videoInformationManager.getCompactedLikes());
+            mBinding.dislikes.setText(videoInformationManager.getCompactedDislikes());
 
             if (item.getThumbnail() == null || item.getThumbnail().getImage() == null) {
                 showLoading();
                 mAdapterBinder.loadThumbnail(item, thumbnail -> {
-                    if (thumbnail.getImage() != null) {
+                    if (thumbnail != null && thumbnail.getImage() != null) {
 
                         mBinding.icon.setImageBitmap(thumbnail.getImage());
                     } else {
@@ -85,9 +88,7 @@ public class PreferitiVideoListAdapter extends PreferitiListAdapter<LudoVideo> {
 
                 setSettingPreferito(position, true);
 
-                mAdapterBinder.onPreferitoIntentDelete(item, preferitoDeleted -> {
-                    setSettingPreferito(position, false);
-                });
+                mAdapterBinder.onPreferitoIntentDelete(item, preferitoDeleted -> setSettingPreferito(position, false));
             });
 
 

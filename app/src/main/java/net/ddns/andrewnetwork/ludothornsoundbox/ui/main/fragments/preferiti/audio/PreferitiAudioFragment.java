@@ -76,6 +76,7 @@ public class PreferitiAudioFragment extends ChildPreferitiFragment implements IP
         super.onViewCreated(view, savedInstanceState);
 
         loadPreferiti();
+        mBinding.swipeRefreshLayout.setOnRefreshListener(this::loadPreferiti);
     }
 
     private void loadPreferiti() {
@@ -85,6 +86,8 @@ public class PreferitiAudioFragment extends ChildPreferitiFragment implements IP
         } else {
             onPreferitiListLoaded(audioList);
         }
+
+        mBinding.swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
