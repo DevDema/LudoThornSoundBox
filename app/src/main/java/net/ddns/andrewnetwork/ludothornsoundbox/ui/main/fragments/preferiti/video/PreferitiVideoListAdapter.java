@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemVideoBinding;
+import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ItemVideoPreferitoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.IAudioVideoAdaptersBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.child.VideoRecyclerAdapter;
@@ -33,19 +34,19 @@ public class PreferitiVideoListAdapter extends PreferitiListAdapter<LudoVideo> {
     protected ViewHolder onCreateCustomViewHolder(ViewGroup parent, int i) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         return new PreferitiVideoListAdapter.VideoViewHolder(
-                inflater.inflate(R.layout.item_video, parent, false), (IFragmentVideoPreferitiAdapterBinder) mBinder);
+                inflater.inflate(R.layout.item_video_preferito, parent, false), (IFragmentVideoPreferitiAdapterBinder) mBinder);
     }
 
     private class VideoViewHolder extends VideoRecyclerAdapter.VideoAbstractViewHolder {
 
         private final IFragmentVideoPreferitiAdapterBinder mAdapterBinder;
-        private final ItemVideoBinding mBinding;
+        private final ItemVideoPreferitoBinding mBinding;
 
         private VideoViewHolder(@NonNull View itemView, IFragmentVideoPreferitiAdapterBinder adapterBinder) {
             super(mContext, itemView);
 
             this.mAdapterBinder = adapterBinder;
-            this.mBinding = ItemVideoBinding.bind(itemView);
+            this.mBinding = ItemVideoPreferitoBinding.bind(itemView);
         }
 
         @Override

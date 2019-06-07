@@ -13,8 +13,6 @@ public interface FragmentVideoChildBinder {
         void setRecyclerViewRefreshing(boolean refreshing);
 
         void onMoreVideosLoaded(List<Channel> videoList);
-
-        void refreshPrefiti(List<LudoVideo> preferitiList);
     }
 
     interface FragmentVideoParent extends  FragmentAdapterVideoBinder {

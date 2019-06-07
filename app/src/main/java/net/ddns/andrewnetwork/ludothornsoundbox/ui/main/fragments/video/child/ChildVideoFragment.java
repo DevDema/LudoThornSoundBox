@@ -39,15 +39,13 @@ public class ChildVideoFragment extends BaseFragment implements FragmentVideoChi
     private FragmentVideoParent parent;
 
     private Channel channel;
-    private  List<LudoVideo> preferitiList;
     private FragmentVideoListBinding mBinding;
 
-    public static ChildVideoFragment newInstance(Channel channel, List<LudoVideo> preferitiList) {
+    public static ChildVideoFragment newInstance(Channel channel) {
 
         Bundle args = new Bundle();
         ChildVideoFragment fragment = new ChildVideoFragment();
         args.putString(KEY_CHANNEL, JsonUtil.getGson().toJson(channel));
-        args.putString(KEY_PREFERITI, JsonUtil.getGson().toJson(preferitiList));
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +63,6 @@ public class ChildVideoFragment extends BaseFragment implements FragmentVideoChi
 
         if (getArguments() != null) {
             channel = JsonUtil.getGson().fromJson(getArguments().getString(KEY_CHANNEL), Channel.class);
-            preferitiList = JsonUtil.getGson().fromJson(getArguments().getString(KEY_PREFERITI), new TypeToken<List<LudoVideo>>(){}.getType());
         }
     }
 
@@ -83,7 +80,7 @@ public class ChildVideoFragment extends BaseFragment implements FragmentVideoChi
 
         mBinding.masterLayout.setOnRefreshListener(() -> parent.refreshChannels(false));
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mBinding.recyclerView.setAdapter(new VideoRecyclerAdapter(mContext, getParent(), preferitiList));
+        mBinding.recyclerView.setAdapter(new VideoRecyclerAdapter(mContext, getParent()));
         mBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -128,13 +125,6 @@ public class ChildVideoFragment extends BaseFragment implements FragmentVideoChi
         }
 
         mBinding.masterLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void refreshPrefiti(List<LudoVideo> preferitiList) {
-        if(mBinding.recyclerView.getAdapter() instanceof VideoRecyclerAdapter) {
-            ((VideoRecyclerAdapter) mBinding.recyclerView.getAdapter()).setNewPreferiti(preferitiList);
-        }
     }
 
     private List<LudoVideo> getVideosInChannel(List<Channel> channelList) {

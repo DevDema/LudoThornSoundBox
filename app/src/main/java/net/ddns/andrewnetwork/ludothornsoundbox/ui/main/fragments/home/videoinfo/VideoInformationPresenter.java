@@ -1,27 +1,20 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo;
 
-import android.util.Log;
+import android.content.SharedPreferences;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.DataManager;
-import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationView;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.SchedulerProvider;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.wrapper.GenericWrapper2;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -99,5 +92,64 @@ public class VideoInformationPresenter<V extends IVideoInformationView> extends 
                 ));
     }
 
+    @Override
+    public List<LudoVideo> getPreferitiList() {
+        return getDataManager().getVideoPreferitiList();
+    }
+
+    @Override
+    public void aggiungiPreferito(LudoVideo video, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
+        List<LudoVideo> preferitiList = getPreferitiList();
+
+        //CONTROLLA SE HAI RAGGIUNTO IL NUMERO MASSIMO DI PREFERITI.
+        if (preferitiList.size() >= 5) {
+            getMvpView().onMaxVideoReached();
+            return;
+        }
+
+        //CONTROLLA SE ESISTE GIA'
+        for (LudoVideo videoInList : preferitiList) {
+            if (videoInList.getId().equals(video.getId())) {
+                getMvpView().onPreferitoEsistente(video);
+                return;
+            }
+        }
+
+        getDataManager().salvaVideoPreferito(video);
+        getMvpView().onPreferitoSavedSuccess(video);
+
+        if (preferitoDeletedListener != null) {
+            preferitoDeletedListener.onPreferitoDeleted(video);
+        }
+
+    }
+    @Override
+    public void rimuoviPreferito(LudoVideo item, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
+        if (getDataManager().rimuoviVideoPreferito(item)) {
+            getMvpView().onPreferitoRimossoSuccess(item);
+            if (preferitoDeletedListener != null) {
+                preferitoDeletedListener.onPreferitoDeleted(item);
+            }
+        } else {
+            getMvpView().onPreferitoRimossoFailed();
+        }
+    }
+
+    @Override
+    public boolean isPreferito(LudoVideo video) {
+        List<LudoVideo> preferitiList = getPreferitiList();
+
+        return preferitiList.contains(video);
+    }
+
+    @Override
+    public void registerOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
+        getDataManager().registerOnSharedPreferencesChangeListener(onSharedPreferenceChangeListener);
+    }
+
+    @Override
+    public void unregisterOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
+        getDataManager().unregisterOnSharedPreferencesChangeListener(onSharedPreferenceChangeListener);
+    }
 
 }

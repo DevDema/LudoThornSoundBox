@@ -14,19 +14,17 @@ import java.util.List;
 public class VideoPagerAdapter extends FragmentPagerAdapter {
 
     private final List<Channel> channelList;
-    private final List<LudoVideo> preferitiList;
 
-    VideoPagerAdapter(FragmentManager fm, List<Channel> channelList, List<LudoVideo> preferitiList) {
+    VideoPagerAdapter(FragmentManager fm, List<Channel> channelList) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
         this.channelList = channelList;
-        this.preferitiList = preferitiList;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        return ChildVideoFragment.newInstance(channelList.get(position), preferitiList);
+        return ChildVideoFragment.newInstance(channelList.get(position));
     }
 
     @Override

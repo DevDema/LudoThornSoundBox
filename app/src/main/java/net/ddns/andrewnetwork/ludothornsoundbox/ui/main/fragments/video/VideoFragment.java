@@ -44,7 +44,7 @@ import com.google.android.material.tabs.TabLayout;
 import static net.ddns.andrewnetwork.ludothornsoundbox.data.prefs.AppPreferencesHelper.PREF_KEY_PREFERITI_VIDEO;
 import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
 
-public class VideoFragment extends MainFragment implements IVideoView, FragmentAdapterVideoBinder, FragmentVideoChildBinder.FragmentVideoParent, SharedPreferences.OnSharedPreferenceChangeListener {
+public class VideoFragment extends MainFragment implements IVideoView, FragmentAdapterVideoBinder, FragmentVideoChildBinder.FragmentVideoParent {
 
     private ContentVideoBinding mBinding;
     private static boolean loadingMoreVideos;
@@ -100,7 +100,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
             mPresenter.onAttach(this);
         }
 
-        mPresenter.registerOnSharedPreferencesChangeListener(this);
+        //mPresenter.registerOnSharedPreferencesChangeListener(this);
 
         refreshChannels(true);
 
@@ -111,7 +111,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
     public void onDestroy() {
         super.onDestroy();
 
-        mPresenter.unregisterOnSharedPreferencesChangeListener(this);
+        //mPresenter.unregisterOnSharedPreferencesChangeListener(this);
     }
 
     @Override
@@ -185,18 +185,18 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
             mBinding.tabLayout.addTab(tab.setText(channel.getChannelName()));
         }
 
-        mBinding.viewPager.setAdapter(new VideoPagerAdapter(getChildFragmentManager(), channelList, mPresenter.getPreferitiList()));
+        mBinding.viewPager.setAdapter(new VideoPagerAdapter(getChildFragmentManager(), channelList));
         mBinding.viewPager.setOffscreenPageLimit(channelList.size());
         mBinding.tabLayout.setupWithViewPager(mBinding.viewPager);
 
     }
 
-    @Override
+    /*@Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(PREF_KEY_PREFERITI_VIDEO)) {
             notifyRefreshPreferiti(mPresenter.getPreferitiList());
         }
-    }
+    }*/
 
     @Override
     public void onMoreVideoListLoadSuccess(List<Channel> videoList) {
@@ -206,13 +206,13 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
         });
     }
 
-    private void notifyRefreshPreferiti(List<LudoVideo> preferitiList) {
+    /*private void notifyRefreshPreferiti(List<LudoVideo> preferitiList) {
         for (Fragment fragment : getChildFragmentManager().getFragments()) {
             if (fragment instanceof FragmentVideoChild) {
                 ((FragmentVideoChild) fragment).refreshPrefiti(preferitiList);
             }
         }
-    }
+    }*/
 
     private void notifyMoreVideosLoaded(List<Channel> videoList) {
         for (Fragment fragment : getChildFragmentManager().getFragments()) {
@@ -222,36 +222,6 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
         }
     }
 
-    @Override
-    public void onPreferitoSavedSuccess(LudoVideo video) {
-        if (getView() != null) {
-            Snackbar snackbar = Snackbar.make(getView(), mContext.getString(R.string.video_aggiunto_preferiti), Snackbar.LENGTH_SHORT);
-            snackbar.show();
-        }
-    }
-
-    @Override
-    public void onMaxVideoReached() {
-        CommonUtils.showDialog(mActivity, mActivity.getString(R.string.max_video_reached_label));
-    }
-
-    @Override
-    public void onPreferitoEsistente(LudoVideo video) {
-        CommonUtils.showDialog(mActivity, getString(R.string.video_esistente_label));
-    }
-
-    @Override
-    public void onPreferitoRimossoSuccess(LudoVideo item) {
-        if (getView() != null) {
-            Snackbar snackbar = Snackbar.make(getView(), mContext.getString(R.string.video_rimosso_preferiti_label), Snackbar.LENGTH_SHORT);
-            snackbar.show();
-        }
-    }
-
-    @Override
-    public void onPreferitoRimossoFailed() {
-        Toast.makeText(mContext, R.string.generic_error_label, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void refreshChannels(boolean usesGlobalLoading) {
@@ -274,19 +244,10 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
         }
     }
 
-    @Override
-    public void aggiungiPreferito(LudoVideo video, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
-        mPresenter.aggiungiPreferito(video, preferitoDeletedListener);
-    }
 
     @Override
     public void loadThumbnail(LudoVideo item, PreferitiListAdapter.ThumbnailLoadedListener thumbnailLoadedListener) {
         mPresenter.loadThumbnail(item, thumbnailLoadedListener);
-    }
-
-    @Override
-    public void rimuoviPreferito(LudoVideo item, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
-        mPresenter.rimuoviPreferito(item, preferitoDeletedListener);
     }
 
     @Override

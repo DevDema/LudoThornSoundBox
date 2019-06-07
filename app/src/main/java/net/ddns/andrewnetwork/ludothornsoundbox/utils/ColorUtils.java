@@ -26,7 +26,7 @@ public final class ColorUtils {
     }
 
     public static @ColorRes int getByName(Context context, String name) {
-        if(name.equals(NULL_COLOR)) {
+        if(name == null || name.equals(NULL_COLOR)) {
             return getByName(context, DEFAULT_COLOR);
         }
 

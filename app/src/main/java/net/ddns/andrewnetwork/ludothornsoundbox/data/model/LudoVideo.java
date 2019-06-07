@@ -116,6 +116,7 @@ public class LudoVideo implements Comparable<LudoVideo> {
         this.audioList = audioList;
     }
 
+    @NonNull
     @Override
     public String toString() {
         String string = "Video:" +

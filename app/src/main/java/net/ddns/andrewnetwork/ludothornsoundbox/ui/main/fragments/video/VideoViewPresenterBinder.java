@@ -21,16 +21,6 @@ public interface VideoViewPresenterBinder {
         void onVideoListLoadSuccess(List<Channel> channelList);
 
         void onMoreVideoListLoadSuccess(List<Channel> channelList);
-
-        void onPreferitoSavedSuccess(LudoVideo video);
-
-        void onMaxVideoReached();
-
-        void onPreferitoEsistente(LudoVideo video);
-
-        void onPreferitoRimossoSuccess(LudoVideo item);
-
-        void onPreferitoRimossoFailed();
     }
 
     interface IVideoPresenter<V extends IVideoView> extends MvpPresenter<V> {
@@ -41,16 +31,7 @@ public interface VideoViewPresenterBinder {
 
         void getMoreVideos(Channel channel, Date date, VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener);
 
-        void aggiungiPreferito(LudoVideo video, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener);
-
-        List<LudoVideo> getPreferitiList();
-
         void loadThumbnail(LudoVideo item, ThumbnailLoadedListener thumbnailLoadedListener);
 
-        void rimuoviPreferito(LudoVideo item, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener);
-
-        void registerOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener);
-
-        void unregisterOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener);
     }
 }

@@ -38,17 +38,17 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
     private static final int PROGRESS = 1;
     private static final int VIDEO = 0;
     private static boolean isLoadingMore = false;
-    private HashMap<String, Boolean> isPreferito;
+    //private HashMap<String, Boolean> isPreferito;
     private FragmentAdapterVideoBinder mBinder;
 
-    VideoRecyclerAdapter(Context context, FragmentAdapterVideoBinder binder, List<LudoVideo> preferitiVideoList) {
+    VideoRecyclerAdapter(Context context, FragmentAdapterVideoBinder binder) {
         this.mContext = context;
         this.videoList = new ArrayList<>();
-        this.isPreferito = new HashMap<>();
+        //this.isPreferito = new HashMap<>();
         this.itemsAll = new ArrayList<>(videoList);
         this.mBinder = binder;
 
-        setPreferiti(preferitiVideoList);
+        //setPreferiti(preferitiVideoList);
     }
 
     @Override
@@ -78,13 +78,13 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
         if (viewHolder.getItemViewType() == VIDEO) {
             if (viewHolder instanceof VideoAbstractViewHolder) {
                 LudoVideo video = videoList.get(position);
-                Boolean isPreferitoValue = isPreferito.get(video.getId());
+                //Boolean isPreferitoValue = isPreferito.get(video.getId());
 
-                if (isPreferitoValue == null) {
-                    isPreferitoValue = false;
-                }
+                //if (isPreferitoValue == null) {
+                //    isPreferitoValue = false;
+                //}
 
-                ((VideoViewHolder) viewHolder).set(video, position, isPreferitoValue);
+                ((VideoViewHolder) viewHolder).set(video, position);
             }
         } else {
             ProgressBar progressBar = viewHolder.itemView.findViewById(R.id.pb_loading);
@@ -100,12 +100,13 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
             super(context, itemView);
         }
 
-        private void set(LudoVideo item, int position, boolean isPreferito) {
-            set(item, position);
+        @Override
+        public void set(LudoVideo item, int position) {
+            super.set(item, position);
 
             ImageView thumbnailPlace = itemView.findViewById(R.id.icon);
 
-            setPreferitoListener(item, isPreferito);
+            //setPreferitoListener(item, isPreferito);
 
             thumbnailPlace.setImageDrawable(null);
 
@@ -145,7 +146,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
 
         }
 
-        private void setPreferitoListener(LudoVideo item, boolean isPreferitoValue) {
+        /*private void setPreferitoListener(LudoVideo item, boolean isPreferitoValue) {
             ImageButton imageButton = itemView.findViewById(R.id.preferito_button);
 
             if (isPreferitoValue) {
@@ -169,7 +170,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
                     setPreferitoListener(item, true);
                 }));
             }
-        }
+        }*/
     }
 
     public static class VideoAbstractViewHolder extends PreferitiListAdapter.ViewHolder<LudoVideo> {
@@ -195,10 +196,8 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
                 TextView tt1 = itemView.findViewById(R.id.videotitle);
                 TextView tt2 = itemView.findViewById(R.id.videodesc);
                 TextView channel = itemView.findViewById(R.id.videochannel);
-                TextView likes = itemView.findViewById(R.id.likes);
-                TextView dislikes = itemView.findViewById(R.id.dislikes);
+                TextView updated = itemView.findViewById(R.id.date_label);
                 TextView views = itemView.findViewById(R.id.views);
-                TextView updated = itemView.findViewById(R.id.Updated);
 
 
                 ImageView tt3 = itemView.findViewById(R.id.icon);
@@ -215,13 +214,6 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
                     channel.setText(item.getChannel().getChannelName());
                 }
                 VideoInformationManager videoInformationManager = new VideoInformationManager(mContext, item);
-                if (likes != null) {
-                    likes.setText(videoInformationManager.getCompactedLikes());
-                }
-
-                if (dislikes != null) {
-                    dislikes.setText(videoInformationManager.getCompactedDislikes());
-                }
 
                 if (views != null) {
                     views.setText(videoInformationManager.getCompactedViews());
@@ -285,16 +277,16 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    private void setPreferiti(List<LudoVideo> videoList) {
+    /*private void setPreferiti(List<LudoVideo> videoList) {
         isPreferito.clear();
 
         for (LudoVideo videoPreferito : videoList) {
             isPreferito.put(videoPreferito.getId(), videoPreferito.getPreferito());
         }
-    }
+    }*/
 
-    void setNewPreferiti(List<LudoVideo> videoList) {
+    /*void setNewPreferiti(List<LudoVideo> videoList) {
         setPreferiti(videoList);
         notifyDataSetChanged();
-    }
+    }*/
 }

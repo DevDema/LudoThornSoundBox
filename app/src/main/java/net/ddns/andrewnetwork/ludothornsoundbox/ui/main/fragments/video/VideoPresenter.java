@@ -111,33 +111,6 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void aggiungiPreferito(LudoVideo video, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
-        List<LudoVideo> preferitiList = getPreferitiList();
-
-        //CONTROLLA SE HAI RAGGIUNTO IL NUMERO MASSIMO DI PREFERITI.
-        if (preferitiList.size() >= 5) {
-            getMvpView().onMaxVideoReached();
-            return;
-        }
-
-        //CONTROLLA SE ESISTE GIA'
-        for (LudoVideo videoInList : preferitiList) {
-            if (videoInList.getId().equals(video.getId())) {
-                getMvpView().onPreferitoEsistente(video);
-                return;
-            }
-        }
-
-        getDataManager().salvaVideoPreferito(video);
-        getMvpView().onPreferitoSavedSuccess(video);
-
-        if (preferitoDeletedListener != null) {
-            preferitoDeletedListener.onPreferitoDeleted(video);
-        }
-
-    }
-
-    @Override
     public void loadThumbnail(LudoVideo video, PreferitiListAdapter.ThumbnailLoadedListener thumbnailLoadedListener) {
         getCompositeDisposable().add(getDataManager().getThumbnail(video)
                 .observeOn(getSchedulerProvider().ui())
@@ -149,30 +122,5 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
                 ));
     }
 
-    @Override
-    public void rimuoviPreferito(LudoVideo item, PreferitiListAdapter.PreferitoDeletedListener<LudoVideo> preferitoDeletedListener) {
-        if (getDataManager().rimuoviVideoPreferito(item)) {
-            getMvpView().onPreferitoRimossoSuccess(item);
-            if (preferitoDeletedListener != null) {
-                preferitoDeletedListener.onPreferitoDeleted(item);
-            }
-        } else {
-            getMvpView().onPreferitoRimossoFailed();
-        }
-    }
 
-    @Override
-    public void registerOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
-        getDataManager().registerOnSharedPreferencesChangeListener(onSharedPreferenceChangeListener);
-    }
-
-    @Override
-    public void unregisterOnSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
-        getDataManager().unregisterOnSharedPreferencesChangeListener(onSharedPreferenceChangeListener);
-    }
-
-    @Override
-    public List<LudoVideo> getPreferitiList() {
-        return getDataManager().getVideoPreferitiList();
-    }
 }

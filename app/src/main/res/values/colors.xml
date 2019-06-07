@@ -4,7 +4,7 @@
     <color name="light_gray">#eeeeee</color>
     <color name="background">#ff720d</color>
     <color name="black_effective">#2a2a2a</color>
-    <color name="yellow_background" >#F7DE3A</color>
+    <color name="yellow_background" >#DFC533</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
     <color name="colorAccentDark" >#E24905</color>
@@ -12,4 +12,5 @@
     <color name="gray">#777777</color>
     <color name="red">#FF0000</color>
     <color name="cyan">#60D8B9</color>
+    <color name="darker_transparent" >#36000000</color>
 </resources>

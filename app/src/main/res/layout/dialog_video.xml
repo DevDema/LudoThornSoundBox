@@ -113,8 +113,9 @@
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:gravity="center"
-                            android:text="Guarda su Youtube"/>
+                            android:text="@string/guarda_su_youtube_label"/>
                     </RelativeLayout>
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/video_info"
                         android:layout_width="0dp"
@@ -145,7 +146,7 @@
 
                                 <ImageView
                                     android:id="@+id/likesImage"
-                                    android:layout_width="@dimen/input_size_xxs"
+                                    android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="center"
                                     android:layout_weight="1"
@@ -176,7 +177,7 @@
 
                                 <ImageView
                                     android:id="@+id/dislikeImage"
-                                    android:layout_width="@dimen/input_size_xxs"
+                                    android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="center"
                                     android:layout_weight="1"
@@ -200,13 +201,13 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
 
-                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/preferito_logo"
                                 app:layout_constraintStart_toEndOf="@id/dislike_layout"
                                 app:layout_constraintTop_toTopOf="parent">
 
                                 <ImageView
                                     android:id="@+id/views_image"
-                                    android:layout_width="0dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:contentDescription="@string/views_label"
                                     app:layout_constraintEnd_toEndOf="parent"
@@ -224,6 +225,22 @@
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@id/views_image" />
                             </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <ImageButton
+                                android:id="@+id/preferito_logo"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:contentDescription="@string/guarda_su_youtube_label"
+                                android:background="@color/transparent"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerInParent="true"
+                                android:scaleType="fitCenter"
+
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/views_layout"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:srcCompat="@drawable/preferito_selector"/>
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -232,7 +249,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:background="@color/colorAccentDark"
+                        android:background="@color/darker_transparent"
                         android:paddingStart="20dp"
                         android:paddingTop="10dp"
                         android:paddingEnd="20dp"

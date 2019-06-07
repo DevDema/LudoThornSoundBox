@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.math.BigInteger;
 
 public class VideoInformation implements Serializable {
-    BigInteger likes;
-    BigInteger dislikes;
-    BigInteger views;
+    private BigInteger likes;
+    private BigInteger dislikes;
+    private BigInteger views;
 
     public BigInteger getLikes() {
         return likes;
@@ -29,13 +29,6 @@ public class VideoInformation implements Serializable {
     }
 
     public void setViews(BigInteger views) {
-        this.views = views;
-    }
-
-
-    public VideoInformation(BigInteger likes, BigInteger dislikes, BigInteger views) {
-        this.likes = likes;
-        this.dislikes = dislikes;
         this.views = views;
     }
 
