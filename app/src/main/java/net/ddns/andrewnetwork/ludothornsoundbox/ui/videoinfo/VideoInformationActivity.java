@@ -274,7 +274,10 @@ public class VideoInformationActivity extends AdsActivity implements IVideoInfor
     }
 
     public void apriVideo(LudoVideo item) {
-        AdsActivity.AdClosedListener adClosedListener = () -> CommonUtils.openLink(this, buildVideoUrl(item.getId()));
+        AdsActivity.AdClosedListener adClosedListener = () -> {
+            AudioUtils.stopTrack();
+            CommonUtils.openLink(this, buildVideoUrl(item.getId()));
+        };
         if (Math.random() < 0.5) {
             showInterstitialAd(adClosedListener);
         } else {
