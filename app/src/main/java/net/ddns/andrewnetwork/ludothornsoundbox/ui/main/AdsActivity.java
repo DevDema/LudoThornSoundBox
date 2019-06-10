@@ -40,6 +40,7 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
         void onAdClosed();
     }
 
+    private boolean isButtonEnabled = false;
     private List<AdView> mAdViews = new ArrayList<>();
     private InterstitialAd mInterstitialAd;
     private ImageButton button;
@@ -56,14 +57,25 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
             @Override
             public void onAdLoaded() {
 
-                button.setEnabled(true);
+                Log.i("AdLoadedInter", "Ad successfully loaded.");
+
+                isButtonEnabled = true;
+
+                if(button != null) {
+                    button.setEnabled(isButtonEnabled);
+                }
             }
 
             @Override
             public void onAdFailedToLoad(int error) {
 
                 Log.e("AdFailedInter", "Ad failed to load, errorcode: " + error);
-                button.setEnabled(false);
+
+                isButtonEnabled = false;
+
+                if(button != null) {
+                    button.setEnabled(isButtonEnabled);
+                }
 
                 AdRequest adRequest = new AdRequest.Builder().build();
                 mInterstitialAd.loadAd(adRequest);
@@ -158,7 +170,7 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
 
                         button = new ImageButton(AdsActivity.this);
 
-                        button.setEnabled(false);
+                        button.setEnabled(isButtonEnabled);
                         button.setBackground(ContextCompat.getDrawable(AdsActivity.this, R.drawable.block_color_dark));
                         button.setImageDrawable(ContextCompat.getDrawable(AdsActivity.this, R.drawable.ic_support_me));
                         button.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));

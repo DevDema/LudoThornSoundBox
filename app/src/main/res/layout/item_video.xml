@@ -91,7 +91,7 @@
                         android:id="@+id/views"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:maxLength="3"
+                        android:maxLength="4"
                         android:paddingEnd="5dp"
                         android:paddingStart="5dp"
                         android:textAlignment="textEnd"
