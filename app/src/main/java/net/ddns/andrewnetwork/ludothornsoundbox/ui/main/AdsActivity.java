@@ -23,6 +23,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.PreferencesManagerActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppConstants;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
 
     protected LinearLayout bottomBanner;
 
+
+
     public interface AdClosedListener {
 
         void onAdClosed();
@@ -45,73 +48,76 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
     private InterstitialAd mInterstitialAd;
     private ImageButton button;
     private int[] adsBannerTrial;
+    private boolean isBannerLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MobileAds.initialize(this, AppConstants.ADS_CODE);
+        if(AppUtils.areAdsEnabled) {
+            MobileAds.initialize(this, AppConstants.ADS_CODE);
 
-        AdListener adInterstitialListener = new AdListener() {
+            AdListener adInterstitialListener = new AdListener() {
 
-            @Override
-            public void onAdLoaded() {
+                @Override
+                public void onAdLoaded() {
 
-                Log.i("AdLoadedInter", "Ad successfully loaded.");
+                    Log.i("AdLoadedInter", "Ad successfully loaded.");
 
-                isButtonEnabled = true;
+                    isButtonEnabled = true;
 
-                if(button != null) {
-                    button.setEnabled(isButtonEnabled);
-                }
-            }
-
-            @Override
-            public void onAdFailedToLoad(int error) {
-
-                Log.e("AdFailedInter", "Ad failed to load, errorcode: " + error);
-
-                isButtonEnabled = false;
-
-                if(button != null) {
-                    button.setEnabled(isButtonEnabled);
+                    if (button != null) {
+                        button.setEnabled(isButtonEnabled);
+                    }
                 }
 
-                AdRequest adRequest = new AdRequest.Builder().build();
-                mInterstitialAd.loadAd(adRequest);
+                @Override
+                public void onAdFailedToLoad(int error) {
+
+                    Log.e("AdFailedInter", "Ad failed to load, errorcode: " + error);
+
+                    isButtonEnabled = false;
+
+                    if (button != null) {
+                        button.setEnabled(isButtonEnabled);
+                    }
+
+                    AdRequest adRequest = new AdRequest.Builder().build();
+                    mInterstitialAd.loadAd(adRequest);
+                }
+
+                @Override
+                public void onAdClosed() {
+                    AdRequest adRequest = new AdRequest.Builder().build();
+                    button.setEnabled(false);
+                    mInterstitialAd.loadAd(adRequest);
+                }
+            };
+
+            mInterstitialAd = new InterstitialAd(this);
+
+            mInterstitialAd.setAdUnitId("ca-app-pub-3889032681139142/3864341552");
+            mInterstitialAd.setAdListener(adInterstitialListener);
+
+            Bundle extras = new Bundle();
+            AdRequest.Builder adRequestBuilder = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras);
+
+            //CONFIGURA TEST DEVICE
+            if (BuildConfig.DEBUG) {
+                addTestDevices(adRequestBuilder);
             }
 
-            @Override
-            public void onAdClosed() {
-                AdRequest adRequest = new AdRequest.Builder().build();
-                button.setEnabled(false);
-                mInterstitialAd.loadAd(adRequest);
-            }
-        };
+            mInterstitialAd.loadAd(adRequestBuilder.build());
 
-        mInterstitialAd = new InterstitialAd(this);
-
-        mInterstitialAd.setAdUnitId("ca-app-pub-3889032681139142/3864341552");
-        mInterstitialAd.setAdListener(adInterstitialListener);
-
-        Bundle extras = new Bundle();
-        AdRequest.Builder adRequestBuilder = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras);
-
-        //CONFIGURA TEST DEVICE
-        if (BuildConfig.DEBUG) {
-            addTestDevices(adRequestBuilder);
+            initBanner(false);
         }
-
-        mInterstitialAd.loadAd(adRequestBuilder.build());
-
-        initBanner(false);
     }
 
     protected abstract LinearLayout getAdRootView();
 
     public void showInterstitialAd(AdClosedListener adClosedListener) {
 
-        if (mInterstitialAd.isLoaded()) {
+        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
         } else if (adClosedListener != null) {
             adClosedListener.onAdClosed();
@@ -159,6 +165,8 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
                 @Override
                 public void onGlobalLayout() {
                     if (!mAdViews.isEmpty() && mAdViews.get(0) != null && mAdViews.get(0).getWidth() > 0) {
+
+                        isBannerLoaded = true;
                         final double floatItems = (bottomBanner.getWidth() - buttonWidth) * 1.0 / mAdViews.get(0).getWidth();
                         final short totalAdViews = (short) Math.min(ADS_BANNER_UNIT_IDS.length, Math.floor(floatItems));
 
@@ -257,5 +265,9 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
         if (onGlobalLayoutListener != null) {
             adView.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
         }
+    }
+
+    public boolean isBannerLoaded() {
+        return isBannerLoaded;
     }
 }

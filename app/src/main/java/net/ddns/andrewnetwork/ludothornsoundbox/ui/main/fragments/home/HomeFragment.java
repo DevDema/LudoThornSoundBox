@@ -125,6 +125,15 @@ public class HomeFragment extends MainFragment implements OnButtonSelectedListen
         if(mActivity.getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT) {
             configurePagerInitialHeight();
         }
+
+        ViewGroup.MarginLayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.buttonsSwitcherLayout.getLayoutParams();
+
+        if(AppUtils.areAdsEnabled && mActivity instanceof AdsActivity && !((AdsActivity) mActivity).isBannerLoaded()) {
+            int bannerHeight = (int) mActivity.getResources().getDimension(R.dimen.input_size_xxxs);
+
+            layoutParams.bottomMargin += bannerHeight;
+        }
+
     }
 
     @Override

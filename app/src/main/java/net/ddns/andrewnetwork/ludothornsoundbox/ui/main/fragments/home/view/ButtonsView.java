@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.AdsActivity;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.StringParse;
 
 import java.util.List;
@@ -208,6 +210,8 @@ public class ButtonsView<T> extends LinearLayout {
     public static void computeMaxItems(Context context, ViewGroup viewGroup) {
         int buttonWidth = getWidthFromPreferences(context);
         int buttonHeight = (int) context.getResources().getDimension(R.dimen.input_size_xxxs);
+
+
         MAX_COLUMNS = (int) Math.floor(viewGroup.getWidth() * 1.0 / (buttonWidth + 2 * MARGIN));
         MAX_ROWS = (int) Math.floor(viewGroup.getHeight() * 1.0 / (buttonHeight + 2 * MARGIN));
     }

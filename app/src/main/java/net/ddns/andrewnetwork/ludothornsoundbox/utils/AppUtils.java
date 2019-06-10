@@ -55,7 +55,7 @@ public final class AppUtils {
     public static int DAYS_BEFORE_ASKING_FEEDBACK = 10;
     public static int DAYS_LATER_ASKING_FEEDBACK = 5;
     public static String LINK_ASKING_FEEDBACK = "https://play.google.com/store/apps/details?id=net.ddns.andrewnetwork.ludothornsoundbox&hl=it";
-    private static volatile boolean receiversRegistered = false;
+    public static boolean areAdsEnabled = true;
 
     private static final String ALIAS_1 = "MainActivity1";
     private static final String ALIAS_2 = "MainActivity2";
