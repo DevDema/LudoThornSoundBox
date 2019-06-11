@@ -1,4 +1,4 @@
-package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo;
+package net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo;
 
 import android.content.SharedPreferences;
 
@@ -6,8 +6,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.DataManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationPresenter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.SchedulerProvider;
 

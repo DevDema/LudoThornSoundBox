@@ -26,12 +26,11 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomePresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeViewPresenterBinder.IHomeView;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationPresenter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationPresenter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo.VideoInformationPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiMainPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiMainViewPresenterBinder;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiViewPresenterBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioViewPresenterBinder;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.video.PreferitiVideoPresenter;

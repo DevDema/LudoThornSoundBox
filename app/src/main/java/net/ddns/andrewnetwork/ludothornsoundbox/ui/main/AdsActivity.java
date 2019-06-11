@@ -35,7 +35,7 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
     private static final String[] TOKEN_TEST_DEVICES = {"95AC5A23C9D7F20AC40305659DC13A0F", "E471AADF1D21337710F1244766497DF9"};
 
     protected LinearLayout bottomBanner;
-
+    private AdClosedListener adClosedListener;
 
 
     public interface AdClosedListener {
@@ -67,7 +67,7 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
                     isButtonEnabled = true;
 
                     if (button != null) {
-                        button.setEnabled(isButtonEnabled);
+                        button.setEnabled(true);
                     }
                 }
 
@@ -79,7 +79,7 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
                     isButtonEnabled = false;
 
                     if (button != null) {
-                        button.setEnabled(isButtonEnabled);
+                        button.setEnabled(false);
                     }
 
                     AdRequest adRequest = new AdRequest.Builder().build();
@@ -91,6 +91,10 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
                     AdRequest adRequest = new AdRequest.Builder().build();
                     button.setEnabled(false);
                     mInterstitialAd.loadAd(adRequest);
+
+                    if(adClosedListener != null) {
+                        adClosedListener.onAdClosed();
+                    }
                 }
             };
 
@@ -117,6 +121,7 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
 
     public void showInterstitialAd(AdClosedListener adClosedListener) {
 
+        this.adClosedListener = adClosedListener;
         if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
         } else if (adClosedListener != null) {

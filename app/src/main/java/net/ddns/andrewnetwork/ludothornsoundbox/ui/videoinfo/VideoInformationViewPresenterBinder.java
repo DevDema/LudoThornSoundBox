@@ -1,4 +1,4 @@
-package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo;
+package net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo;
 
 import android.content.SharedPreferences;
 

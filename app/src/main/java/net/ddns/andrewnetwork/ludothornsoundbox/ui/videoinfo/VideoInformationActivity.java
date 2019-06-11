@@ -30,8 +30,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.databinding.DialogVideoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.AdsActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationPresenter;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationPresenter;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo.VideoInformationViewPresenterBinder.IVideoInformationView;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ColorUtils;
