@@ -114,6 +114,8 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
 
             if (isSettingPreferito) {
                 mBinding.progressBackground.setVisibility(View.VISIBLE);
+            } else {
+                mBinding.progressBackground.setVisibility(View.INVISIBLE);
             }
 
             mBinding.preferitoButton.setActivated(!isSettingPreferito);
@@ -152,15 +154,7 @@ public class PreferitiAudioListAdapter extends PreferitiListAdapter<LudoAudio> {
             videoAvailable.put(item.getTitle(), true);
 
             mBinding.videoTitleLabel.setText(video.getTitle());
-            mBinding.videoButton.setOnClickListener(v ->
-                    CommonUtils.showDialog(mContext, "Aprire il video corrispondente su youtube?",
-                            (dialog, which) -> {
-                                mBinder.apriVideo(video);
-                                dialog.dismiss();
-                            },
-                            true
-                    )
-            );
+            mBinding.videoButton.setOnClickListener(v -> mBinder.apriVideo(video));
 
             mBinding.videoTitleLabel.setVisibility(View.VISIBLE);
             mBinding.videoButton.setVisibility(View.VISIBLE);

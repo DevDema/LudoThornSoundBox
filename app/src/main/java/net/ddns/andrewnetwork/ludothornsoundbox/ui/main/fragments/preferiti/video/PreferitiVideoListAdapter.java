@@ -92,8 +92,10 @@ public class PreferitiVideoListAdapter extends PreferitiListAdapter<LudoVideo> {
             });
 
 
-            if(isSettingPreferito) {
+            if (isSettingPreferito) {
                 mBinding.progressBackground.setVisibility(View.VISIBLE);
+            } else {
+                mBinding.progressBackground.setVisibility(View.INVISIBLE);
             }
 
 

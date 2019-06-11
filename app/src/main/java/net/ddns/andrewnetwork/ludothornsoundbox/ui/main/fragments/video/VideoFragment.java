@@ -159,11 +159,12 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
         this.channelList = channelList;
 
+        notifyFragmentsRefreshing(false);
         if (channelList.size() > 1) {
             channelList.add(0, new Channel(ALL_CHANNELS, null, ColorUtils.getByColorResource(mContext, R.color.colorAccent)));
+        } else {
+            mBinding.tabLayout.setVisibility(View.GONE);
         }
-
-        notifyFragmentsRefreshing(false);
 
         setUpTabLayout();
         mBinding.progressBar.setVisibility(View.INVISIBLE);
