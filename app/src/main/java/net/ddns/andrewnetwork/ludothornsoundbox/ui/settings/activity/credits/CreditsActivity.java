@@ -55,6 +55,15 @@ public class CreditsActivity extends PreferencesManagerActivity {
             mBinding.mailSegnalazioniLabel.setVisibility(View.INVISIBLE);
             mBinding.mailSegnalazioneName.setVisibility(View.INVISIBLE);
         }
+
+        if(nonEmptyNonNull(BuildConfig.SUPPORTERS)) {
+            mBinding.ringraziamentiLabel.setVisibility(View.VISIBLE);
+            mBinding.ringraziamentiValue.setVisibility(View.VISIBLE);
+            mBinding.ringraziamentiValue.setText(BuildConfig.SUPPORTERS);
+        } else {
+            mBinding.ringraziamentiLabel.setVisibility(View.GONE);
+            mBinding.ringraziamentiValue.setVisibility(View.GONE);
+        }
     }
 
     @Override

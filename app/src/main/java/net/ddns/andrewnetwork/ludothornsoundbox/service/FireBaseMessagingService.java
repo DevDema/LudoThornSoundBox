@@ -95,8 +95,8 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
 
             Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             NotificationCompat.Builder notificationBuilder =
-                    new NotificationCompat.Builder(this, "notify_001")
-                            .setSmallIcon(R.drawable.ic_icona_notifiche)
+                    new NotificationCompat.Builder(this, getString(R.string.notifiche_canale_channel_id))
+                            .setSmallIcon(R.mipmap.icona_notifiche)
                             .setContentTitle(notification.getTitle())
                             .setContentText(notification.getBody())
                             .setLargeIcon(thumbnail)
@@ -105,6 +105,7 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
                             .setContentIntent(pendingIntent);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Log.d(TAG, "Creating notification channels...");
                 String channelId = getString(R.string.notifiche_canale_channel_id);
                 NotificationChannel channel = new NotificationChannel(channelId, getString(R.string.notifiche_canale_channel), IMPORTANCE_LOW);
                 notificationManager.createNotificationChannel(channel);

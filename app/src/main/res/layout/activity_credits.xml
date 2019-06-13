@@ -118,6 +118,7 @@
                     android:textSize="18sp" />
 
                 <TextView
+                    android:id="@+id/ringraziamenti_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -128,12 +129,12 @@
                     android:textSize="18sp" />
 
                 <TextView
+                    android:id="@+id/ringraziamenti_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="20dp"
-                    android:text="@string/ringraziamenti_value"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
