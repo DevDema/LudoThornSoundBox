@@ -1,0 +1,57 @@
+{
+  "project_info": {
+    "project_number": "401523614562",
+    "firebase_url": "https://ludothornsoundbox.firebaseio.com",
+    "project_id": "ludothornsoundbox",
+    "storage_bucket": "ludothornsoundbox.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401523614562:android:80723ba75cf59f1f",
+        "android_client_info": {
+          "package_name": "net.ddns.andrewnetwork.ludothornsoundbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401523614562-1fgrlkg5p4tv1mbeib8j9grsc6ie14il.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.ddns.andrewnetwork.ludothornsoundbox",
+            "certificate_hash": "f4458299bd2ce22b2c63b9bd8f09aeb56b62aca5"
+          }
+        },
+        {
+          "client_id": "401523614562-4ucf23k0i52iff41r1lv0t45b42ppb37.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.ddns.andrewnetwork.ludothornsoundbox",
+            "certificate_hash": "4e50fe5c0a5fbcd658d61c0992e63fc5f4da6e87"
+          }
+        },
+        {
+          "client_id": "401523614562-cu3d4m67d13d8v75e2as9ueubr76g73a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL5EhMG5a1WtWDPd_hmnfVdn7-SbaRqgc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401523614562-cu3d4m67d13d8v75e2as9ueubr76g73a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-3889032681139142~8858308706"
+    }
+  ],
+  "configuration_version": "1"
+}
