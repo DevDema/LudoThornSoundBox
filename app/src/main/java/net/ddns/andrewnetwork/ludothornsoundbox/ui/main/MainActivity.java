@@ -12,7 +12,6 @@ import android.os.Bundle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.reflect.TypeToken;
 
 import androidx.annotation.IdRes;
@@ -61,7 +60,6 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.inject.Inject;
 
@@ -493,6 +491,7 @@ public class MainActivity extends AdsActivity
         mBinding.appBarMain.navigation.setOnNavigationItemSelectedListener(this);
     }
 
+    @SuppressWarnings("unchecked")
     private <T extends Fragment> T getFragmentByClass(Class<T> fragmentClass) {
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment.getClass().equals(fragmentClass)) {

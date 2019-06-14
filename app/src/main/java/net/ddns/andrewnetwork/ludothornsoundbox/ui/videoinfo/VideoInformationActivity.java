@@ -268,6 +268,7 @@ public class VideoInformationActivity extends AdsActivity implements IVideoInfor
 
         View.OnClickListener onClickListener = v -> apriVideo(video);
         mBinding.thumbnailImage.setOnClickListener(onClickListener);
+        mBinding.youtubeLogo.setOnClickListener(onClickListener);
         mBinding.youtubeButton.setOnClickListener(onClickListener);
 
         refreshIsPreferito();
