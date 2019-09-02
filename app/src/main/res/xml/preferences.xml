@@ -20,10 +20,10 @@
             android:summary="@string/modifiche_layout_summary"
             android:title="@string/modifiche_layout_title">
 
-            <Preference
+            <!--<Preference
                 android:key="@string/cambia_icona_key"
                 android:summary="@string/cambia_icona_summary"
-                android:title="@string/cambia_icona_title" />
+                android:title="@string/cambia_icona_title" />-->
 
             <SwitchPreference
                 android:key="@string/usa_font_app_key"
