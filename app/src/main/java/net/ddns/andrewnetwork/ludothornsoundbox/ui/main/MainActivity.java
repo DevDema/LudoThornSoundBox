@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -41,6 +42,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.advpopup.AdvertisementFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioFragment;
@@ -53,11 +55,13 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.social.SocialActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.web.WebActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
+import net.ddns.andrewnetwork.ludothornsoundbox.utils.FileUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ListUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.StringUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ViewUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,6 +208,14 @@ public class MainActivity extends AdsActivity
         mBinding.appBarMain.navigation.setSelectedItemId(fragmentFirstSelection);
 
         handleIntents(getIntent()!= null ? getIntent() : new Intent());
+
+        if(ListUtils.getRandomPopUpBoolean()) {
+            openPopupAdvertisements();
+        }
+    }
+
+    private void openPopupAdvertisements() {
+        newDialogFragment(AdvertisementFragment.newInstance());
     }
 
     private void resetAppIcon() {
