@@ -41,7 +41,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
     //private HashMap<String, Boolean> isPreferito;
     private FragmentAdapterVideoBinder mBinder;
 
-    VideoRecyclerAdapter(Context context, FragmentAdapterVideoBinder binder) {
+    public VideoRecyclerAdapter(Context context, FragmentAdapterVideoBinder binder) {
         this.mContext = context;
         this.videoList = new ArrayList<>();
         //this.isPreferito = new HashMap<>();
@@ -263,7 +263,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter {
         }
     }
 
-    void addItems(List<LudoVideo> ludoVideoList) {
+    public void addItems(List<LudoVideo> ludoVideoList) {
         //REMOVE THE PROGRESS BAR ITEM
 
         //ASSIGN TO ADAPTER VARIABLES

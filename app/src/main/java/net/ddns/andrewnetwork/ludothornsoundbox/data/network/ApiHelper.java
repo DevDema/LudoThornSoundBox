@@ -46,4 +46,8 @@ public interface ApiHelper {
     Observable<LudoAudio> getVideoById(LudoAudio audio);
 
     Single<LudoVideo> getVideoById(String url);
+
+    Single<List<LudoVideo>> searchVideosAllChannels(String searchString, List<Channel> channelList);
+
+    Single<List<LudoVideo>> searchMoreVideosAllChannels(String searchString, Date date, List<Channel> channelList);
 }
