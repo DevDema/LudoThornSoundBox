@@ -74,8 +74,7 @@ public class VideoManager {
         int counter = 0;
         for (LudoVideo video : videoList)
             if (video.getThumbnail()!= null && video.getThumbnail().getImage() != null) counter++;
-        if (counter >= videoList.size()) return true;
-        return false;
+        return counter >= videoList.size();
     }
 
     /**

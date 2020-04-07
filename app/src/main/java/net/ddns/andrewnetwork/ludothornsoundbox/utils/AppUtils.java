@@ -48,8 +48,6 @@ import static net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.icon
 public final class AppUtils {
 
     public static final String MAIL_ANDREA = "andrea.de-matteis@outlook.com";
-    public static final String MAIL_LUDO = "miticludus@gmail.com";
-    public static final String MAIL_SEGNALAZIONI = "chemerdo@gmail.com";
     public static final String PATREON_LINK = "https://www.patreon.com/LudoThorn";
     public static final String MERCHANDISE_LINK = "https://www.moteefe.com/store/ludothorn";
     public static int DAYS_BEFORE_ASKING_FEEDBACK = 10;

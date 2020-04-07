@@ -76,7 +76,7 @@ public class AppApiHelper implements ApiHelper {
     @Override
     public Observable<List<LudoVideo>> getVideoList(Channel channel) {
         return Observable.create(emitter -> {
-            Log.v("ChannelREST", "getting Videos.");
+            Log.d("ChannelREST", "getting Videos for channel" + JsonUtil.getGson().toJson(channel));
 
             YouTube.Search.List search;
             search = createTubeService().search().list("id,snippet");
@@ -87,7 +87,8 @@ public class AppApiHelper implements ApiHelper {
             search.setMaxResults(VIDEO_PER_CHANNEL_LOADED);
             final SearchListResponse searchResponse = search.execute();
 
-            List<SearchResult> searchResultList = new ArrayList<>(searchResponse.getItems());
+            List<SearchResult> searchResultList = searchResponse.getItems();
+            Log.d("ChannelREST", JsonUtil.getGson().toJson(searchResultList));
             List<LudoVideo> videoList = castToLudoVideo(searchResultList);
             VideoUtils.addVideosToChannels(channel, videoList);
             emitter.onNext(videoList);
@@ -98,7 +99,7 @@ public class AppApiHelper implements ApiHelper {
     @Override
     public Observable<Channel> getChannel(Channel channel) {
         return Observable.create(emitter -> {
-            Log.v("ChannelREST", "getting Channel.");
+            Log.d("ChannelREST", "getting channel " + JsonUtil.getGson().toJson(channel));
 
             YouTube.Channels.List channels;
             channels = createTubeService().channels().list("statistics");

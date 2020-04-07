@@ -287,7 +287,7 @@ public abstract class DateHourUtils {
         if (monthString.length() == 1) {
             monthString = "0" + monthString;
         }
-        return String.valueOf(calendar.get(Calendar.YEAR)) + monthString;
+        return calendar.get(Calendar.YEAR) + monthString;
     }
 
     public static String convertToTime(int hourOfDay, int minutes) {
@@ -297,7 +297,7 @@ public abstract class DateHourUtils {
             minuteString = "0" + minutes;
         }
 
-        return String.valueOf(hourOfDay) + ":" + minuteString;
+        return hourOfDay + ":" + minuteString;
     }
 
     public static String convertToTime(Calendar calendar) {
