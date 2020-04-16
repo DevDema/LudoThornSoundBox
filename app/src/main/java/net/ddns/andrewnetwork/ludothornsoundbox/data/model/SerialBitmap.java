@@ -28,7 +28,7 @@ public class SerialBitmap implements Serializable {
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteStream);
-        byte bitmapBytes[] = byteStream.toByteArray();
+        byte[] bitmapBytes = byteStream.toByteArray();
         out.write(bitmapBytes, 0, bitmapBytes.length);
     }
 
@@ -38,7 +38,7 @@ public class SerialBitmap implements Serializable {
         int b;
         while((b = in.read()) != -1)
             byteStream.write(b);
-        byte bitmapBytes[] = byteStream.toByteArray();
+        byte[] bitmapBytes = byteStream.toByteArray();
         bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
     }
 

@@ -37,6 +37,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.utils.AppUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.JsonUtil;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -75,7 +76,7 @@ public class AppApiHelper implements ApiHelper {
     @Override
     public Observable<List<LudoVideo>> getVideoList(Channel channel) {
         return Observable.create(emitter -> {
-            Log.v("ChannelREST", "getting Videos.");
+            Log.d("ChannelREST", "getting Videos for channel" + JsonUtil.getGson().toJson(channel));
 
             YouTube.Search.List search;
             search = createTubeService().search().list("id,snippet");
@@ -86,7 +87,8 @@ public class AppApiHelper implements ApiHelper {
             search.setMaxResults(VIDEO_PER_CHANNEL_LOADED);
             final SearchListResponse searchResponse = search.execute();
 
-            List<SearchResult> searchResultList = new ArrayList<>(searchResponse.getItems());
+            List<SearchResult> searchResultList = searchResponse.getItems();
+            Log.d("ChannelREST", JsonUtil.getGson().toJson(searchResultList));
             List<LudoVideo> videoList = castToLudoVideo(searchResultList);
             VideoUtils.addVideosToChannels(channel, videoList);
             emitter.onNext(videoList);
@@ -97,11 +99,12 @@ public class AppApiHelper implements ApiHelper {
     @Override
     public Observable<Channel> getChannel(Channel channel) {
         return Observable.create(emitter -> {
-            Log.v("ChannelREST", "getting Channel.");
+            Log.d("ChannelREST", "getting channel " + JsonUtil.getGson().toJson(channel));
 
             YouTube.Channels.List channels;
             channels = createTubeService().channels().list("statistics");
             channels.setKey(AppUtils.getApiKey());
+
             if (nonEmptyNonNull(channel.getChannelUsername())) {
                 channels.setForUsername(channel.getChannelUsername());
             } else if (nonEmptyNonNull(channel.getId())) {
@@ -120,10 +123,10 @@ public class AppApiHelper implements ApiHelper {
         return Single.create(emitter -> {
             Log.d("ChannelREST", "getting Channel for video " + video.getTitle());
 
-            YouTube.Videos.List channels;
-            channels = createTubeService().videos().list("snippet");
-            channels.setKey(AppUtils.getApiKey());
-            channels.setId(video.getId());
+            YouTube.Videos.List channels = createTubeService().videos().list("snippet");
+            channels.setKey(AppUtils.getApiKey())
+                    .setId(video.getId());
+
             final Video videoResponse = channels.execute().getItems().get(0);
             VideoSnippet videoSnippet = videoResponse.getSnippet();
             Channel channel = new Channel(videoSnippet.getChannelId());
@@ -164,15 +167,15 @@ public class AppApiHelper implements ApiHelper {
             Log.v("VideoInfoREST", "getting VideoInformation.");
             List<Video> videos;
 
-            YouTube.Videos.List videoSearch;
+            YouTube.Videos.List videoSearch = createTubeService().videos().list("id,snippet,statistics");
+            final VideoListResponse videoListResponse = videoSearch
+                    .setKey(AppUtils.getApiKey())
+                    .setId(video.getId())
+                    .execute();
 
-            videoSearch = createTubeService().videos().list("id,snippet,statistics");
-            videoSearch.setKey(AppUtils.getApiKey());
-            videoSearch.setId(video.getId());
-            final VideoListResponse videoListResponse = videoSearch.execute();
             videos = videoListResponse.getItems();
 
-            if (!videos.isEmpty() && videos.size() == 1) {
+            if (videos.size() == 1) {
                 VideoInformation videoInformation = VideoUtils.extractVideoInformation(videos.get(0));
                 video.setVideoInformation(videoInformation);
 
@@ -188,17 +191,14 @@ public class AppApiHelper implements ApiHelper {
         return Observable.create(emitter -> {
             Log.v("ChannelREST", "getting More Videos.");
 
-            YouTube.Search.List search;
-            search = createTubeService().search().list("id,snippet");
-            search.setKey(AppUtils.getApiKey());
-            if (channel != null) {
-                search.setChannelId(channel.getId());
-            }
-            search.setPublishedBefore(new DateTime(beforeDate));
-            search.setType(LOOKUP_TYPE_VIDEO);
-            search.setOrder(ORDER_TYPE_VIDEO);
-            search.setMaxResults(VIDEO_PER_CHANNEL_LOADED);
-            final SearchListResponse searchResponse = search.execute();
+            YouTube.Search.List search = createTubeService().search().list("id,snippet");
+            final SearchListResponse searchResponse = search.setKey(AppUtils.getApiKey())
+                    .setChannelId(channel != null ? channel.getId() : null)
+                    .setPublishedBefore(new DateTime(beforeDate))
+                    .setType(LOOKUP_TYPE_VIDEO)
+                    .setOrder(ORDER_TYPE_VIDEO)
+                    .setMaxResults(VIDEO_PER_CHANNEL_LOADED)
+                    .execute();
 
             List<SearchResult> searchResultList = new ArrayList<>(searchResponse.getItems());
             List<LudoVideo> videoList = castToLudoVideo(searchResultList);
@@ -248,18 +248,63 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Single<List<LudoVideo>> searchMoreVideosAllChannels(String searchString, Date date, List<Channel> channelList) {
+        return Single.create(emitter -> {
+            List<LudoVideo> videoList = new ArrayList<>();
+
+            for (Channel channel : channelList) {
+                videoList.addAll(searchVideosChannel(searchString, date, channel));
+            }
+
+            emitter.onSuccess(videoList);
+        });
+    }
+
+    @Override
+    public Single<List<LudoVideo>> searchVideosAllChannels(String searchString, List<Channel> channelList) {
+        return Single.create(emitter -> {
+            List<LudoVideo> videoList = new ArrayList<>();
+
+            for (Channel channel : channelList) {
+                videoList.addAll(searchVideosChannel(searchString, channel));
+            }
+
+            emitter.onSuccess(videoList);
+        });
+    }
+
+    private List<LudoVideo> searchVideosChannel(String searchString, Channel channel) throws IOException {
+        return searchVideosChannel(searchString, null, channel);
+    }
+
+    private List<LudoVideo> searchVideosChannel(String searchString, Date date, Channel channel) throws IOException {
+        YouTube.Search.List search;
+        search = createTubeService().search().list("id,snippet");
+        search.setKey(AppUtils.getApiKey());
+
+        final SearchListResponse videoListResponse = search.setQ(searchString)
+                .setOrder(ORDER_TYPE_VIDEO)
+                .setPublishedBefore(date != null ? new DateTime(date) : null)
+                .setChannelId(channel.getId())
+                .execute();
+
+        List<SearchResult> searchResultList = new ArrayList<>(videoListResponse.getItems());
+
+        return castToLudoVideo(searchResultList);
+    }
+
+    @Override
     public Single<LudoVideo> getVideoById(String url) {
         return Single.create(emitter -> {
             Log.d("VideoFromUrlREST", "getting Video for URL: " + url);
             Log.d("ApiKey", AppUtils.getApiKey());
 
-            YouTube.Videos.List search;
-            search = createTubeService().videos().list("id,snippet,statistics");
-            search.setKey(AppUtils.getApiKey());
+            YouTube.Videos.List search = createTubeService().videos().list("id,snippet,statistics");
+            final VideoListResponse videoListResponse = search.setKey(AppUtils.getApiKey())
+                    .setId(url)
+                    .setMaxResults(1L)
+                    .execute();
 
-            search.setId(url);
-            search.setMaxResults(1L);
-            final VideoListResponse videoListResponse = search.execute();
             Log.d("VideoResponse", videoListResponse.toString());
 
             List<Video> searchResultList = new ArrayList<>(videoListResponse.getItems());

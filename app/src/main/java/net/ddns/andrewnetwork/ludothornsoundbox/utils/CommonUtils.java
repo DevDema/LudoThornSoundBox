@@ -34,6 +34,7 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.navigationI
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -98,7 +99,7 @@ public final class CommonUtils {
         is.read(buffer);
         is.close();
 
-        return new String(buffer, "UTF-8");
+        return new String(buffer, StandardCharsets.UTF_8);
     }
 
     public static void showDialog(Context context, String message) {

@@ -51,7 +51,7 @@ public class CustomEditText extends AppCompatEditText {
         Handler handler = new Handler();
         final long[] last_text_edit = {0};
         long delay = 1000; // 1 seconds after user stops typing
-        Editable editable[] = new Editable[1];
+        Editable[] editable = new Editable[1];
         editable[0] = new SpannableStringBuilder("");
         Runnable input_finish_checker = () -> {
             if (System.currentTimeMillis() > (last_text_edit[0] + delay - 500)) {

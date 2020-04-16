@@ -1,12 +1,9 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.BuildConfig;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
@@ -14,17 +11,14 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ContentVideoBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.AdsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.MainFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiListAdapter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.FragmentVideoChildBinder.FragmentVideoChild;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoViewPresenterBinder.IVideoView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.search.VideoSearchFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.videoinfo.VideoInformationActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ColorUtils;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.VideoUtils;
 
 import java.util.Date;
@@ -38,11 +32,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
-
-import static net.ddns.andrewnetwork.ludothornsoundbox.data.prefs.AppPreferencesHelper.PREF_KEY_PREFERITI_VIDEO;
-import static net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.controller.VideoManager.buildVideoUrl;
 
 public class VideoFragment extends MainFragment implements IVideoView, FragmentAdapterVideoBinder, FragmentVideoChildBinder.FragmentVideoParent {
 
@@ -60,7 +50,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
             currentPosition = tab.getPosition();
             Channel channel = channelList.get(tab.getPosition());
 
-            if(getView() != null) {
+            if (getView() != null) {
                 getView().setBackgroundColor(ContextCompat.getColor(mActivity, ColorUtils.getByName(mContext, channel.getBackGroundColor())));
             }
         }
@@ -75,10 +65,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
         }
     };
-    public interface MoreVideosLoadedListener {
-
-        void onMoreVideosLoaded(List<Channel> videoList);
-    }
+    private VideoSearchFragment searchFragment;
 
     public static VideoFragment newInstance() {
 
@@ -102,7 +89,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
         //mPresenter.registerOnSharedPreferencesChangeListener(this);
 
-        refreshChannels(true);
+        refresh(true);
 
         return mBinding.getRoot();
     }
@@ -134,8 +121,10 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
         super.onHiddenChanged(hidden);
 
         if (!hidden) {
-            if (loadingFailed) {
-                refreshChannels(true);
+            if (searchFragment != null) {
+                mActivity.getSupportFragmentManager().beginTransaction().show(searchFragment).commit();
+            } else if (loadingFailed) {
+                refresh(true);
             }
         }
     }
@@ -151,7 +140,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
                 android.graphics.PorterDuff.Mode.SRC_IN);
 
         mBinding.progressVideoLoadingLabel.setText(mContext.getString(R.string.progress_video_loading_label, BuildConfig.SHORT_NAME));
-        mBinding.errorConnectionButton.setOnClickListener(v -> refreshChannels(true));
+        mBinding.errorConnectionButton.setOnClickListener(v -> refresh(true));
     }
 
     @Override
@@ -230,7 +219,7 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
 
 
     @Override
-    public void refreshChannels(boolean usesGlobalLoading) {
+    public void refresh(boolean usesGlobalLoading) {
         mBinding.errorConnectionLayout.setVisibility(View.GONE);
         mBinding.tabLayout.removeOnTabSelectedListener(onTabSelectedListener);
 
@@ -241,6 +230,13 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
             mBinding.progressBar.setVisibility(View.VISIBLE);
         }
         mPresenter.getChannels(VideoUtils.getChannels());
+    }
+
+    @Override
+    public void refreshSearch(String text) {
+        mBinding.errorConnectionLayout.setVisibility(View.GONE);
+
+        mPresenter.searchVideos(text, VideoUtils.removeNullIds(channelList));
     }
 
     private void notifyFragmentsRefreshing(boolean refreshing) {
@@ -270,12 +266,59 @@ public class VideoFragment extends MainFragment implements IVideoView, FragmentA
         VideoFragment.loadingMoreVideos = loadingMoreVideos;
     }
 
-    public void getMoreVideos(Channel channel, Date mostRecentDate, MoreVideosLoadedListener moreVideosLoadedListener) {
-        mPresenter.getMoreVideos(channel, mostRecentDate, moreVideosLoadedListener);
+    @Override
+    public void getMoreVideos(Channel channel, Date mostRecentDate, MoreChannelsLoadedListener moreChannelsLoadedListener) {
+        mPresenter.getMoreVideos(channel, mostRecentDate, moreChannelsLoadedListener);
     }
 
-    public void getMoreVideos(MoreVideosLoadedListener moreVideosLoadedListener) {
+    @Override
+    public void getMoreVideos(MoreChannelsLoadedListener moreChannelsLoadedListener) {
 
-        mPresenter.getMoreVideos(channelList, VideoUtils.getMostRecentDate(channelList), moreVideosLoadedListener);
+        mPresenter.getMoreVideos(channelList, VideoUtils.getMostRecentDateFromChannels(channelList), moreChannelsLoadedListener);
+    }
+
+    @Override
+    public void getMoreVideos(String searchString, Date date, MoreVideosLoadedListener moreChannelsLoadedListener) {
+        List<Channel> list = VideoUtils.removeNullIds(channelList);
+        mPresenter.getMoreVideos(searchString, date, moreChannelsLoadedListener, list);
+    }
+
+    @Override
+    public void onSearchVideosLoaded(List<LudoVideo> videoList) {
+        if (searchFragment != null) {
+            searchFragment.initVideos();
+            searchFragment.onSearchMoreVideosLoaded(videoList);
+        }
+    }
+
+    @Override
+    public void onSearchMoreVideosLoaded(List<LudoVideo> videoList) {
+        if (searchFragment != null) {
+            searchFragment.onSearchMoreVideosLoaded(videoList);
+        }
+    }
+
+    public void initSearchFragment(String text) {
+        if (mActivity != null && searchFragment == null) {
+            searchFragment = VideoSearchFragment.newInstance(text);
+            mActivity.addFragment(searchFragment);
+        } else if(searchFragment != null) {
+            refreshSearch(text);
+        }
+    }
+
+    public void clearSearchFragment() {
+        this.searchFragment = null;
+    }
+
+    private interface MoreLoadedListener<T> {
+
+        void onMoreLoaded(List<T> list);
+    }
+
+    public interface MoreChannelsLoadedListener extends MoreLoadedListener<Channel> {
+    }
+
+    public interface MoreVideosLoadedListener extends MoreLoadedListener<LudoVideo> {
     }
 }

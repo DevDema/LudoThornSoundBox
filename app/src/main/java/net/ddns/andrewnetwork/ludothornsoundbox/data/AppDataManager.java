@@ -13,7 +13,6 @@ import net.ddns.andrewnetwork.ludothornsoundbox.data.network.ApiHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.persistence.DatabaseHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.prefs.PreferencesHelper;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.ApplicationContext;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.AudioUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.RxBus;
 
 import java.util.ArrayList;
@@ -220,5 +219,15 @@ public class AppDataManager implements DataManager {
     @Override
     public List<LudoAudio> getAudioNascosti() {
         return mPreferencesHelper.getAudioNascosti() != null ? mPreferencesHelper.getAudioNascosti() : new ArrayList<>();
+    }
+
+    @Override
+    public Single<List<LudoVideo>> searchVideosAllChannels(String searchString, List<Channel> channelList) {
+        return mApiHelper.searchVideosAllChannels(searchString, channelList);
+    }
+
+    @Override
+    public Single<List<LudoVideo>> searchMoreVideosAllChannels(String searchString, Date date, List<Channel> channelList) {
+        return mApiHelper.searchMoreVideosAllChannels(searchString, date, channelList);
     }
 }

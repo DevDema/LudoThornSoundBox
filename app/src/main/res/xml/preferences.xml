@@ -7,23 +7,26 @@
             android:entries="@array/schermate_list"
             android:entryValues="@array/schermate_list"
             android:key="@string/pag_iniziale_key"
+            android:icon="@drawable/ic_home_black_24dp"
             android:summary="@string/pag_iniziale_summary"
             android:title="@string/pag_iniziale_title" />
 
         <Preference
             android:key="@string/cambia_ordine_key"
+            android:icon="@drawable/ic_shuffle"
             android:summary="@string/cambia_ordine_summary"
             android:title="@string/cambia_ordine_title" />
 
         <PreferenceScreen
             android:key="modifiche_layout_key"
+            android:icon="@drawable/ic_settings_black"
             android:summary="@string/modifiche_layout_summary"
             android:title="@string/modifiche_layout_title">
 
-            <Preference
+            <!--<Preference
                 android:key="@string/cambia_icona_key"
                 android:summary="@string/cambia_icona_summary"
-                android:title="@string/cambia_icona_title" />
+                android:title="@string/cambia_icona_title" />-->
 
             <SwitchPreference
                 android:key="@string/usa_font_app_key"
@@ -36,6 +39,7 @@
 
         <PreferenceScreen
             android:key="preferenze_audio_key"
+            android:icon="@drawable/ic_settings_black"
             android:summary="@string/preferenze_audio_summary"
             android:title="@string/preferenze_audio_title">
 
@@ -64,6 +68,7 @@
 
         <Preference
             android:key="@string/audio_nascosti_key"
+            android:icon="@drawable/ic_audio_black"
             android:summary="@string/audio_nascosti_summary"
             android:title="@string/audio_nascosti_title" />
 
@@ -74,11 +79,13 @@
 
         <Preference
             android:key="@string/reset_app_key"
+            android:icon="@drawable/ic_menu_manage"
             android:summary="@string/reset_app_summary"
             android:title="@string/reset_app_title" />
 
         <Preference
             android:key="@string/credits_key"
+            android:icon="@drawable/ic_credits_black"
             android:summary="@string/credits_summary"
             android:title="@string/credits_title" />
 

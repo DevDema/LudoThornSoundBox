@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random;
 
+import io.reactivex.disposables.CompositeDisposable;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.DataManager;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoAudio;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.base.BasePresenter;
@@ -7,11 +8,8 @@ import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomV
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomViewPresenterBinder.IRandomView;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.rx.SchedulerProvider;
 
-import java.util.List;
-
 import javax.inject.Inject;
-
-import io.reactivex.disposables.CompositeDisposable;
+import java.util.List;
 
 public class RandomPresenter<V extends IRandomView> extends BasePresenter<V> implements IRandomPresenter<V> {
 

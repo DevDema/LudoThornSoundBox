@@ -23,6 +23,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.preference.PreferenceManager;
@@ -41,10 +42,12 @@ import net.ddns.andrewnetwork.ludothornsoundbox.databinding.ActivityMainBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.di.component.ActivityComponent;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainPresenter;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.MainViewPresenterBinder.IMainView;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.advpopup.AdvertisementFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.home.HomeFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.PreferitiFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.preferiti.audio.PreferitiAudioFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.random.RandomFragment;
+import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.search.VideoSearchFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.SettingsActivity;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video.VideoFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.settings.activity.credits.CreditsActivity;
@@ -85,7 +88,6 @@ public class MainActivity extends AdsActivity
     int fragmentFirstSelection;
     private Fragment currentFragment;
     private List<LudoNavigationItem> orderedNavigationMenu;
-
     private List<Integer> lastItems;
     private NavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = menuItem -> {
         int id = menuItem.getItemId();
@@ -179,7 +181,7 @@ public class MainActivity extends AdsActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             logCurrentFirebaseInstanceId();
         }
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -203,13 +205,21 @@ public class MainActivity extends AdsActivity
 
         mBinding.appBarMain.navigation.setSelectedItemId(fragmentFirstSelection);
 
-        handleIntents(getIntent()!= null ? getIntent() : new Intent());
+        handleIntents(getIntent() != null ? getIntent() : new Intent());
+
+        if (ListUtils.getRandomPopUpBoolean()) {
+            openPopupAdvertisements();
+        }
+    }
+
+    private void openPopupAdvertisements() {
+        newDialogFragment(AdvertisementFragment.newInstance());
     }
 
     private void resetAppIcon() {
         int iconPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(getString(R.string.cambia_icona_key), -1);
 
-        if(iconPosition == -1) {
+        if (iconPosition == -1) {
             iconPosition = 0;
         }
 
@@ -232,7 +242,7 @@ public class MainActivity extends AdsActivity
     private void handleIntents(Intent intent) {
         if (intent != null && intent.getAction() != null && intent.getAction().equals("OPEN_VIDEOS")) {
             selectOnBottomNavigationOrInstantiate(R.id.action_video);
-            Log.d("IntentAction", intent.getAction() +" Received");
+            Log.d("IntentAction", intent.getAction() + " Received");
         }
     }
 
@@ -350,7 +360,7 @@ public class MainActivity extends AdsActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            if(lastItems.size() > 1) {
+            if (lastItems.size() > 1) {
                 mBinding.appBarMain.navigation.setSelectedItemId(lastItems.get(1));
                 lastItems.remove(0);
             }
@@ -362,45 +372,80 @@ public class MainActivity extends AdsActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if(!lastItems.contains(id)) {
+        if (!lastItems.contains(id)) {
             lastItems.add(0, id);
         }
 
         mBinding.drawerLayout.closeDrawer(GravityCompat.START);
         Fragment fragment;
+        boolean addFragment = false;
 
         switch (id) {
             //BOTTOM NAVIGATION MENU
             default:
             case R.id.action_home:
-                fragment = HomeFragment.newInstance(loadAtOnce);
+                fragment = getFragmentByClass(HomeFragment.class);
+                if (fragment == null) {
+                    fragment = HomeFragment.newInstance(loadAtOnce);
+                    addFragment = true;
+                }
                 break;
             case R.id.action_random:
-                fragment = RandomFragment.newInstance();
+                fragment = getFragmentByClass(RandomFragment.class);
+                if (fragment == null) {
+                    fragment = RandomFragment.newInstance();
+                    addFragment = true;
+                }
                 break;
             case R.id.action_video:
-                fragment = VideoFragment.newInstance();
+                fragment = getFragmentByClass(VideoFragment.class);
+                if (fragment == null) {
+                    fragment = VideoFragment.newInstance();
+                    addFragment = true;
+                }
                 break;
             case R.id.action_favorites:
-                fragment = PreferitiFragment.newInstance();
+                fragment = getFragmentByClass(PreferitiFragment.class);
+                if (fragment == null) {
+                    fragment = PreferitiFragment.newInstance();
+                    addFragment = true;
+                }
                 break;
         }
 
-        if (fragment != null) {
-            currentFragment = fragment;
-            ViewUtils.selectByItemId(mBinding.navView, id);
-            replaceFragmentIfNotExists(fragment);
+        currentFragment = fragment;
+        ViewUtils.selectByItemId(mBinding.navView, id);
+
+        if (addFragment) {
+            addFragment(fragment);
+        } else {
+            showFragment(fragment);
         }
         return true;
     }
 
-    public void replaceFragmentIfNotExists(Fragment newFragment) {
+    private void showFragment(Fragment fragment) {
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        for (Fragment other : fragmentManager.getFragments()) {
+            if (other == fragment) {
+                fragmentTransaction.show(other);
+            } else {
+                fragmentTransaction.hide(other);
+            }
+        }
+
+        fragmentTransaction.commit();
+    }
+
+    /*public void replaceFragmentIfNotExists(Fragment newFragment) {
         boolean found = false;
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (newFragment.getClass().isInstance(fragment)) {
                 fragmentTransaction.show(fragment);
-
+                currentFragment = fragment;
                 found = true;
             }
         }
@@ -413,9 +458,12 @@ public class MainActivity extends AdsActivity
             }
 
             fragmentTransaction.commit();
-        } else addFragment(newFragment);
+        } else {
+            addFragment(newFragment);
+            currentFragment = newFragment;
+        }
 
-    }
+    }*/
 
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
@@ -429,8 +477,8 @@ public class MainActivity extends AdsActivity
             getView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    if(getFragmentContainer().getHeight()>0) {
-                         if (getFragmentContainer().getHeight() < 600) {
+                    if (getFragmentContainer().getHeight() > 0) {
+                        if (getFragmentContainer().getHeight() < 600) {
                             bottomBanner.setVisibility(View.GONE);
 
                         } else {
@@ -492,7 +540,7 @@ public class MainActivity extends AdsActivity
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Fragment> T getFragmentByClass(Class<T> fragmentClass) {
+    public <T extends Fragment> T getFragmentByClass(Class<T> fragmentClass) {
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment.getClass().equals(fragmentClass)) {
                 return (T) fragment;
@@ -512,39 +560,68 @@ public class MainActivity extends AdsActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if (currentFragment != null) {
+            if (currentFragment.getClass().equals(HomeFragment.class)) {
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.options_home_menu, menu);
+
+                inflateSearchView(menu.findItem(R.id.search_bar));
+                return true;
+            } /*else if (currentFragment.getClass().equals(VideoFragment.class)) {
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.options_video_menu, menu);
+
+                boolean isSearchOpened = getFragmentByClass(VideoSearchFragment.class) != null;
+
+                menu.findItem(R.id.action_close).setVisible(isSearchOpened);
+
+                inflateSearchView(menu.findItem(R.id.search_bar));
 
 
-        if (currentFragment != null && currentFragment.getClass().equals(HomeFragment.class)) {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.options_home_menu, menu);
+                return true;
+            }*/ else {
+                menu.clear();
+            }
+        }
 
-            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-            SearchView searchView = (SearchView) menu.findItem(R.id.search_bar).getActionView();
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-            searchView.setIconifiedByDefault(false);
-            searchView.setOnQueryTextListener(this);
+        return false;
+    }
+
+    private void inflateSearchView(MenuItem searchMenuItem) {
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(this);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (currentFragment instanceof VideoFragment) {
+            VideoFragment videoFragment = (VideoFragment) currentFragment;
+
+            videoFragment.initSearchFragment(query);
+
+
+
             return true;
-        } else {
-            menu.clear();
         }
 
         return false;
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
-        return getFragmentByClass(HomeFragment.class) == null;
-    }
-
-    @Override
     public boolean onQueryTextChange(String newText) {
         this.searchText = newText;
 
-        HomeFragment homeFragment = getFragmentByClass(HomeFragment.class);
-        if (homeFragment != null) {
-            homeFragment.searchAudioByTitle(newText);
-            return true;
+        if (nonEmptyNonNull(newText)) {
+
+            if (currentFragment instanceof HomeFragment) {
+                ((HomeFragment) currentFragment).searchAudioByTitle(newText);
+                return true;
+            }
         }
+
         return false;
     }
 
@@ -554,9 +631,9 @@ public class MainActivity extends AdsActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        HomeFragment homeFragment = getFragmentByClass(HomeFragment.class);
 
-        if (homeFragment != null) {
+        if (currentFragment instanceof HomeFragment) {
+            HomeFragment homeFragment = (HomeFragment) currentFragment;
             switch (item.getItemId()) {
                 case R.id.action_shuffle:
                     return homeFragment.invertOrder();
@@ -565,8 +642,27 @@ public class MainActivity extends AdsActivity
                 case R.id.action_data:
                     return homeFragment.orderBy(AUDIO_DATA);
             }
-        }
+        } /*else if (currentFragment.getClass().equals(VideoFragment.class)) {
+            switch (item.getItemId()) {
+                case R.id.action_close:
+                    return closeSearchSubFragment();
+            }
+        }*/
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean closeSearchSubFragment() {
+        VideoSearchFragment videoSearchFragment = getFragmentByClass(VideoSearchFragment.class);
+        if (currentFragment instanceof VideoFragment) {
+            ((VideoFragment) currentFragment).clearSearchFragment();
+        }
+        if (videoSearchFragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(videoSearchFragment).commit();
+            invalidateOptionsMenu();
+            return true;
+        }
+
+        return false;
     }
 }

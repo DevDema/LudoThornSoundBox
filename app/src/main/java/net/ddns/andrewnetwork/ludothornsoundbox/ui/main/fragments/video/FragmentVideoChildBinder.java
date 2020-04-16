@@ -1,7 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
-import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
 
 import java.util.Date;
 import java.util.List;
@@ -16,10 +15,14 @@ public interface FragmentVideoChildBinder {
     }
 
     interface FragmentVideoParent extends  FragmentAdapterVideoBinder {
-        void refreshChannels(boolean usesGlobalLoading);
+        void refresh(boolean usesGlobalLoading);
 
-        void getMoreVideos(VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener);
+        void getMoreVideos(VideoFragment.MoreChannelsLoadedListener moreChannelsLoadedListener);
 
-        void getMoreVideos(Channel channel, Date date, VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener);
+        void getMoreVideos(Channel channel, Date date, VideoFragment.MoreChannelsLoadedListener moreChannelsLoadedListener);
+
+        void getMoreVideos(String searchString, Date date, VideoFragment.MoreVideosLoadedListener moreChannelsLoadedListener);
+
+        void refreshSearch(String text);
     }
 }

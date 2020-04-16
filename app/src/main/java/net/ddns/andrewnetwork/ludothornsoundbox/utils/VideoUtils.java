@@ -202,17 +202,26 @@ public abstract class VideoUtils {
         return newList;
     }
 
-    public static Date getMostRecentDate(Channel channel) {
+    public static Date getMostRecentDate(List<LudoVideo> videoList) {
 
 
-        if (channel.getVideoList().isEmpty())
+        if (videoList.isEmpty())
             return Calendar.getInstance().getTime();
 
-        return channel.getVideoList().get(channel.getVideoList().size() - 1).getDateTime();
+        return videoList.get(videoList.size() - 1).getDateTime();
 
     }
 
-    public static Date getMostRecentDate(List<Channel> channelListInput) {
+    public static Date getMostRecentDate(Channel channel) {
+
+        if(channel != null) {
+            return getMostRecentDate(channel.getVideoList());
+        }
+
+        return null;
+    }
+
+    public static Date getMostRecentDateFromChannels(List<Channel> channelListInput) {
         List<Channel> channelList = new ArrayList<>(channelListInput);
 
         List<Date> dateList = new ArrayList<>();
@@ -265,5 +274,17 @@ public abstract class VideoUtils {
     public static Bitmap getThumbnailURLFromVideoId(String videoURL) throws IOException {
         URL url = new URL("https://img.youtube.com/vi/" + videoURL + "/default.jpg");
         return BitmapFactory.decodeStream(url.openConnection().getInputStream());
+    }
+
+    public static List<Channel> removeNullIds(@NonNull List<Channel> channelList) {
+        List<Channel> channelList1 = new ArrayList<>();
+
+        for(Channel channel : channelList) {
+            if(channel.getId() != null) {
+                channelList1.add(channel);
+            }
+        }
+
+        return channelList1;
     }
 }

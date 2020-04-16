@@ -1,21 +1,16 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.data.model;
 
-import android.util.Pair;
-
-import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ColorUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import androidx.annotation.ColorRes;
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 
-public class Channel implements Comparable, Serializable {
+public class Channel implements Comparable<Channel>, Serializable {
 
-    private final String backGroundColor;
-    private String ChannelName;
+    private String backGroundColor;
+    private String channelName;
     private String id;
     private long totalNumberOfVideos;
     private String channelUsername;
@@ -23,32 +18,39 @@ public class Channel implements Comparable, Serializable {
 
     private String nextPageToken;
 
+    public Channel() {
+        this.backGroundColor = ColorUtils.DEFAULT_COLOR;
+        this.videoList = new ArrayList<>();
+    }
 
     public String getChannelName() {
-        return ChannelName;
+        return channelName;
     }
 
     public void setChannelName(String channelName) {
-        ChannelName = channelName;
+        this.channelName = channelName;
     }
 
     public Channel(String id) {
+        this();
+
         this.id = id;
-        backGroundColor = ColorUtils.DEFAULT_COLOR;
+
     }
 
     public Channel(String channelName, String username, String color) {
-        ChannelName = channelName;
+        this();
+
+        this.channelName = channelName;
         this.channelUsername = username;
-        videoList = new ArrayList<>();
         this.backGroundColor = color;
     }
 
     public Channel(String channelName, String username, String id, String color) {
-        ChannelName = channelName;
+        this(id);
+
+        this.channelName = channelName;
         this.channelUsername = username;
-        this.id=id;
-        videoList = new ArrayList<>();
         this.backGroundColor = color;
     }
 
@@ -75,8 +77,11 @@ public class Channel implements Comparable, Serializable {
 
     public ArrayList<LudoVideo> getVideoListWithNoThumbnails() {
         ArrayList<LudoVideo> newLudoVideos = new ArrayList<>();
-        for(LudoVideo video : videoList)
-            if(!video.hasThumbnail()) newLudoVideos.add(video);
+        for (LudoVideo video : videoList) {
+            if (!video.hasThumbnail()) {
+                newLudoVideos.add(video);
+            }
+        }
         return newLudoVideos;
     }
 
@@ -98,14 +103,15 @@ public class Channel implements Comparable, Serializable {
 
     @Override
     public String toString() {
-        return "Canale: "+getChannelName()+" ID: " +getId();
+        return "Canale: " + getChannelName() + " ID: " + getId();
     }
 
     @Override
-    public int compareTo(@NonNull Object o) {
-        if(o.getClass()==this.getClass()) {
-            Channel channel = (Channel) o;
-            if(this.getId().equals(channel.getId())) return 0;
+    public int compareTo(@NonNull Channel o) {
+        if (o.getClass() == this.getClass()) {
+            if (this.getId().equals(o.getId())) {
+                return 0;
+            }
         }
         return -1;
     }

@@ -1,6 +1,5 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.fragments.video;
 
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import net.ddns.andrewnetwork.ludothornsoundbox.data.DataManager;
@@ -61,7 +60,55 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void getMoreVideos(List<Channel> channelListInput, Date date, VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener) {
+    public void getMoreVideos(String searchString, Date date, VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener, List<Channel> channelList) {
+        getCompositeDisposable().add(getDataManager().searchMoreVideosAllChannels(searchString, date, channelList)
+                .observeOn(getSchedulerProvider().ui())
+                .subscribeOn(getSchedulerProvider().io())
+                .subscribe(videoList -> {
+                            if (moreVideosLoadedListener != null) {
+                                moreVideosLoadedListener.onMoreLoaded(videoList);
+                            }
+
+                            getMvpView().onSearchMoreVideosLoaded(videoList);
+                        }, throwable -> {
+                            Log.e("SearchVideosREST", throwable.getMessage());
+
+                            if (!isViewAttached()) {
+                                return;
+                            }
+                            if (!getMvpView().isAppVisible()) {
+                                return;
+                            }
+
+                            getMvpView().onVideoListLoadFailed();
+                        }
+                )
+        );
+    }
+
+    @Override
+    public void searchVideos(String searchString, List<Channel> channelList) {
+        getCompositeDisposable().add(getDataManager().searchVideosAllChannels(searchString, channelList)
+                .observeOn(getSchedulerProvider().ui())
+                .subscribeOn(getSchedulerProvider().io())
+                .subscribe(videoList -> getMvpView().onSearchVideosLoaded(videoList), throwable -> {
+                            Log.e("SearchVideosREST", throwable.getMessage());
+
+                            if (!isViewAttached()) {
+                                return;
+                            }
+                            if (!getMvpView().isAppVisible()) {
+                                return;
+                            }
+
+                            getMvpView().onVideoListLoadFailed();
+                        }
+                )
+        );
+    }
+
+    @Override
+    public void getMoreVideos(List<Channel> channelListInput, Date date, VideoFragment.MoreChannelsLoadedListener moreChannelsLoadedListener) {
         List<Channel> channelList = new ArrayList<>(channelListInput);
         Channel allChannel = VideoUtils.findChannelByName(channelList, ALL_CHANNELS);
 
@@ -91,8 +138,8 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
                                     }
                                     getMvpView().onVideoListLoadFailed();
                                 }, () -> {
-                                    if (moreVideosLoadedListener != null) {
-                                        moreVideosLoadedListener.onMoreVideosLoaded(channelList);
+                                    if (moreChannelsLoadedListener != null) {
+                                        moreChannelsLoadedListener.onMoreLoaded(channelList);
                                     }
 
                                     getMvpView().onMoreVideoListLoadSuccess(channelList);
@@ -102,12 +149,12 @@ public class VideoPresenter<V extends IVideoView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void getMoreVideos(Channel channel, Date date, VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener) {
+    public void getMoreVideos(Channel channel, Date date, VideoFragment.MoreChannelsLoadedListener moreChannelsLoadedListener) {
         List<Channel> channels = new ArrayList<>();
 
         channels.add(channel);
 
-        getMoreVideos(channels, date, moreVideosLoadedListener);
+        getMoreVideos(channels, date, moreChannelsLoadedListener);
     }
 
     @Override

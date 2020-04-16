@@ -12,8 +12,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.reflect.TypeToken;
-
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.Channel;
 import net.ddns.andrewnetwork.ludothornsoundbox.data.model.LudoVideo;
@@ -36,10 +34,10 @@ public class ChildVideoFragment extends BaseFragment implements FragmentVideoChi
 
     private static final String KEY_PREFERITI = "KEY_PREFERITI";
     private static final String KEY_CHANNEL = "KEY_CHANNEL";
-    private FragmentVideoParent parent;
+    protected FragmentVideoParent parent;
 
     private Channel channel;
-    private FragmentVideoListBinding mBinding;
+    protected FragmentVideoListBinding mBinding;
 
     public static ChildVideoFragment newInstance(Channel channel) {
 
@@ -78,7 +76,11 @@ public class ChildVideoFragment extends BaseFragment implements FragmentVideoChi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mBinding.masterLayout.setOnRefreshListener(() -> parent.refreshChannels(false));
+        initView(view, savedInstanceState);
+    }
+
+    protected void initView(View view, Bundle savedInstanceState) {
+        mBinding.masterLayout.setOnRefreshListener(() -> parent.refresh(false));
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mBinding.recyclerView.setAdapter(new VideoRecyclerAdapter(mContext, getParent()));
         mBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -88,17 +90,17 @@ public class ChildVideoFragment extends BaseFragment implements FragmentVideoChi
 
                 if (!recyclerView.canScrollVertically(1)) {
                     if (!isLoadingMoreVideos()) {
-                        VideoFragment.MoreVideosLoadedListener moreVideosLoadedListener = null;
+                        VideoFragment.MoreChannelsLoadedListener moreChannelsLoadedListener = null;
                         VideoRecyclerAdapter adapter = (VideoRecyclerAdapter) recyclerView.getAdapter();
                         if (adapter != null) {
                             adapter.showLoading();
-                            moreVideosLoadedListener = videoList -> mActivity.runOnUiThread(adapter::hideLoading);
+                            moreChannelsLoadedListener = videoList -> mActivity.runOnUiThread(adapter::hideLoading);
                         }
 
                         if(channel.getChannelName().equals(ALL_CHANNELS)) {
-                            parent.getMoreVideos(moreVideosLoadedListener);
+                            parent.getMoreVideos(moreChannelsLoadedListener);
                         } else {
-                            parent.getMoreVideos(channel, VideoUtils.getMostRecentDate(channel), moreVideosLoadedListener);
+                            parent.getMoreVideos(channel, VideoUtils.getMostRecentDate(channel), moreChannelsLoadedListener);
                         }
 
                         setLoadingMoreVideos(true);
