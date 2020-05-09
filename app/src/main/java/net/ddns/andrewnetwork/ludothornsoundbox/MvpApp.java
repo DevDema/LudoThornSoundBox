@@ -28,7 +28,7 @@ import javax.inject.Inject;
  * Created by janisharali on 27/01/17.
  */
 
-public abstract class MvpApp extends BaseApplication {
+public class MvpApp extends BaseApplication {
 
     private static boolean activityVisible;
 
