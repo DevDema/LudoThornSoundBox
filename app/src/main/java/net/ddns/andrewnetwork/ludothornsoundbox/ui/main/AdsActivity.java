@@ -1,5 +1,6 @@
 package net.ddns.andrewnetwork.ludothornsoundbox.ui.main;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -184,8 +185,12 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
                         button = new ImageButton(AdsActivity.this);
 
                         button.setEnabled(isButtonEnabled);
-                        button.setBackground(ContextCompat.getDrawable(AdsActivity.this, R.drawable.block_color_dark));
-                        button.setImageDrawable(ContextCompat.getDrawable(AdsActivity.this, R.drawable.ic_support_me));
+                        try {
+                            button.setBackground(ContextCompatad.getDrawable(AdsActivity.this, R.drawable.block_color_dark));
+                            button.setImageDrawable(ContextCompat.getDrawable(AdsActivity.this, R.drawable.ic_support_me));
+                        } catch (Resources.NotFoundException ignored){
+                        }
+
                         button.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
                         button.setOnClickListener(v -> CommonUtils.showDialog(AdsActivity.this, getString(R.string.help_message_ad, BuildConfig.SHORT_NAME), (dialog, which) -> showInterstitialAd(null), true));
 
@@ -213,6 +218,10 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
             @Override
             public void onAdLoaded() {
                 adView.setVisibility(View.VISIBLE);
+
+                if(counter >= adsBannerTrial.length) {
+                    return;
+                }
 
                 adsBannerTrial[counter] = 0;
             }

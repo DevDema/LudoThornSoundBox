@@ -2,6 +2,7 @@ package net.ddns.andrewnetwork.ludothornsoundbox.ui.main.advpopup;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Pair;
@@ -18,7 +19,6 @@ import androidx.fragment.app.DialogFragment;
 import net.ddns.andrewnetwork.ludothornsoundbox.R;
 import net.ddns.andrewnetwork.ludothornsoundbox.databinding.DialogAdvBinding;
 import net.ddns.andrewnetwork.ludothornsoundbox.ui.web.WebActivity;
-import net.ddns.andrewnetwork.ludothornsoundbox.utils.CommonUtils;
 import net.ddns.andrewnetwork.ludothornsoundbox.utils.ListUtils;
 
 import java.util.List;
@@ -60,8 +60,11 @@ public class AdvertisementFragment extends DialogFragment {
 
             if(!list.isEmpty()) {
                 Pair<Integer, String> item = ListUtils.selectRandomItem(list);
+                try {
+                    drawable = ContextCompat.getDrawable(context, item.first);
+                } catch (Resources.NotFoundException ignored) {
+                }
 
-                drawable = ContextCompat.getDrawable(context, item.first);
                 url = item.second;
             }
 
