@@ -186,7 +186,7 @@ public abstract class AdsActivity extends PreferencesManagerActivity {
 
                         button.setEnabled(isButtonEnabled);
                         try {
-                            button.setBackground(ContextCompatad.getDrawable(AdsActivity.this, R.drawable.block_color_dark));
+                            button.setBackground(ContextCompat.getDrawable(AdsActivity.this, R.drawable.block_color_dark));
                             button.setImageDrawable(ContextCompat.getDrawable(AdsActivity.this, R.drawable.ic_support_me));
                         } catch (Resources.NotFoundException ignored){
                         }
